@@ -1,4 +1,6 @@
-﻿namespace FileCabinetApp
+﻿using System.Globalization;
+
+namespace FileCabinetApp
 {
     public static class Program
     {
@@ -13,6 +15,7 @@
         private static Tuple<string, Action<string>>[] commands = new Tuple<string, Action<string>>[]
         {
             new Tuple<string, Action<string>>("help", PrintHelp),
+            new Tuple<string, Action<string>>("create", Create),
             new Tuple<string, Action<string>>("stat", Stat),
             new Tuple<string, Action<string>>("exit", Exit),
         };
@@ -20,6 +23,7 @@
         private static string[][] helpMessages = new string[][]
         {
             new string[] { "help", "prints the help screen", "The 'help' command prints the help screen." },
+            new string[] { "create", "creates a new record", "The 'create' command creates a record to the service." },
             new string[] { "stat", "prints the stat of the record", "The 'stat' command prints stat of the record." },
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
         };
@@ -93,6 +97,27 @@
 
             Console.WriteLine();
         }
+
+        private static void Create(string obj)
+        {
+            Console.Write("First name: ");
+            string? firstName = Console.ReadLine();
+
+            Console.Write("Last name: ");
+            string? lastName = Console.ReadLine();
+
+            Console.Write("Date of birth: ");
+            CultureInfo culture = CultureInfo.CreateSpecificCulture("en-US");
+            DateTimeStyles styles = DateTimeStyles.None;
+            DateTime.TryParse(
+                Console.ReadLine(),
+                culture,
+                styles,
+                out DateTime dateOfBirth);
+
+            Console.WriteLine($"Record #{fileCabinetService.CreateRecord(firstName, lastName, dateOfBirth)} is created.");
+        }
+
         private static void Stat(string parameters)
         {
             var recordsCount = Program.fileCabinetService.GetStat();
