@@ -104,20 +104,55 @@ namespace FileCabinetApp
         {
             Console.Write("First name: ");
             string? firstName = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(firstName))
+            {
+                Console.WriteLine("First name is incorrect.");
+                return;
+            }
 
             Console.Write("Last name: ");
             string? lastName = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(lastName))
+            {
+                Console.WriteLine("Last name is incorrect.");
+                return;
+            }
 
             Console.Write("Date of birth: ");
             CultureInfo culture = CultureInfo.CreateSpecificCulture("en-US");
             DateTimeStyles styles = DateTimeStyles.None;
-            DateTime.TryParse(
+            if (!DateTime.TryParse(
                 Console.ReadLine(),
                 culture,
                 styles,
-                out DateTime dateOfBirth);
+                out DateTime dateOfBirth))
+            {
+                Console.WriteLine("Date is incorrect.");
+                return;
+            }
 
-            Console.WriteLine($"Record #{fileCabinetService.CreateRecord(firstName, lastName, dateOfBirth)} is created.");
+            Console.Write("Sex (M or F): ");
+            if (!char.TryParse(Console.ReadLine(), out char sex) || (!sex.Equals('M') && !sex.Equals('F')))
+            {
+                Console.WriteLine("Sex is incorrect.");
+                return;
+            }
+
+            Console.Write("Height: ");
+            if (!short.TryParse(Console.ReadLine(), out short height))
+            {
+                Console.WriteLine("Height is incorrect");
+                return;
+            }
+
+            Console.Write("Salary: ");
+            if (!decimal.TryParse(Console.ReadLine(), out decimal salary))
+            {
+                Console.WriteLine("Salary is incorrect");
+                return;
+            }
+
+            Console.WriteLine($"Record #{fileCabinetService.CreateRecord(firstName, lastName, dateOfBirth, sex, height, salary)} is created.");
         }
 
         private static void List(string parameters)
@@ -127,7 +162,12 @@ namespace FileCabinetApp
             foreach (var record in records)
             {
                 string date = record.DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture);
-                Console.WriteLine($"#{record.Id}, {record.FirstName}, {record.LastName}, {date}");
+                Console.WriteLine($"#{record.Id}, " +
+                    $"{record.FirstName}, " +
+                    $"{record.LastName}, " +
+                    $"{date}, {record.Sex}, " +
+                    $"{record.Height}, " +
+                    $"{record.Salary}");
             }
         }
 
