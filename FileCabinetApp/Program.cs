@@ -28,9 +28,9 @@ namespace FileCabinetApp
             new string[] { "help", "prints the help screen", "The 'help' command prints the help screen." },
             new string[] { "create", "creates a new record", "The 'create' command creates a record to the service." },
             new string[] { "edit", "edites record", "The 'edit' command edites existing record. Parameters - {id}" },
-            new string[] { "list", "returns the array of records", "The 'list' command returns array of records." },
-            new string[] { "find", "return the array of records by given property", "The 'edit' command returns array of records by given property." },
-            new string[] { "stat", "return the count of records", "The 'stat' command prints stat of the record." },
+            new string[] { "list", "prints the array of records", "The 'list' command prints array of records." },
+            new string[] { "find", "prints the array of records found by given property", "The 'find' command prints array of records by given property." },
+            new string[] { "stat", "prints the count of records", "The 'stat' command prints count of the records in service." },
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
         };
 
@@ -172,6 +172,10 @@ namespace FileCabinetApp
             {
                 foundRecords = fileCabinetService.FindByLastName(value);
             }
+            else if (property.Equals("dateofbirth", StringComparison.InvariantCultureIgnoreCase))
+            {
+                foundRecords = fileCabinetService.FindByDateOfBirth(value);
+            }
             else
             {
                 Console.WriteLine("No such property");
@@ -187,6 +191,11 @@ namespace FileCabinetApp
                     $"{date}, {record.Sex}, " +
                     $"{record.Height}, " +
                     $"{record.Salary}");
+            }
+
+            if (foundRecords.Length == 0)
+            {
+                Console.WriteLine("No records by given property.");
             }
         }
 
