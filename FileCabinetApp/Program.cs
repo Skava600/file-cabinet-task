@@ -104,53 +104,27 @@ namespace FileCabinetApp
         {
             Console.Write("First name: ");
             string? firstName = Console.ReadLine();
-            if (string.IsNullOrWhiteSpace(firstName))
-            {
-                Console.WriteLine("First name is incorrect.");
-                return;
-            }
 
             Console.Write("Last name: ");
             string? lastName = Console.ReadLine();
-            if (string.IsNullOrWhiteSpace(lastName))
-            {
-                Console.WriteLine("Last name is incorrect.");
-                return;
-            }
 
             Console.Write("Date of birth: ");
             CultureInfo culture = CultureInfo.CreateSpecificCulture("en-US");
             DateTimeStyles styles = DateTimeStyles.None;
-            if (!DateTime.TryParse(
+            DateTime.TryParse(
                 Console.ReadLine(),
                 culture,
                 styles,
-                out DateTime dateOfBirth))
-            {
-                Console.WriteLine("Date is incorrect.");
-                return;
-            }
+                out DateTime dateOfBirth);
 
             Console.Write("Sex (M or F): ");
-            if (!char.TryParse(Console.ReadLine(), out char sex) || (!sex.Equals('M') && !sex.Equals('F')))
-            {
-                Console.WriteLine("Sex is incorrect.");
-                return;
-            }
+            char.TryParse(Console.ReadLine(), out char sex);
 
             Console.Write("Height: ");
-            if (!short.TryParse(Console.ReadLine(), out short height))
-            {
-                Console.WriteLine("Height is incorrect");
-                return;
-            }
+            short.TryParse(Console.ReadLine(), out short height);
 
-            Console.Write("Salary: ");
-            if (!decimal.TryParse(Console.ReadLine(), out decimal salary))
-            {
-                Console.WriteLine("Salary is incorrect");
-                return;
-            }
+            Console.Write("Salary ($): ");
+            decimal.TryParse(Console.ReadLine(), out decimal salary);
 
             Console.WriteLine($"Record #{fileCabinetService.CreateRecord(firstName, lastName, dateOfBirth, sex, height, salary)} is created.");
         }
