@@ -6,6 +6,55 @@
 
         public int CreateRecord(string? firstName, string? lastName, DateTime dateOfBirth, char sex, short height, decimal salary)
         {
+            ValidateInfo(firstName, lastName, dateOfBirth, sex, height, salary);
+            var record = new FileCabinetRecord
+            {
+                Id = this.list.Count + 1,
+                FirstName = firstName,
+                LastName = lastName,
+                DateOfBirth = dateOfBirth,
+                Sex = sex,
+                Height = height,
+                Salary = salary,
+            };
+
+            this.list.Add(record);
+
+            return record.Id;
+        }
+
+        public void EditRecord(int id, string? firstName, string? lastName, DateTime dateOfBirth, char sex, short height, decimal salary)
+        {
+            FileCabinetRecord record = this.list.Find(rec => rec.Id == id)
+                ?? throw new ArgumentOutOfRangeException(nameof(id), $"#{id} record is not found");
+
+            ValidateInfo(firstName, lastName, dateOfBirth, sex, height, salary);
+
+            record.FirstName = firstName;
+            record.LastName = lastName;
+            record.DateOfBirth = dateOfBirth;
+            record.Sex = sex;
+            record.Height = height;
+            record.Salary = salary;
+        }
+
+        public FileCabinetRecord[] GetRecords()
+        {
+            return this.list.ToArray();
+        }
+
+        public bool IsRecordExists(int id)
+        {
+            return this.list.Exists(record => record.Id == id);
+        }
+
+        public int GetStat()
+        {
+            return this.list.Count;
+        }
+
+        private static void ValidateInfo(string? firstName, string? lastName, DateTime dateOfBirth, char sex, short height, decimal salary)
+        {
             if (firstName == null)
             {
                 throw new ArgumentNullException(nameof(firstName));
@@ -46,31 +95,6 @@
             {
                 throw new ArgumentException("salary can't be less zero.", nameof(salary));
             }
-
-            var record = new FileCabinetRecord
-            {
-                Id = this.list.Count + 1,
-                FirstName = firstName,
-                LastName = lastName,
-                DateOfBirth = dateOfBirth,
-                Sex = sex,
-                Height = height,
-                Salary = salary,
-            };
-
-            this.list.Add(record);
-
-            return record.Id;
-        }
-
-        public FileCabinetRecord[] GetRecords()
-        {
-            return this.list.ToArray();
-        }
-
-        public int GetStat()
-        {
-            return this.list.Count;
         }
     }
 }

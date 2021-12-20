@@ -16,6 +16,7 @@ namespace FileCabinetApp
         {
             new Tuple<string, Action<string>>("help", PrintHelp),
             new Tuple<string, Action<string>>("create", Create),
+            new Tuple<string, Action<string>>("edit", Edit),
             new Tuple<string, Action<string>>("list", List),
             new Tuple<string, Action<string>>("stat", Stat),
             new Tuple<string, Action<string>>("exit", Exit),
@@ -25,6 +26,7 @@ namespace FileCabinetApp
         {
             new string[] { "help", "prints the help screen", "The 'help' command prints the help screen." },
             new string[] { "create", "creates a new record", "The 'create' command creates a record to the service." },
+            new string[] { "edit", "edites record", "The 'edit' command edites existing record. Parameters - {id}" },
             new string[] { "list", "returns the list of records", "The 'list' command returns array of records." },
             new string[] { "stat", "return the count of records", "The 'stat' command prints stat of the record." },
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
@@ -102,29 +104,13 @@ namespace FileCabinetApp
 
         private static void Create(string parameters)
         {
-            Console.Write("First name: ");
-            string? firstName = Console.ReadLine();
-
-            Console.Write("Last name: ");
-            string? lastName = Console.ReadLine();
-
-            Console.Write("Date of birth: ");
-            CultureInfo culture = CultureInfo.CreateSpecificCulture("en-US");
-            DateTimeStyles styles = DateTimeStyles.None;
-            DateTime.TryParse(
-                Console.ReadLine(),
-                culture,
-                styles,
-                out DateTime dateOfBirth);
-
-            Console.Write("Sex (M or F): ");
-            char.TryParse(Console.ReadLine(), out char sex);
-
-            Console.Write("Height: ");
-            short.TryParse(Console.ReadLine(), out short height);
-
-            Console.Write("Salary ($): ");
-            decimal.TryParse(Console.ReadLine(), out decimal salary);
+            GetRecordInput(
+                out string? firstName,
+                out string? lastName,
+                out DateTime dateOfBirth,
+                out char sex,
+                out short height,
+                out decimal salary);
 
             try
             {
@@ -134,6 +120,39 @@ namespace FileCabinetApp
             {
                 Console.WriteLine($"{ex.Message}. Input data again.");
                 Create(parameters);
+            }
+        }
+
+        private static void Edit(string parameters)
+        {
+            int.TryParse(parameters, out int id);
+            if (fileCabinetService.IsRecordExists(id))
+            {
+                Console.WriteLine($"#{id} record is not found.");
+                return;
+            }
+
+            GetRecordInput(
+                out string? firstName,
+                out string? lastName,
+                out DateTime dateOfBirth,
+                out char sex,
+                out short height,
+                out decimal salary);
+
+            try
+            {
+                fileCabinetService.EditRecord(id, firstName, lastName, dateOfBirth, sex, height, salary);
+                Console.WriteLine($"Record #{id} is updated.");
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"{ex.Message}. Input data again.");
+                Edit(parameters);
             }
         }
 
@@ -163,6 +182,39 @@ namespace FileCabinetApp
         {
             Console.WriteLine("Exiting an application...");
             isRunning = false;
+        }
+
+        private static void GetRecordInput(
+            out string? firstName,
+            out string? lastName,
+            out DateTime dateOfBirth,
+            out char sex,
+            out short height,
+            out decimal salary)
+        {
+            Console.Write("First name: ");
+            firstName = Console.ReadLine();
+
+            Console.Write("Last name: ");
+            lastName = Console.ReadLine();
+
+            Console.Write("Date of birth: ");
+            CultureInfo culture = CultureInfo.CreateSpecificCulture("en-US");
+            DateTimeStyles styles = DateTimeStyles.None;
+            DateTime.TryParse(
+                Console.ReadLine(),
+                culture,
+                styles,
+                out dateOfBirth);
+
+            Console.Write("Sex (M or F): ");
+            char.TryParse(Console.ReadLine(), out sex);
+
+            Console.Write("Height: ");
+            short.TryParse(Console.ReadLine(), out height);
+
+            Console.Write("Salary ($): ");
+            decimal.TryParse(Console.ReadLine(), out salary);
         }
     }
 }
