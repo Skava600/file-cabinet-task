@@ -128,7 +128,7 @@ namespace FileCabinetApp
         private static void Edit(string parameters)
         {
             int.TryParse(parameters, out int id);
-            if (fileCabinetService.IsRecordExists(id))
+            if (!fileCabinetService.IsRecordExists(id))
             {
                 Console.WriteLine($"#{id} record is not found.");
                 return;
