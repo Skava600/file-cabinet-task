@@ -5,6 +5,7 @@
         private readonly List<FileCabinetRecord> list = new List<FileCabinetRecord>();
         private readonly Dictionary<string, List<FileCabinetRecord>> firstNameDictionary = new Dictionary<string, List<FileCabinetRecord>>(StringComparer.InvariantCultureIgnoreCase);
         private readonly Dictionary<string, List<FileCabinetRecord>> lastNameDictionary = new Dictionary<string, List<FileCabinetRecord>>(StringComparer.InvariantCultureIgnoreCase);
+        private readonly Dictionary<DateTime, List<FileCabinetRecord>> dateOfBirthDictionary = new Dictionary<DateTime, List<FileCabinetRecord>>();
 
         public int CreateRecord(string? firstName, string? lastName, DateTime dateOfBirth, char sex, short height, decimal salary)
         {
@@ -22,7 +23,7 @@
 
             this.list.Add(record);
 
-            this.AddRecordToDictionary(firstName!, lastName!, record);
+            this.AddRecordToDictionary(firstName!, lastName!, dateOfBirth, record);
 
             return record.Id;
         }
@@ -36,7 +37,8 @@
 
             this.firstNameDictionary[record.FirstName !].Remove(record);
             this.lastNameDictionary[record.LastName!].Remove(record);
-            this.AddRecordToDictionary(firstName!, lastName!, record);
+            this.dateOfBirthDictionary[record.DateOfBirth].Remove(record);
+            this.AddRecordToDictionary(firstName!, lastName!, dateOfBirth, record);
 
             record.FirstName = firstName;
             record.LastName = lastName;
@@ -84,7 +86,12 @@
         public FileCabinetRecord[] FindByDateOfBirth(string dateOfBirth)
         {
             DateTime.TryParse(dateOfBirth, out DateTime dob);
-            return this.list.Where(record => record.DateOfBirth.Equals(dob)).ToArray();
+            if (this.dateOfBirthDictionary.ContainsKey(dob))
+            {
+                return this.dateOfBirthDictionary[dob].ToArray();
+            }
+
+            return Array.Empty<FileCabinetRecord>();
         }
 
         private static void ValidateInfo(string? firstName, string? lastName, DateTime dateOfBirth, char sex, short height, decimal salary)
@@ -131,20 +138,26 @@
             }
         }
 
-        private void AddRecordToDictionary(string firstName, string lastName, FileCabinetRecord record)
+        private void AddRecordToDictionary(string firstName, string lastName, DateTime dateOfBirth, FileCabinetRecord record)
         {
-            if (!this.firstNameDictionary.ContainsKey(firstName!))
+            if (!this.firstNameDictionary.ContainsKey(firstName))
             {
                 this.firstNameDictionary.Add(firstName!, new List<FileCabinetRecord>());
             }
 
-            if (!this.lastNameDictionary.ContainsKey(lastName!))
+            if (!this.lastNameDictionary.ContainsKey(lastName))
             {
                 this.lastNameDictionary.Add(lastName!, new List<FileCabinetRecord>());
             }
 
+            if (!this.dateOfBirthDictionary.ContainsKey(dateOfBirth))
+            {
+                this.dateOfBirthDictionary.Add(dateOfBirth, new List<FileCabinetRecord>());
+            }
+
             this.firstNameDictionary[firstName!].Add(record);
             this.lastNameDictionary[lastName!].Add(record);
+            this.dateOfBirthDictionary[dateOfBirth].Add(record);
         }
     }
 }
