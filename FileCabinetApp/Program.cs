@@ -168,6 +168,10 @@ namespace FileCabinetApp
             {
                 foundRecords = fileCabinetService.FindByFirstName(value);
             }
+            else if (property.Equals("lastname", StringComparison.InvariantCultureIgnoreCase))
+            {
+                foundRecords = fileCabinetService.FindByLastName(value);
+            }
             else
             {
                 Console.WriteLine("No such property");

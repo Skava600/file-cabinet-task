@@ -58,6 +58,11 @@
             return this.list.Where(record => record.FirstName!.Equals(firstName, StringComparison.InvariantCultureIgnoreCase)).ToArray();
         }
 
+        public FileCabinetRecord[] FindByLastName(string lastName)
+        {
+            return this.list.Where(record => record.LastName!.Equals(lastName, StringComparison.InvariantCultureIgnoreCase)).ToArray();
+        }
+
         private static void ValidateInfo(string? firstName, string? lastName, DateTime dateOfBirth, char sex, short height, decimal salary)
         {
             if (firstName == null)
