@@ -100,7 +100,7 @@ namespace FileCabinetApp
             Console.WriteLine();
         }
 
-        private static void Create(string obj)
+        private static void Create(string parameters)
         {
             Console.Write("First name: ");
             string? firstName = Console.ReadLine();
@@ -126,7 +126,15 @@ namespace FileCabinetApp
             Console.Write("Salary ($): ");
             decimal.TryParse(Console.ReadLine(), out decimal salary);
 
-            Console.WriteLine($"Record #{fileCabinetService.CreateRecord(firstName, lastName, dateOfBirth, sex, height, salary)} is created.");
+            try
+            {
+                Console.WriteLine($"Record #{fileCabinetService.CreateRecord(firstName, lastName, dateOfBirth, sex, height, salary)} is created.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"{ex.Message}. Input data again.");
+                Create(parameters);
+            }
         }
 
         private static void List(string parameters)

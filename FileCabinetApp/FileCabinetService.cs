@@ -6,9 +6,19 @@
 
         public int CreateRecord(string? firstName, string? lastName, DateTime dateOfBirth, char sex, short height, decimal salary)
         {
+            if (firstName == null)
+            {
+                throw new ArgumentNullException(nameof(firstName));
+            }
+
             if (string.IsNullOrWhiteSpace(firstName) || firstName.Length < 2 || firstName.Length > 60)
             {
                 throw new ArgumentException("Length of first Name must be between 2 and 60.", nameof(firstName));
+            }
+
+            if (lastName == null)
+            {
+                throw new ArgumentNullException(nameof(lastName));
             }
 
             if (string.IsNullOrWhiteSpace(lastName) || lastName.Length < 2 || lastName.Length > 60)
