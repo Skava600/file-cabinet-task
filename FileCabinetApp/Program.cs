@@ -17,6 +17,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("help", PrintHelp),
             new Tuple<string, Action<string>>("create", Create),
             new Tuple<string, Action<string>>("edit", Edit),
+            new Tuple<string, Action<string>>("find", Find),
             new Tuple<string, Action<string>>("list", List),
             new Tuple<string, Action<string>>("stat", Stat),
             new Tuple<string, Action<string>>("exit", Exit),
@@ -27,8 +28,9 @@ namespace FileCabinetApp
             new string[] { "help", "prints the help screen", "The 'help' command prints the help screen." },
             new string[] { "create", "creates a new record", "The 'create' command creates a record to the service." },
             new string[] { "edit", "edites record", "The 'edit' command edites existing record. Parameters - {id}" },
-            new string[] { "list", "returns the list of records", "The 'list' command returns array of records." },
-            new string[] { "stat", "return the count of records", "The 'stat' command prints stat of the record." },
+            new string[] { "list", "prints the array of records", "The 'list' command prints array of records." },
+            new string[] { "find", "prints the array of records found by given property", "The 'find' command prints array of records by given property." },
+            new string[] { "stat", "prints the count of records", "The 'stat' command prints count of the records in service." },
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
         };
 
@@ -126,7 +128,7 @@ namespace FileCabinetApp
         private static void Edit(string parameters)
         {
             int.TryParse(parameters, out int id);
-            if (fileCabinetService.IsRecordExists(id))
+            if (!fileCabinetService.IsRecordExists(id))
             {
                 Console.WriteLine($"#{id} record is not found.");
                 return;
@@ -153,6 +155,47 @@ namespace FileCabinetApp
             {
                 Console.WriteLine($"{ex.Message}. Input data again.");
                 Edit(parameters);
+            }
+        }
+
+        private static void Find(string parameters)
+        {
+            string[] findParameters = parameters.Split(" ", 2);
+            string property = findParameters[0];
+            string value = findParameters[1].Trim('"');
+            FileCabinetRecord[] foundRecords = Array.Empty<FileCabinetRecord>();
+            if (property.Equals("firstname", StringComparison.InvariantCultureIgnoreCase))
+            {
+                foundRecords = fileCabinetService.FindByFirstName(value);
+            }
+            else if (property.Equals("lastname", StringComparison.InvariantCultureIgnoreCase))
+            {
+                foundRecords = fileCabinetService.FindByLastName(value);
+            }
+            else if (property.Equals("dateofbirth", StringComparison.InvariantCultureIgnoreCase))
+            {
+                foundRecords = fileCabinetService.FindByDateOfBirth(value);
+            }
+            else
+            {
+                Console.WriteLine("No such property");
+                return;
+            }
+
+            foreach (var record in foundRecords)
+            {
+                string date = record.DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture);
+                Console.WriteLine($"#{record.Id}, " +
+                    $"{record.FirstName}, " +
+                    $"{record.LastName}, " +
+                    $"{date}, {record.Sex}, " +
+                    $"{record.Height}, " +
+                    $"{record.Salary}");
+            }
+
+            if (foundRecords.Length == 0)
+            {
+                Console.WriteLine("No records by given property.");
             }
         }
 
