@@ -4,5 +4,136 @@
         <name>FileCabinetApp</name>
     </assembly>
     <members>
+        <member name="T:FileCabinetApp.FileCabinetRecord">
+            <summary>
+            The class to subscribe file cabinet record.
+            </summary>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.Id">
+            <summary>
+            Gets or sets the ID.
+            </summary>
+            <value>
+            The ID.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.FirstName">
+            <summary>
+            Gets or sets the first name.
+            </summary>
+            <value>
+            The first name.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.LastName">
+            <summary>
+            Gets or sets the last name.
+            </summary>
+            <value>
+            The last name.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.DateOfBirth">
+            <summary>
+            Gets or sets the date of birth.
+            </summary>
+            <value>
+            The date of birth.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.Sex">
+            <summary>
+            Gets or sets the sex (M or F).
+            </summary>
+            <value>
+            The sex M or F.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.Height">
+            <summary>
+            Gets or sets the height in cm.
+            </summary>
+            <value>
+            The height in cm.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.Salary">
+            <summary>
+            Gets or sets the salary in dollars.
+            </summary>
+            <value>
+            The salary in dollars.
+            </value>
+        </member>
+        <member name="T:FileCabinetApp.FileCabinetService">
+            <summary>
+            Class to describe the file cabinet service.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.CreateRecord(System.String,System.String,System.DateTime,System.Char,System.Int16,System.Decimal)">
+            <summary>This method creates new FileCabinetRecord with given properties.</summary>
+            <param name="firstName">the first name of new record.</param>
+            <param name="lastName">the last name of new record.</param>
+            <param name="dateOfBirth">date of birth of new record.</param>
+            <param name="sex">sex of a new record.</param>
+            <param name="height">height of new record.</param>
+            <param name="salary">salary of new record.</param>
+            <returns>return a number representing id of the new record.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.EditRecord(System.Int32,System.String,System.String,System.DateTime,System.Char,System.Int16,System.Decimal)">
+            <summary>This method edites FileCabinetRecord found by id with given properties.</summary>
+            <param name="id">ID of editing record.</param>
+            <param name="firstName">new value of first name.</param>
+            <param name="lastName">new value of last name.</param>
+            <param name="dateOfBirth">new value of date of birth.</param>
+            <param name="sex">new value of sex.</param>
+            <param name="height">new value of height.</param>
+            <param name="salary">new value of salary .</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.GetRecords">
+            <summary>This method for getting array of records.</summary>
+            <returns>array of registered FileCabinetRecord.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.IsRecordExists(System.Int32)">
+            <summary>This method checks if the record with given id exists.</summary>
+            <param name="id">id of record.</param>
+            <returns><c>true</c> if record exists and <c>false</c> otherwise.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.GetStat">
+            <summary>This method for getting quantity of registered records.</summary>
+            <returns>int number of reg.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.FindByFirstName(System.String)">
+            <summary>
+            Finds the specified first name.
+            </summary>
+            <param name="firstName">The first name of record.</param>
+            <returns>All records with specified first name.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.FindByLastName(System.String)">
+            <summary>
+            Finds the specified last name.
+            </summary>
+            <param name="lastName">The last name of record.</param>
+            <returns>All records with specified last name.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.FindByDateOfBirth(System.String)">
+            <summary>
+            Finds the specified date of birth.
+            </summary>
+            <param name="dateOfBirth">The date of birth of record.</param>
+            <returns>All records with specified date of birth.</returns>
+        </member>
+        <member name="T:FileCabinetApp.Program">
+            <summary>
+            The program class.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Program.Main(System.String[])">
+            <summary>
+            Defines the entry point of the application.
+            </summary>
+            <param name="args">The arguments.</param>
+        </member>
     </members>
 </doc>
