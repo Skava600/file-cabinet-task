@@ -3,13 +3,19 @@
     public class FileCabinetService
     {
         private readonly List<FileCabinetRecord> list = new List<FileCabinetRecord>();
-        private readonly Dictionary<string, List<FileCabinetRecord>> firstNameDictionary = new Dictionary<string, List<FileCabinetRecord>>(StringComparer.InvariantCultureIgnoreCase);
-        private readonly Dictionary<string, List<FileCabinetRecord>> lastNameDictionary = new Dictionary<string, List<FileCabinetRecord>>(StringComparer.InvariantCultureIgnoreCase);
-        private readonly Dictionary<DateTime, List<FileCabinetRecord>> dateOfBirthDictionary = new Dictionary<DateTime, List<FileCabinetRecord>>();
+
+        private readonly Dictionary<string, List<FileCabinetRecord>> firstNameDictionary =
+            new Dictionary<string, List<FileCabinetRecord>>(StringComparer.InvariantCultureIgnoreCase);
+
+        private readonly Dictionary<string, List<FileCabinetRecord>> lastNameDictionary =
+            new Dictionary<string, List<FileCabinetRecord>>(StringComparer.InvariantCultureIgnoreCase);
+
+        private readonly Dictionary<DateTime, List<FileCabinetRecord>> dateOfBirthDictionary =
+            new Dictionary<DateTime, List<FileCabinetRecord>>();
 
         public int CreateRecord(string? firstName, string? lastName, DateTime dateOfBirth, char sex, short height, decimal salary)
         {
-            ValidateInfo(firstName, lastName, dateOfBirth, sex, height, salary);
+            ValidateRecordParams(firstName, lastName, dateOfBirth, sex, height, salary);
             var record = new FileCabinetRecord
             {
                 Id = this.list.Count + 1,
@@ -23,7 +29,7 @@
 
             this.list.Add(record);
 
-            this.AddRecordToDictionary(firstName!, lastName!, dateOfBirth, record);
+            this.AddRecordToDictionaries(firstName!, lastName!, dateOfBirth, record);
 
             return record.Id;
         }
@@ -33,12 +39,12 @@
             FileCabinetRecord record = this.list.Find(rec => rec.Id == id)
                 ?? throw new ArgumentOutOfRangeException(nameof(id), $"#{id} record is not found");
 
-            ValidateInfo(firstName, lastName, dateOfBirth, sex, height, salary);
+            ValidateRecordParams(firstName, lastName, dateOfBirth, sex, height, salary);
 
             this.firstNameDictionary[record.FirstName !].Remove(record);
             this.lastNameDictionary[record.LastName!].Remove(record);
             this.dateOfBirthDictionary[record.DateOfBirth].Remove(record);
-            this.AddRecordToDictionary(firstName!, lastName!, dateOfBirth, record);
+            this.AddRecordToDictionaries(firstName!, lastName!, dateOfBirth, record);
 
             record.FirstName = firstName;
             record.LastName = lastName;
@@ -94,7 +100,7 @@
             return Array.Empty<FileCabinetRecord>();
         }
 
-        private static void ValidateInfo(string? firstName, string? lastName, DateTime dateOfBirth, char sex, short height, decimal salary)
+        private static void ValidateRecordParams(string? firstName, string? lastName, DateTime dateOfBirth, char sex, short height, decimal salary)
         {
             if (firstName == null)
             {
@@ -116,9 +122,10 @@
                 throw new ArgumentException("Length of last Name must be between 2 and 60.", nameof(lastName));
             }
 
-            if (dateOfBirth < new DateTime(1950, 1, 1) || dateOfBirth > DateTime.Now)
+            DateTime minDate = new DateTime(1950, 1, 1);
+            if (dateOfBirth < minDate || dateOfBirth > DateTime.Now)
             {
-                throw new ArgumentException("Date of birth is not valid.", nameof(dateOfBirth));
+                throw new ArgumentException("Date of birth must be between 1 Jan 1950 and current date.", nameof(dateOfBirth));
             }
 
             sex = char.ToUpper(sex);
@@ -129,7 +136,7 @@
 
             if (height < 60 || height > 272)
             {
-                throw new ArgumentException("height value isn't valid.", nameof(height));
+                throw new ArgumentException("height must be a number between 60 and 272.", nameof(height));
             }
 
             if (salary < 0)
@@ -138,16 +145,16 @@
             }
         }
 
-        private void AddRecordToDictionary(string firstName, string lastName, DateTime dateOfBirth, FileCabinetRecord record)
+        private void AddRecordToDictionaries(string firstName, string lastName, DateTime dateOfBirth, FileCabinetRecord record)
         {
             if (!this.firstNameDictionary.ContainsKey(firstName))
             {
-                this.firstNameDictionary.Add(firstName!, new List<FileCabinetRecord>());
+                this.firstNameDictionary.Add(firstName, new List<FileCabinetRecord>());
             }
 
             if (!this.lastNameDictionary.ContainsKey(lastName))
             {
-                this.lastNameDictionary.Add(lastName!, new List<FileCabinetRecord>());
+                this.lastNameDictionary.Add(lastName, new List<FileCabinetRecord>());
             }
 
             if (!this.dateOfBirthDictionary.ContainsKey(dateOfBirth))
@@ -155,8 +162,8 @@
                 this.dateOfBirthDictionary.Add(dateOfBirth, new List<FileCabinetRecord>());
             }
 
-            this.firstNameDictionary[firstName!].Add(record);
-            this.lastNameDictionary[lastName!].Add(record);
+            this.firstNameDictionary[firstName].Add(record);
+            this.lastNameDictionary[lastName].Add(record);
             this.dateOfBirthDictionary[dateOfBirth].Add(record);
         }
     }

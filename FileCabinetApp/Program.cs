@@ -127,7 +127,13 @@ namespace FileCabinetApp
 
         private static void Edit(string parameters)
         {
-            int.TryParse(parameters, out int id);
+            string input = parameters.Split()[0];
+            if (!int.TryParse(input, out int id))
+            {
+                Console.WriteLine($"Invalid input parameters. Should be integer but received {input}");
+                return;
+            }
+
             if (!fileCabinetService.IsRecordExists(id))
             {
                 Console.WriteLine($"#{id} record is not found.");
@@ -160,19 +166,21 @@ namespace FileCabinetApp
 
         private static void Find(string parameters)
         {
-            string[] findParameters = parameters.Split(" ", 2);
-            string property = findParameters[0];
-            string value = findParameters[1].Trim('"');
-            FileCabinetRecord[] foundRecords = Array.Empty<FileCabinetRecord>();
-            if (property.Equals("firstname", StringComparison.InvariantCultureIgnoreCase))
+            string[] inputs = parameters.Split(' ', 2);
+
+            string propertyName = inputs[0];
+            string value = inputs[1].Trim('"');
+
+            FileCabinetRecord[] foundRecords;
+            if (propertyName.Equals("firstname", StringComparison.InvariantCultureIgnoreCase))
             {
                 foundRecords = fileCabinetService.FindByFirstName(value);
             }
-            else if (property.Equals("lastname", StringComparison.InvariantCultureIgnoreCase))
+            else if (propertyName.Equals("lastname", StringComparison.InvariantCultureIgnoreCase))
             {
                 foundRecords = fileCabinetService.FindByLastName(value);
             }
-            else if (property.Equals("dateofbirth", StringComparison.InvariantCultureIgnoreCase))
+            else if (propertyName.Equals("dateofbirth", StringComparison.InvariantCultureIgnoreCase))
             {
                 foundRecords = fileCabinetService.FindByDateOfBirth(value);
             }
