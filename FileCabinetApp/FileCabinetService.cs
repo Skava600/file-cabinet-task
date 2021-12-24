@@ -6,7 +6,7 @@ namespace FileCabinetApp
     /// <summary>
     /// Class to describe the file cabinet service.
     /// </summary>
-    public class FileCabinetService
+    public abstract class FileCabinetService
     {
         private readonly List<FileCabinetRecord> list = new List<FileCabinetRecord>();
 
@@ -24,7 +24,7 @@ namespace FileCabinetApp
         /// <returns>return a number representing id of the new record.</returns>
         public int CreateRecord(RecordData recordData)
         {
-            ValidateRecordParams(recordData);
+            this.ValidateRecordParams(recordData);
             var record = new FileCabinetRecord
             {
                 Id = this.list.Count + 1,
@@ -51,7 +51,7 @@ namespace FileCabinetApp
             FileCabinetRecord record = this.list.Find(rec => rec.Id == id)
                 ?? throw new ArgumentOutOfRangeException(nameof(id), $"#{id} record is not found");
 
-            ValidateRecordParams(recordData);
+            this.ValidateRecordParams(recordData);
 
             this.firstNameDictionary[record.FirstName !].Remove(record);
             this.lastNameDictionary[record.LastName!].Remove(record);
@@ -135,49 +135,9 @@ namespace FileCabinetApp
             return Array.Empty<FileCabinetRecord>();
         }
 
-        private static void ValidateRecordParams(RecordData record)
-        {
-            if (record.FirstName == null)
-            {
-                throw new ArgumentNullException(nameof(record.FirstName));
-            }
-
-            if (string.IsNullOrWhiteSpace(record.FirstName) || record.FirstName.Length < 2 || record.FirstName.Length > 60)
-            {
-                throw new ArgumentException("Length of first Name must be between 2 and 60.", nameof(record.FirstName));
-            }
-
-            if (record.LastName == null)
-            {
-                throw new ArgumentNullException(nameof(record.LastName));
-            }
-
-            if (string.IsNullOrWhiteSpace(record.LastName) || record.LastName.Length < 2 || record.LastName.Length > 60)
-            {
-                throw new ArgumentException("Length of last Name must be between 2 and 60.", nameof(record.LastName));
-            }
-
-            DateTime minDate = new DateTime(1950, 1, 1);
-            if (record.DateOfBirth < minDate || record.DateOfBirth > DateTime.Now)
-            {
-                throw new ArgumentException("Date of birth must be between 1 Jan 1950 and current date.", nameof(record.DateOfBirth));
-            }
-
-            if (!char.ToUpper(record.Sex).Equals('M') && !char.ToUpper(record.Sex).Equals('F'))
-            {
-                throw new ArgumentException("sex is only M(male) and F(female).", nameof(record.Sex));
-            }
-
-            if (record.Height < 60 || record.Height > 272)
-            {
-                throw new ArgumentException("height must be a number between 60 and 272.", nameof(record.Height));
-            }
-
-            if (record.Salary < 0)
-            {
-                throw new ArgumentException("salary can't be less zero.", nameof(record.Salary));
-            }
-        }
+        /// <summary>This method validates  parameters from given <see cref="RecordData"/> class.</summary>
+        /// <param name="record"><see cref="RecordData"/> with params for FileCabinetRecord.</param>
+        public abstract void ValidateRecordParams(RecordData record);
 
         private void AddRecordToDictionaries(string firstName, string lastName, DateTime dateOfBirth, FileCabinetRecord record)
         {

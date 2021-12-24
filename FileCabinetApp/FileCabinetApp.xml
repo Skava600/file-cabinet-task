@@ -4,6 +4,24 @@
         <name>FileCabinetApp</name>
     </assembly>
     <members>
+        <member name="T:FileCabinetApp.FileCabinetCustomService">
+            <summary>
+            The file cabinet service with custom behaviour.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetCustomService.ValidateRecordParams(FileCabinetApp.RecordData)">
+            <summary>This method validates  parameters from given <see cref="T:FileCabinetApp.RecordData"/> class.</summary>
+            <param name="record"><see cref="T:FileCabinetApp.RecordData"/> with params for FileCabinetRecord.</param>
+        </member>
+        <member name="T:FileCabinetApp.FileCabinetDefaultService">
+            <summary>
+            The file cabinet service with default behaviour.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetDefaultService.ValidateRecordParams(FileCabinetApp.RecordData)">
+            <summary>This method validates  parameters from given <see cref="T:FileCabinetApp.RecordData"/> class.</summary>
+            <param name="record"><see cref="T:FileCabinetApp.RecordData"/> with params for FileCabinetRecord.</param>
+        </member>
         <member name="T:FileCabinetApp.FileCabinetRecord">
             <summary>
             The class to subscribe file cabinet record.
@@ -113,6 +131,10 @@
             </summary>
             <param name="dateOfBirth">The date of birth of record.</param>
             <returns>All records with specified date of birth.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.ValidateRecordParams(FileCabinetApp.RecordData)">
+            <summary>This method validates  parameters from given <see cref="T:FileCabinetApp.RecordData"/> class.</summary>
+            <param name="record"><see cref="T:FileCabinetApp.RecordData"/> with params for FileCabinetRecord.</param>
         </member>
         <member name="T:FileCabinetApp.Program">
             <summary>
