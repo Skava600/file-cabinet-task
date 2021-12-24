@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 
 namespace FileCabinetApp
 {
@@ -113,17 +114,11 @@ namespace FileCabinetApp
 
         private static void Create(string parameters)
         {
-            GetRecordInput(
-                out string? firstName,
-                out string? lastName,
-                out DateTime dateOfBirth,
-                out char sex,
-                out short height,
-                out decimal salary);
+            RecordData recordData = GetRecordInput();
 
             try
             {
-                Console.WriteLine($"Record #{fileCabinetService.CreateRecord(firstName, lastName, dateOfBirth, sex, height, salary)} is created.");
+                Console.WriteLine($"Record #{fileCabinetService.CreateRecord(recordData)} is created.");
             }
             catch (Exception ex)
             {
@@ -147,17 +142,11 @@ namespace FileCabinetApp
                 return;
             }
 
-            GetRecordInput(
-                out string? firstName,
-                out string? lastName,
-                out DateTime dateOfBirth,
-                out char sex,
-                out short height,
-                out decimal salary);
+            RecordData recordData = GetRecordInput();
 
             try
             {
-                fileCabinetService.EditRecord(id, firstName, lastName, dateOfBirth, sex, height, salary);
+                fileCabinetService.EditRecord(id, recordData);
                 Console.WriteLine($"Record #{id} is updated.");
             }
             catch (ArgumentOutOfRangeException ex)
@@ -242,19 +231,13 @@ namespace FileCabinetApp
             isRunning = false;
         }
 
-        private static void GetRecordInput(
-            out string? firstName,
-            out string? lastName,
-            out DateTime dateOfBirth,
-            out char sex,
-            out short height,
-            out decimal salary)
+        private static RecordData GetRecordInput()
         {
             Console.Write("First name: ");
-            firstName = Console.ReadLine();
+            string? firstName = Console.ReadLine();
 
             Console.Write("Last name: ");
-            lastName = Console.ReadLine();
+            string? lastName = Console.ReadLine();
 
             Console.Write("Date of birth: ");
             CultureInfo culture = CultureInfo.CreateSpecificCulture("en-US");
@@ -263,16 +246,19 @@ namespace FileCabinetApp
                 Console.ReadLine(),
                 culture,
                 styles,
-                out dateOfBirth);
+                out DateTime dateOfBirth);
 
             Console.Write("Sex (M or F): ");
-            char.TryParse(Console.ReadLine(), out sex);
+            char.TryParse(Console.ReadLine(), out char sex);
 
             Console.Write("Height: ");
-            short.TryParse(Console.ReadLine(), out height);
+            short.TryParse(Console.ReadLine(), out short height);
 
             Console.Write("Salary ($): ");
-            decimal.TryParse(Console.ReadLine(), out salary);
+            decimal.TryParse(Console.ReadLine(), out decimal salary);
+
+            RecordData record = new RecordData(firstName, lastName, dateOfBirth, sex, height, salary);
+            return record;
         }
     }
 }

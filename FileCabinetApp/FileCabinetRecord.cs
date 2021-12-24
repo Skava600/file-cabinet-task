@@ -1,4 +1,6 @@
-﻿namespace FileCabinetApp
+﻿using System;
+
+namespace FileCabinetApp
 {
     /// <summary>
     /// The class to subscribe file cabinet record.

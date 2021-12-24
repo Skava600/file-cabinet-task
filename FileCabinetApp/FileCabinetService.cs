@@ -1,4 +1,7 @@
-﻿namespace FileCabinetApp
+﻿using System;
+using System.Collections.Generic;
+
+namespace FileCabinetApp
 {
     /// <summary>
     /// Class to describe the file cabinet service.
@@ -16,61 +19,52 @@
         private readonly Dictionary<DateTime, List<FileCabinetRecord>> dateOfBirthDictionary =
             new Dictionary<DateTime, List<FileCabinetRecord>>();
 
-        /// <summary>This method creates new FileCabinetRecord with given properties.</summary>
-        /// <param name="firstName">the first name of new record.</param>
-        /// <param name="lastName">the last name of new record.</param>
-        /// <param name="dateOfBirth">date of birth of new record.</param>
-        /// <param name="sex">sex of a new record.</param>
-        /// <param name="height">height of new record.</param>
-        /// <param name="salary">salary of new record.</param>
+        /// <summary>This method creates new FileCabinetRecord with given <see cref="RecordData"/> class params.</summary>
+        /// <param name="recordData"><see cref="RecordData"/> with params for FileCabinetRecord.</param>
         /// <returns>return a number representing id of the new record.</returns>
-        public int CreateRecord(string? firstName, string? lastName, DateTime dateOfBirth, char sex, short height, decimal salary)
+        public int CreateRecord(RecordData recordData)
         {
-            ValidateRecordParams(firstName, lastName, dateOfBirth, sex, height, salary);
+            ValidateRecordParams(recordData);
             var record = new FileCabinetRecord
             {
                 Id = this.list.Count + 1,
-                FirstName = firstName,
-                LastName = lastName,
-                DateOfBirth = dateOfBirth,
-                Sex = sex,
-                Height = height,
-                Salary = salary,
+                FirstName = recordData.FirstName,
+                LastName = recordData.LastName,
+                DateOfBirth = recordData.DateOfBirth,
+                Sex = char.ToUpper(recordData.Sex),
+                Height = recordData.Height,
+                Salary = recordData.Salary,
             };
 
             this.list.Add(record);
 
-            this.AddRecordToDictionaries(firstName!, lastName!, dateOfBirth, record);
+            this.AddRecordToDictionaries(record.FirstName !, record.LastName !, record.DateOfBirth, record);
 
             return record.Id;
         }
 
-        /// <summary>This method edites FileCabinetRecord found by id with given properties.</summary>
+        /// <summary>This method edites FileCabinetRecord found by id with given <see cref="RecordData"/> class params.</summary>
         /// <param name="id">ID of editing record.</param>
-        /// <param name="firstName">new value of first name.</param>
-        /// <param name="lastName">new value of last name.</param>
-        /// <param name="dateOfBirth">new value of date of birth.</param>
-        /// <param name="sex">new value of sex.</param>
-        /// <param name="height">new value of height.</param>
-        /// <param name="salary">new value of salary .</param>
-        public void EditRecord(int id, string? firstName, string? lastName, DateTime dateOfBirth, char sex, short height, decimal salary)
+        /// <param name="recordData"><see cref="RecordData"/> with params for FileCabinetRecord.</param>
+        public void EditRecord(int id, RecordData recordData)
         {
             FileCabinetRecord record = this.list.Find(rec => rec.Id == id)
                 ?? throw new ArgumentOutOfRangeException(nameof(id), $"#{id} record is not found");
 
-            ValidateRecordParams(firstName, lastName, dateOfBirth, sex, height, salary);
+            ValidateRecordParams(recordData);
 
             this.firstNameDictionary[record.FirstName !].Remove(record);
             this.lastNameDictionary[record.LastName!].Remove(record);
             this.dateOfBirthDictionary[record.DateOfBirth].Remove(record);
-            this.AddRecordToDictionaries(firstName!, lastName!, dateOfBirth, record);
 
-            record.FirstName = firstName;
-            record.LastName = lastName;
-            record.DateOfBirth = dateOfBirth;
-            record.Sex = sex;
-            record.Height = height;
-            record.Salary = salary;
+            record.FirstName = recordData.FirstName;
+            record.LastName = recordData.LastName;
+            record.DateOfBirth = recordData.DateOfBirth;
+            record.Sex = recordData.Sex;
+            record.Height = recordData.Height;
+            record.Salary = recordData.Salary;
+
+            this.AddRecordToDictionaries(recordData.FirstName!, recordData.LastName!, recordData.DateOfBirth, record);
         }
 
         /// <summary>This method for getting array of records.</summary>
@@ -141,48 +135,47 @@
             return Array.Empty<FileCabinetRecord>();
         }
 
-        private static void ValidateRecordParams(string? firstName, string? lastName, DateTime dateOfBirth, char sex, short height, decimal salary)
+        private static void ValidateRecordParams(RecordData record)
         {
-            if (firstName == null)
+            if (record.FirstName == null)
             {
-                throw new ArgumentNullException(nameof(firstName));
+                throw new ArgumentNullException(nameof(record.FirstName));
             }
 
-            if (string.IsNullOrWhiteSpace(firstName) || firstName.Length < 2 || firstName.Length > 60)
+            if (string.IsNullOrWhiteSpace(record.FirstName) || record.FirstName.Length < 2 || record.FirstName.Length > 60)
             {
-                throw new ArgumentException("Length of first Name must be between 2 and 60.", nameof(firstName));
+                throw new ArgumentException("Length of first Name must be between 2 and 60.", nameof(record.FirstName));
             }
 
-            if (lastName == null)
+            if (record.LastName == null)
             {
-                throw new ArgumentNullException(nameof(lastName));
+                throw new ArgumentNullException(nameof(record.LastName));
             }
 
-            if (string.IsNullOrWhiteSpace(lastName) || lastName.Length < 2 || lastName.Length > 60)
+            if (string.IsNullOrWhiteSpace(record.LastName) || record.LastName.Length < 2 || record.LastName.Length > 60)
             {
-                throw new ArgumentException("Length of last Name must be between 2 and 60.", nameof(lastName));
+                throw new ArgumentException("Length of last Name must be between 2 and 60.", nameof(record.LastName));
             }
 
             DateTime minDate = new DateTime(1950, 1, 1);
-            if (dateOfBirth < minDate || dateOfBirth > DateTime.Now)
+            if (record.DateOfBirth < minDate || record.DateOfBirth > DateTime.Now)
             {
-                throw new ArgumentException("Date of birth must be between 1 Jan 1950 and current date.", nameof(dateOfBirth));
+                throw new ArgumentException("Date of birth must be between 1 Jan 1950 and current date.", nameof(record.DateOfBirth));
             }
 
-            sex = char.ToUpper(sex);
-            if (!sex.Equals('M') && !sex.Equals('F'))
+            if (!char.ToUpper(record.Sex).Equals('M') && !char.ToUpper(record.Sex).Equals('F'))
             {
-                throw new ArgumentException("sex is only M(male) and F(female).", nameof(sex));
+                throw new ArgumentException("sex is only M(male) and F(female).", nameof(record.Sex));
             }
 
-            if (height < 60 || height > 272)
+            if (record.Height < 60 || record.Height > 272)
             {
-                throw new ArgumentException("height must be a number between 60 and 272.", nameof(height));
+                throw new ArgumentException("height must be a number between 60 and 272.", nameof(record.Height));
             }
 
-            if (salary < 0)
+            if (record.Salary < 0)
             {
-                throw new ArgumentException("salary can't be less zero.", nameof(salary));
+                throw new ArgumentException("salary can't be less zero.", nameof(record.Salary));
             }
         }
 
