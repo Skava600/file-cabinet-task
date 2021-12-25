@@ -3,6 +3,7 @@ using System.Globalization;
 using FileCabinetApp.Entities;
 using FileCabinetApp.Models;
 using FileCabinetApp.Services;
+using FileCabinetApp.Validation;
 
 namespace FileCabinetApp
 {
@@ -41,7 +42,7 @@ namespace FileCabinetApp
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
         };
 
-        private static FileCabinetService fileCabinetService = new FileCabinetDefaultService();
+        private static FileCabinetService fileCabinetService = new FileCabinetService(new DefaultValidator());
 
         private enum ValidationRule
         {
@@ -109,8 +110,8 @@ namespace FileCabinetApp
 
             fileCabinetService = systemValidationBehaviour switch
             {
-                ValidationRule.Custom => new FileCabinetCustomService(),
-                _ => new FileCabinetDefaultService(),
+                ValidationRule.Custom => new FileCabinetService(new CustomValidator()),
+                _ => new FileCabinetService(new DefaultValidator()),
             };
             Console.WriteLine($"Using {systemValidationBehaviour} validation rules.");
         }

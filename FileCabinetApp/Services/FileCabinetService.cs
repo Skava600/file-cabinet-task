@@ -9,7 +9,7 @@ namespace FileCabinetApp.Services
     /// <summary>
     /// Class to describe the file cabinet service.
     /// </summary>
-    public abstract class FileCabinetService
+    public class FileCabinetService
     {
         private readonly List<FileCabinetRecord> list = new List<FileCabinetRecord>();
 
@@ -28,7 +28,7 @@ namespace FileCabinetApp.Services
         /// Initializes a new instance of the <see cref="FileCabinetService"/> class.
         /// </summary>
         /// <param name="recordValidator"><see cref="IRecordValidator"/>.</param>
-        protected FileCabinetService(IRecordValidator recordValidator)
+        public FileCabinetService(IRecordValidator recordValidator)
         {
             this.recordValidator = recordValidator;
         }
