@@ -22,6 +22,17 @@ namespace FileCabinetApp.Services
         private readonly Dictionary<DateTime, List<FileCabinetRecord>> dateOfBirthDictionary =
             new Dictionary<DateTime, List<FileCabinetRecord>>();
 
+        private readonly IRecordValidator recordValidator;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FileCabinetService"/> class.
+        /// </summary>
+        /// <param name="recordValidator"><see cref="IRecordValidator"/>.</param>
+        protected FileCabinetService(IRecordValidator recordValidator)
+        {
+            this.recordValidator = recordValidator;
+        }
+
         /// <summary>
         /// This method creates new FileCabinetRecord with given <see cref="RecordData"/> class params.
         /// </summary>
@@ -29,7 +40,7 @@ namespace FileCabinetApp.Services
         /// <returns>return a number representing id of the new record.</returns>
         public int CreateRecord(RecordData recordData)
         {
-            this.CreateValidator().ValidateParameters(recordData);
+            this.recordValidator.ValidateParameters(recordData);
             var record = new FileCabinetRecord
             {
                 Id = this.list.Count + 1,
@@ -49,14 +60,6 @@ namespace FileCabinetApp.Services
         }
 
         /// <summary>
-        /// This method creates validator.
-        /// </summary>
-        /// <returns>
-        /// <see cref="IRecordValidator"/>.
-        /// </returns>
-        public abstract IRecordValidator CreateValidator();
-
-        /// <summary>
         /// This method edites FileCabinetRecord found by id with given <see cref="RecordData"/> class params.
         /// </summary>
         /// <param name="id">ID of editing record.</param>
@@ -66,7 +69,7 @@ namespace FileCabinetApp.Services
             FileCabinetRecord record = this.list.Find(rec => rec.Id == id)
                 ?? throw new ArgumentOutOfRangeException(nameof(id), $"#{id} record is not found");
 
-            this.CreateValidator().ValidateParameters(recordData);
+            this.recordValidator.ValidateParameters(recordData);
 
             this.firstNameDictionary[record.FirstName !].Remove(record);
             this.lastNameDictionary[record.LastName!].Remove(record);

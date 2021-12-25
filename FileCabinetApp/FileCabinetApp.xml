@@ -145,31 +145,31 @@
             The file cabinet service with custom behaviour.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetCustomService.CreateValidator">
+        <member name="M:FileCabinetApp.Services.FileCabinetCustomService.#ctor">
             <summary>
-            Creates Cusom Validator.
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Services.FileCabinetCustomService"/> class.
             </summary>
-            <returns>
-            <see cref="T:FileCabinetApp.Validation.CustomValidator"/>.
-            </returns>
         </member>
         <member name="T:FileCabinetApp.Services.FileCabinetDefaultService">
             <summary>
             The file cabinet service with default behaviour.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetDefaultService.CreateValidator">
+        <member name="M:FileCabinetApp.Services.FileCabinetDefaultService.#ctor">
             <summary>
-            Creates Default Validator.
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Services.FileCabinetDefaultService"/> class.
             </summary>
-            <returns>
-            <see cref="T:FileCabinetApp.Validation.DefaultValidator"/>.
-            </returns>
         </member>
         <member name="T:FileCabinetApp.Services.FileCabinetService">
             <summary>
             Class to describe the file cabinet service.
             </summary>
+        </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetService.#ctor(FileCabinetApp.Validation.IRecordValidator)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Services.FileCabinetService"/> class.
+            </summary>
+            <param name="recordValidator"><see cref="T:FileCabinetApp.Validation.IRecordValidator"/>.</param>
         </member>
         <member name="M:FileCabinetApp.Services.FileCabinetService.CreateRecord(FileCabinetApp.Models.RecordData)">
             <summary>
@@ -177,14 +177,6 @@
             </summary>
             <param name="recordData"><see cref="T:FileCabinetApp.Models.RecordData"/> with params for FileCabinetRecord.</param>
             <returns>return a number representing id of the new record.</returns>
-        </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetService.CreateValidator">
-            <summary>
-            This method creates validator.
-            </summary>
-            <returns>
-            <see cref="T:FileCabinetApp.Validation.IRecordValidator"/>.
-            </returns>
         </member>
         <member name="M:FileCabinetApp.Services.FileCabinetService.EditRecord(System.Int32,FileCabinetApp.Models.RecordData)">
             <summary>
