@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Globalization;
+using FileCabinetApp.Entities;
+using FileCabinetApp.Models;
+using FileCabinetApp.Services;
 
 namespace FileCabinetApp
 {
@@ -104,12 +107,11 @@ namespace FileCabinetApp
                 }
             }
 
-            switch (systemValidationBehaviour)
+            fileCabinetService = systemValidationBehaviour switch
             {
-                case ValidationRule.Custom: fileCabinetService = new FileCabinetCustomService(); break;
-                default: fileCabinetService = new FileCabinetDefaultService(); break;
-            }
-
+                ValidationRule.Custom => new FileCabinetCustomService(),
+                _ => new FileCabinetDefaultService(),
+            };
             Console.WriteLine($"Using {systemValidationBehaviour} validation rules.");
         }
 

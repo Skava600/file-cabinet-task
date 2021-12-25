@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using FileCabinetApp.Entities;
+using FileCabinetApp.Models;
+using FileCabinetApp.Validation;
 
-namespace FileCabinetApp
+namespace FileCabinetApp.Services
 {
     /// <summary>
     /// Class to describe the file cabinet service.
@@ -19,12 +22,14 @@ namespace FileCabinetApp
         private readonly Dictionary<DateTime, List<FileCabinetRecord>> dateOfBirthDictionary =
             new Dictionary<DateTime, List<FileCabinetRecord>>();
 
-        /// <summary>This method creates new FileCabinetRecord with given <see cref="RecordData"/> class params.</summary>
+        /// <summary>
+        /// This method creates new FileCabinetRecord with given <see cref="RecordData"/> class params.
+        /// </summary>
         /// <param name="recordData"><see cref="RecordData"/> with params for FileCabinetRecord.</param>
         /// <returns>return a number representing id of the new record.</returns>
         public int CreateRecord(RecordData recordData)
         {
-            this.ValidateRecordParams(recordData);
+            this.CreateValidator().ValidateParameters(recordData);
             var record = new FileCabinetRecord
             {
                 Id = this.list.Count + 1,
@@ -43,7 +48,17 @@ namespace FileCabinetApp
             return record.Id;
         }
 
-        /// <summary>This method edites FileCabinetRecord found by id with given <see cref="RecordData"/> class params.</summary>
+        /// <summary>
+        /// This method creates validator.
+        /// </summary>
+        /// <returns>
+        /// <see cref="IRecordValidator"/>.
+        /// </returns>
+        public abstract IRecordValidator CreateValidator();
+
+        /// <summary>
+        /// This method edites FileCabinetRecord found by id with given <see cref="RecordData"/> class params.
+        /// </summary>
         /// <param name="id">ID of editing record.</param>
         /// <param name="recordData"><see cref="RecordData"/> with params for FileCabinetRecord.</param>
         public void EditRecord(int id, RecordData recordData)
@@ -51,7 +66,7 @@ namespace FileCabinetApp
             FileCabinetRecord record = this.list.Find(rec => rec.Id == id)
                 ?? throw new ArgumentOutOfRangeException(nameof(id), $"#{id} record is not found");
 
-            this.ValidateRecordParams(recordData);
+            this.CreateValidator().ValidateParameters(recordData);
 
             this.firstNameDictionary[record.FirstName !].Remove(record);
             this.lastNameDictionary[record.LastName!].Remove(record);
@@ -134,10 +149,6 @@ namespace FileCabinetApp
 
             return Array.Empty<FileCabinetRecord>();
         }
-
-        /// <summary>This method validates  parameters from given <see cref="RecordData"/> class.</summary>
-        /// <param name="record"><see cref="RecordData"/> with params for FileCabinetRecord.</param>
-        public abstract void ValidateRecordParams(RecordData record);
 
         private void AddRecordToDictionaries(string firstName, string lastName, DateTime dateOfBirth, FileCabinetRecord record)
         {

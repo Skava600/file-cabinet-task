@@ -4,30 +4,12 @@
         <name>FileCabinetApp</name>
     </assembly>
     <members>
-        <member name="T:FileCabinetApp.FileCabinetCustomService">
-            <summary>
-            The file cabinet service with custom behaviour.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetCustomService.ValidateRecordParams(FileCabinetApp.RecordData)">
-            <summary>This method validates  parameters from given <see cref="T:FileCabinetApp.RecordData"/> class.</summary>
-            <param name="record"><see cref="T:FileCabinetApp.RecordData"/> with params for FileCabinetRecord.</param>
-        </member>
-        <member name="T:FileCabinetApp.FileCabinetDefaultService">
-            <summary>
-            The file cabinet service with default behaviour.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetDefaultService.ValidateRecordParams(FileCabinetApp.RecordData)">
-            <summary>This method validates  parameters from given <see cref="T:FileCabinetApp.RecordData"/> class.</summary>
-            <param name="record"><see cref="T:FileCabinetApp.RecordData"/> with params for FileCabinetRecord.</param>
-        </member>
-        <member name="T:FileCabinetApp.FileCabinetRecord">
+        <member name="T:FileCabinetApp.Entities.FileCabinetRecord">
             <summary>
             The class to subscribe file cabinet record.
             </summary>
         </member>
-        <member name="P:FileCabinetApp.FileCabinetRecord.Id">
+        <member name="P:FileCabinetApp.Entities.FileCabinetRecord.Id">
             <summary>
             Gets or sets the ID.
             </summary>
@@ -35,7 +17,7 @@
             The ID.
             </value>
         </member>
-        <member name="P:FileCabinetApp.FileCabinetRecord.FirstName">
+        <member name="P:FileCabinetApp.Entities.FileCabinetRecord.FirstName">
             <summary>
             Gets or sets the first name.
             </summary>
@@ -43,7 +25,7 @@
             The first name.
             </value>
         </member>
-        <member name="P:FileCabinetApp.FileCabinetRecord.LastName">
+        <member name="P:FileCabinetApp.Entities.FileCabinetRecord.LastName">
             <summary>
             Gets or sets the last name.
             </summary>
@@ -51,7 +33,7 @@
             The last name.
             </value>
         </member>
-        <member name="P:FileCabinetApp.FileCabinetRecord.DateOfBirth">
+        <member name="P:FileCabinetApp.Entities.FileCabinetRecord.DateOfBirth">
             <summary>
             Gets or sets the date of birth.
             </summary>
@@ -59,7 +41,7 @@
             The date of birth.
             </value>
         </member>
-        <member name="P:FileCabinetApp.FileCabinetRecord.Sex">
+        <member name="P:FileCabinetApp.Entities.FileCabinetRecord.Sex">
             <summary>
             Gets or sets the sex (M or F).
             </summary>
@@ -67,7 +49,7 @@
             The sex M or F.
             </value>
         </member>
-        <member name="P:FileCabinetApp.FileCabinetRecord.Height">
+        <member name="P:FileCabinetApp.Entities.FileCabinetRecord.Height">
             <summary>
             Gets or sets the height in cm.
             </summary>
@@ -75,7 +57,7 @@
             The height in cm.
             </value>
         </member>
-        <member name="P:FileCabinetApp.FileCabinetRecord.Salary">
+        <member name="P:FileCabinetApp.Entities.FileCabinetRecord.Salary">
             <summary>
             Gets or sets the salary in dollars.
             </summary>
@@ -83,58 +65,69 @@
             The salary in dollars.
             </value>
         </member>
-        <member name="T:FileCabinetApp.FileCabinetService">
+        <member name="T:FileCabinetApp.Models.RecordData">
             <summary>
-            Class to describe the file cabinet service.
+             Class to introduce parameter object of FileCabinetService.CreateRecord and FileCabinetService.EditRecord.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetService.CreateRecord(FileCabinetApp.RecordData)">
-            <summary>This method creates new FileCabinetRecord with given <see cref="T:FileCabinetApp.RecordData"/> class params.</summary>
-            <param name="recordData"><see cref="T:FileCabinetApp.RecordData"/> with params for FileCabinetRecord.</param>
-            <returns>return a number representing id of the new record.</returns>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetService.EditRecord(System.Int32,FileCabinetApp.RecordData)">
-            <summary>This method edites FileCabinetRecord found by id with given <see cref="T:FileCabinetApp.RecordData"/> class params.</summary>
-            <param name="id">ID of editing record.</param>
-            <param name="recordData"><see cref="T:FileCabinetApp.RecordData"/> with params for FileCabinetRecord.</param>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetService.GetRecords">
-            <summary>This method for getting array of records.</summary>
-            <returns>array of registered FileCabinetRecord.</returns>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetService.IsRecordExists(System.Int32)">
-            <summary>This method checks if the record with given id exists.</summary>
-            <param name="id">id of record.</param>
-            <returns><c>true</c> if record exists and <c>false</c> otherwise.</returns>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetService.GetStat">
-            <summary>This method for getting quantity of registered records.</summary>
-            <returns>int number of reg.</returns>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetService.FindByFirstName(System.String)">
+        <member name="M:FileCabinetApp.Models.RecordData.#ctor(System.String,System.String,System.DateTime,System.Char,System.Int16,System.Decimal)">
             <summary>
-            Finds the specified first name.
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Models.RecordData"/> class.
             </summary>
-            <param name="firstName">The first name of record.</param>
-            <returns>All records with specified first name.</returns>
+            <param name="firstName">The first name.</param>
+            <param name="lastName">The last name.</param>
+            <param name="dateOfBirth">The date of birth.</param>
+            <param name="sex">The sex.</param>
+            <param name="height">The height.</param>
+            <param name="salary">The salary.</param>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetService.FindByLastName(System.String)">
+        <member name="P:FileCabinetApp.Models.RecordData.FirstName">
             <summary>
-            Finds the specified last name.
+            Gets the first name.
             </summary>
-            <param name="lastName">The last name of record.</param>
-            <returns>All records with specified last name.</returns>
+            <value>
+            The first name.
+            </value>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetService.FindByDateOfBirth(System.String)">
+        <member name="P:FileCabinetApp.Models.RecordData.LastName">
             <summary>
-            Finds the specified date of birth.
+            Gets the last name.
             </summary>
-            <param name="dateOfBirth">The date of birth of record.</param>
-            <returns>All records with specified date of birth.</returns>
+            <value>
+            The last name.
+            </value>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetService.ValidateRecordParams(FileCabinetApp.RecordData)">
-            <summary>This method validates  parameters from given <see cref="T:FileCabinetApp.RecordData"/> class.</summary>
-            <param name="record"><see cref="T:FileCabinetApp.RecordData"/> with params for FileCabinetRecord.</param>
+        <member name="P:FileCabinetApp.Models.RecordData.DateOfBirth">
+            <summary>
+            Gets the date of birth.
+            </summary>
+            <value>
+            The date of birth.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.Models.RecordData.Sex">
+            <summary>
+            Gets the sex.
+            </summary>
+            <value>
+            The sex.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.Models.RecordData.Height">
+            <summary>
+            Gets the height.
+            </summary>
+            <value>
+            The height.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.Models.RecordData.Salary">
+            <summary>
+            Gets the salary.
+            </summary>
+            <value>
+            The salary.
+            </value>
         </member>
         <member name="T:FileCabinetApp.Program">
             <summary>
@@ -147,69 +140,153 @@
             </summary>
             <param name="args">The arguments.</param>
         </member>
-        <member name="T:FileCabinetApp.RecordData">
+        <member name="T:FileCabinetApp.Services.FileCabinetCustomService">
             <summary>
-             Class to introduce parameter object of FileCabinetService.CreateRecord and FileCabinetService.EditRecord.
+            The file cabinet service with custom behaviour.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.RecordData.#ctor(System.String,System.String,System.DateTime,System.Char,System.Int16,System.Decimal)">
+        <member name="M:FileCabinetApp.Services.FileCabinetCustomService.CreateValidator">
             <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.RecordData"/> class.
+            Creates Cusom Validator.
             </summary>
-            <param name="firstName">The first name.</param>
-            <param name="lastName">The last name.</param>
-            <param name="dateOfBirth">The date of birth.</param>
-            <param name="sex">The sex.</param>
-            <param name="height">The height.</param>
-            <param name="salary">The salary.</param>
+            <returns>
+            <see cref="T:FileCabinetApp.Validation.CustomValidator"/>.
+            </returns>
         </member>
-        <member name="P:FileCabinetApp.RecordData.FirstName">
+        <member name="T:FileCabinetApp.Services.FileCabinetDefaultService">
             <summary>
-            Gets the first name.
+            The file cabinet service with default behaviour.
             </summary>
-            <value>
-            The first name.
-            </value>
         </member>
-        <member name="P:FileCabinetApp.RecordData.LastName">
+        <member name="M:FileCabinetApp.Services.FileCabinetDefaultService.CreateValidator">
             <summary>
-            Gets the last name.
+            Creates Default Validator.
             </summary>
-            <value>
-            The last name.
-            </value>
+            <returns>
+            <see cref="T:FileCabinetApp.Validation.DefaultValidator"/>.
+            </returns>
         </member>
-        <member name="P:FileCabinetApp.RecordData.DateOfBirth">
+        <member name="T:FileCabinetApp.Services.FileCabinetService">
             <summary>
-            Gets the date of birth.
+            Class to describe the file cabinet service.
             </summary>
-            <value>
-            The date of birth.
-            </value>
         </member>
-        <member name="P:FileCabinetApp.RecordData.Sex">
+        <member name="M:FileCabinetApp.Services.FileCabinetService.CreateRecord(FileCabinetApp.Models.RecordData)">
             <summary>
-            Gets the sex.
+            This method creates new FileCabinetRecord with given <see cref="T:FileCabinetApp.Models.RecordData"/> class params.
             </summary>
-            <value>
-            The sex.
-            </value>
+            <param name="recordData"><see cref="T:FileCabinetApp.Models.RecordData"/> with params for FileCabinetRecord.</param>
+            <returns>return a number representing id of the new record.</returns>
         </member>
-        <member name="P:FileCabinetApp.RecordData.Height">
+        <member name="M:FileCabinetApp.Services.FileCabinetService.CreateValidator">
             <summary>
-            Gets the height.
+            This method creates validator.
             </summary>
-            <value>
-            The height.
-            </value>
+            <returns>
+            <see cref="T:FileCabinetApp.Validation.IRecordValidator"/>.
+            </returns>
         </member>
-        <member name="P:FileCabinetApp.RecordData.Salary">
+        <member name="M:FileCabinetApp.Services.FileCabinetService.EditRecord(System.Int32,FileCabinetApp.Models.RecordData)">
             <summary>
-            Gets the salary.
+            This method edites FileCabinetRecord found by id with given <see cref="T:FileCabinetApp.Models.RecordData"/> class params.
             </summary>
-            <value>
-            The salary.
-            </value>
+            <param name="id">ID of editing record.</param>
+            <param name="recordData"><see cref="T:FileCabinetApp.Models.RecordData"/> with params for FileCabinetRecord.</param>
+        </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetService.GetRecords">
+            <summary>This method for getting array of records.</summary>
+            <returns>array of registered FileCabinetRecord.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetService.IsRecordExists(System.Int32)">
+            <summary>This method checks if the record with given id exists.</summary>
+            <param name="id">id of record.</param>
+            <returns><c>true</c> if record exists and <c>false</c> otherwise.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetService.GetStat">
+            <summary>This method for getting quantity of registered records.</summary>
+            <returns>int number of reg.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetService.FindByFirstName(System.String)">
+            <summary>
+            Finds the specified first name.
+            </summary>
+            <param name="firstName">The first name of record.</param>
+            <returns>All records with specified first name.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetService.FindByLastName(System.String)">
+            <summary>
+            Finds the specified last name.
+            </summary>
+            <param name="lastName">The last name of record.</param>
+            <returns>All records with specified last name.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetService.FindByDateOfBirth(System.String)">
+            <summary>
+            Finds the specified date of birth.
+            </summary>
+            <param name="dateOfBirth">The date of birth of record.</param>
+            <returns>All records with specified date of birth.</returns>
+        </member>
+        <member name="T:FileCabinetApp.Validation.CustomValidator">
+            <summary>
+            Class for custom validation.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validation.CustomValidator.ValidateParameters(FileCabinetApp.Models.RecordData)">
+             <summary>This method validates  parameters from given <see cref="T:FileCabinetApp.Models.RecordData"/> class.</summary>
+             <param name="record"><see cref="T:FileCabinetApp.Models.RecordData"/> with params for FileCabinetRecord.</param>
+             <exception cref="T:System.ArgumentNullException">
+             Thrown when the first name is null.
+             or
+             Thrown when the last name is null.
+             </exception>
+            
+             <exception cref="T:System.ArgumentException">
+             Thrown when first or last name less <c>MinNameLength</c> or more than <c>MaxNameLength</c>.
+             or
+             Thrown when first or last name consists of white spaces.
+             or
+             Thrown when date of birth less <c>MinDate</c> or more than Current Date.
+             or
+             Thrown when sex is not M or F with ignore case.
+             or
+             Thrown when height less <c>MinHeight</c> or more than <c>MaxHeight</c>.
+             </exception>
+        </member>
+        <member name="T:FileCabinetApp.Validation.DefaultValidator">
+            <summary>
+            Class for dafault validation.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validation.DefaultValidator.ValidateParameters(FileCabinetApp.Models.RecordData)">
+             <summary>This method validates  parameters from given <see cref="T:FileCabinetApp.Models.RecordData"/> class.</summary>
+             <param name="record"><see cref="T:FileCabinetApp.Models.RecordData"/> with params for FileCabinetRecord.</param>
+             <exception cref="T:System.ArgumentNullException">
+             Thrown when the first name is null.
+             or
+             Thrown when the last name is null.
+             </exception>
+            
+             <exception cref="T:System.ArgumentException">
+             Thrown when first or last name less <c>MinNameLength</c> or more than <c>MaxNameLength</c>.
+             or
+             Thrown when first or last name consists of white spaces.
+             or
+             Thrown when date of birth less <c>MinDate</c> or more than Current Date.
+             or
+             Thrown when sex is not M or F with ignore case.
+             or
+             Thrown when height less <c>MinHeight</c> or more than <c>MaxHeight</c>.
+             </exception>
+        </member>
+        <member name="T:FileCabinetApp.Validation.IRecordValidator">
+            <summary>
+            This interface can validate parameters from RecordData.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validation.IRecordValidator.ValidateParameters(FileCabinetApp.Models.RecordData)">
+            <summary>This method validates  parameters from given <see cref="T:FileCabinetApp.Models.RecordData"/> class.</summary>
+            <param name="record"><see cref="T:FileCabinetApp.Models.RecordData"/> with params for FileCabinetRecord.</param>
         </member>
     </members>
 </doc>

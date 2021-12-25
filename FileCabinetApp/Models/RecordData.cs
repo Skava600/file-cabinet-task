@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FileCabinetApp
+namespace FileCabinetApp.Models
 {
     /// <summary>
     ///  Class to introduce parameter object of FileCabinetService.CreateRecord and FileCabinetService.EditRecord.

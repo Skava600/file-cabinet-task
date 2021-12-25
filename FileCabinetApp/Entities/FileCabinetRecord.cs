@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FileCabinetApp
+namespace FileCabinetApp.Entities
 {
     /// <summary>
     /// The class to subscribe file cabinet record.
