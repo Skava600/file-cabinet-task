@@ -38,7 +38,13 @@ namespace FileCabinetApp
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
         };
 
-        private static FileCabinetService fileCabinetService = new FileCabinetCustomService();
+        private static FileCabinetService fileCabinetService = new FileCabinetDefaultService();
+
+        private enum ValidationRule
+        {
+            Default,
+            Custom,
+        }
 
         /// <summary>
         /// Defines the entry point of the application.
@@ -49,6 +55,8 @@ namespace FileCabinetApp
             Console.WriteLine($"File Cabinet Application, developed by {Program.DeveloperName}");
             Console.WriteLine(Program.HintMessage);
             Console.WriteLine();
+
+            SetServiceBehaviour(args);
 
             do
             {
@@ -77,6 +85,32 @@ namespace FileCabinetApp
                 }
             }
             while (isRunning);
+        }
+
+        private static void SetServiceBehaviour(string[] args)
+        {
+            args = string.Join(' ', args).Split(new char[] { ' ', '=' });
+
+            ValidationRule systemValidationBehaviour = ValidationRule.Default;
+
+            for (int i = 0; i + 1 < args.Length; i++)
+            {
+                if (args[i].Equals("-v", StringComparison.InvariantCulture) ||
+                    args[i].Equals("--validation-rules", StringComparison.InvariantCulture))
+                {
+                    systemValidationBehaviour = args[i + 1].Equals("DEFAULT", StringComparison.InvariantCultureIgnoreCase) ?
+                        ValidationRule.Default : ValidationRule.Custom;
+                    break;
+                }
+            }
+
+            switch (systemValidationBehaviour)
+            {
+                case ValidationRule.Custom: fileCabinetService = new FileCabinetCustomService(); break;
+                default: fileCabinetService = new FileCabinetDefaultService(); break;
+            }
+
+            Console.WriteLine($"Using {systemValidationBehaviour} validation rules.");
         }
 
         private static void PrintMissedCommandInfo(string command)

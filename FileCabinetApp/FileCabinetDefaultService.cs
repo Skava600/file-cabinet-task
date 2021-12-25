@@ -18,6 +18,7 @@ namespace FileCabinetApp
         private const short MaxHeight = 272;
 
         private static readonly DateTime MinDate = new DateTime(1950, 1, 1);
+
         /// <summary>This method validates  parameters from given <see cref="RecordData"/> class.</summary>
         /// <param name="record"><see cref="RecordData"/> with params for FileCabinetRecord.</param>
         public override void ValidateRecordParams(RecordData record)
