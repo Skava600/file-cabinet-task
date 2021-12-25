@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.ObjectModel;
 using System.Globalization;
 using FileCabinetApp.Entities;
 using FileCabinetApp.Models;
@@ -166,7 +166,7 @@ namespace FileCabinetApp
 
         private static void Edit(string parameters)
         {
-            string input = parameters.Split()[0];
+            string input = parameters.Split(' ', StringSplitOptions.RemoveEmptyEntries)[0];
             if (!int.TryParse(input, out int id))
             {
                 Console.WriteLine($"Invalid input parameters. Should be integer but received {input}");
@@ -199,27 +199,19 @@ namespace FileCabinetApp
 
         private static void Find(string parameters)
         {
-            string[] inputs = parameters.Split(' ', 2);
-
-            string propertyName = inputs[0];
-            string value = inputs[1].Trim('"');
-
-            FileCabinetRecord[] foundRecords;
-            if (propertyName.Equals("firstname", StringComparison.InvariantCultureIgnoreCase))
+            ReadOnlyCollection<FileCabinetRecord> foundRecords;
+            try
             {
-                foundRecords = fileCabinetService.FindByFirstName(value);
+                foundRecords = fileCabinetService.FindByProperty(parameters);
             }
-            else if (propertyName.Equals("lastname", StringComparison.InvariantCultureIgnoreCase))
+            catch (InvalidOperationException ex)
             {
-                foundRecords = fileCabinetService.FindByLastName(value);
+                Console.WriteLine(ex.Message);
+                return;
             }
-            else if (propertyName.Equals("dateofbirth", StringComparison.InvariantCultureIgnoreCase))
+            catch (ArgumentException ex)
             {
-                foundRecords = fileCabinetService.FindByDateOfBirth(value);
-            }
-            else
-            {
-                Console.WriteLine("No such property");
+                Console.WriteLine(ex.Message);
                 return;
             }
 
@@ -233,16 +225,11 @@ namespace FileCabinetApp
                     $"{record.Height}, " +
                     $"{record.Salary}");
             }
-
-            if (foundRecords.Length == 0)
-            {
-                Console.WriteLine("No records by given property.");
-            }
         }
 
         private static void List(string parameters)
         {
-            FileCabinetRecord[] records = fileCabinetService.GetRecords();
+            ReadOnlyCollection<FileCabinetRecord> records = fileCabinetService.GetRecords();
 
             foreach (var record in records)
             {

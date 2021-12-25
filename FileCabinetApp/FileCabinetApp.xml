@@ -140,26 +140,6 @@
             </summary>
             <param name="args">The arguments.</param>
         </member>
-        <member name="T:FileCabinetApp.Services.FileCabinetCustomService">
-            <summary>
-            The file cabinet service with custom behaviour.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetCustomService.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.Services.FileCabinetCustomService"/> class.
-            </summary>
-        </member>
-        <member name="T:FileCabinetApp.Services.FileCabinetDefaultService">
-            <summary>
-            The file cabinet service with default behaviour.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetDefaultService.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.Services.FileCabinetDefaultService"/> class.
-            </summary>
-        </member>
         <member name="T:FileCabinetApp.Services.FileCabinetService">
             <summary>
             Class to describe the file cabinet service.
@@ -198,26 +178,12 @@
             <summary>This method for getting quantity of registered records.</summary>
             <returns>int number of reg.</returns>
         </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetService.FindByFirstName(System.String)">
-            <summary>
-            Finds the specified first name.
-            </summary>
-            <param name="firstName">The first name of record.</param>
-            <returns>All records with specified first name.</returns>
-        </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetService.FindByLastName(System.String)">
+        <member name="M:FileCabinetApp.Services.FileCabinetService.FindByProperty(System.String)">
             <summary>
             Finds the specified last name.
             </summary>
-            <param name="lastName">The last name of record.</param>
+            <param name="property">Name and value of property through white space.</param>
             <returns>All records with specified last name.</returns>
-        </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetService.FindByDateOfBirth(System.String)">
-            <summary>
-            Finds the specified date of birth.
-            </summary>
-            <param name="dateOfBirth">The date of birth of record.</param>
-            <returns>All records with specified date of birth.</returns>
         </member>
         <member name="T:FileCabinetApp.Validation.CustomValidator">
             <summary>

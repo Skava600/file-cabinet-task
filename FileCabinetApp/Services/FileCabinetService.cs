@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using FileCabinetApp.Entities;
 using FileCabinetApp.Models;
 using FileCabinetApp.Validation;
@@ -11,7 +12,7 @@ namespace FileCabinetApp.Services
     /// </summary>
     public class FileCabinetService
     {
-        private readonly List<FileCabinetRecord> list = new List<FileCabinetRecord>();
+        private readonly List<FileCabinetRecord> records = new List<FileCabinetRecord>();
 
         private readonly Dictionary<string, List<FileCabinetRecord>> firstNameDictionary =
             new Dictionary<string, List<FileCabinetRecord>>(StringComparer.InvariantCultureIgnoreCase);
@@ -43,7 +44,7 @@ namespace FileCabinetApp.Services
             this.recordValidator.ValidateParameters(recordData);
             var record = new FileCabinetRecord
             {
-                Id = this.list.Count + 1,
+                Id = this.records.Count + 1,
                 FirstName = recordData.FirstName,
                 LastName = recordData.LastName,
                 DateOfBirth = recordData.DateOfBirth,
@@ -52,7 +53,7 @@ namespace FileCabinetApp.Services
                 Salary = recordData.Salary,
             };
 
-            this.list.Add(record);
+            this.records.Add(record);
 
             this.AddRecordToDictionaries(record.FirstName !, record.LastName !, record.DateOfBirth, record);
 
@@ -66,7 +67,7 @@ namespace FileCabinetApp.Services
         /// <param name="recordData"><see cref="RecordData"/> with params for FileCabinetRecord.</param>
         public void EditRecord(int id, RecordData recordData)
         {
-            FileCabinetRecord record = this.list.Find(rec => rec.Id == id)
+            FileCabinetRecord record = this.records.Find(rec => rec.Id == id)
                 ?? throw new ArgumentOutOfRangeException(nameof(id), $"#{id} record is not found");
 
             this.recordValidator.ValidateParameters(recordData);
@@ -85,11 +86,11 @@ namespace FileCabinetApp.Services
             this.AddRecordToDictionaries(recordData.FirstName!, recordData.LastName!, recordData.DateOfBirth, record);
         }
 
-        /// <summary>This method for getting array of records.</summary>
-        /// <returns>array of registered FileCabinetRecord.</returns>
-        public FileCabinetRecord[] GetRecords()
+        /// <summary>This method for getting all records.</summary>
+        /// <returns>Read onlu collection of registered <see cref="FileCabinetRecord"/>.</returns>
+        public ReadOnlyCollection<FileCabinetRecord> GetRecords()
         {
-            return this.list.ToArray();
+            return new ReadOnlyCollection<FileCabinetRecord>(this.records);
         }
 
         /// <summary>This method checks if the record with given id exists.</summary>
@@ -97,60 +98,57 @@ namespace FileCabinetApp.Services
         /// <returns><c>true</c> if record exists and <c>false</c> otherwise.</returns>
         public bool IsRecordExists(int id)
         {
-            return this.list.Exists(record => record.Id == id);
+            return this.records.Exists(record => record.Id == id);
         }
 
         /// <summary>This method for getting quantity of registered records.</summary>
-        /// <returns>int number of reg.</returns>
+        /// <returns>int number of records.</returns>
         public int GetStat()
         {
-            return this.list.Count;
+            return this.records.Count;
         }
 
         /// <summary>
-        /// Finds the specified first name.
+        /// Finds the specified records with property name and value.
         /// </summary>
-        /// <param name="firstName">The first name of record.</param>
-        /// <returns>All records with specified first name.</returns>
-        public FileCabinetRecord[] FindByFirstName(string firstName)
-        {
-            if (this.firstNameDictionary.ContainsKey(firstName))
-            {
-                return this.firstNameDictionary[firstName].ToArray();
-            }
-
-            return Array.Empty<FileCabinetRecord>();
-        }
-
-        /// <summary>
-        /// Finds the specified last name.
-        /// </summary>
-        /// <param name="lastName">The last name of record.</param>
+        /// <param name="property">Name and value of property through white space.</param>
         /// <returns>All records with specified last name.</returns>
-        public FileCabinetRecord[] FindByLastName(string lastName)
+        public ReadOnlyCollection<FileCabinetRecord> FindByProperty(string property)
         {
-            if (this.lastNameDictionary.ContainsKey(lastName))
+            string[] inputs = property.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
+
+            int nameIndex = 0;
+            string propertyName = inputs[nameIndex];
+
+            int valueIndex = 1;
+            string propertyValue = inputs[valueIndex].Trim('"');
+
+            try
             {
-                return this.lastNameDictionary[lastName].ToArray();
+                if (propertyName.Equals(nameof(FileCabinetRecord.FirstName), StringComparison.InvariantCultureIgnoreCase))
+                {
+                    return this.firstNameDictionary[propertyValue].AsReadOnly();
+                }
+                else if (propertyName.Equals(nameof(FileCabinetRecord.LastName), StringComparison.InvariantCultureIgnoreCase))
+                {
+                    return this.lastNameDictionary[propertyValue].AsReadOnly();
+                }
+                else if (propertyName.Equals(nameof(FileCabinetRecord.DateOfBirth), StringComparison.InvariantCultureIgnoreCase))
+                {
+                    DateTime.TryParse(propertyValue, out DateTime dob);
+                    return this.dateOfBirthDictionary[dob].AsReadOnly();
+                }
+                else
+                {
+                    throw new InvalidOperationException($"The {propertyName} isn't valid command searching property. Only " +
+                        $"'{nameof(FileCabinetRecord.FirstName)}', '{nameof(FileCabinetRecord.LastName)}' and " +
+                        $"'{nameof(FileCabinetRecord.DateOfBirth)}' allowed.");
+                }
             }
-
-            return Array.Empty<FileCabinetRecord>();
-        }
-
-        /// <summary>
-        /// Finds the specified date of birth.
-        /// </summary>
-        /// <param name="dateOfBirth">The date of birth of record.</param>
-        /// <returns>All records with specified date of birth.</returns>
-        public FileCabinetRecord[] FindByDateOfBirth(string dateOfBirth)
-        {
-            DateTime.TryParse(dateOfBirth, out DateTime dob);
-            if (this.dateOfBirthDictionary.ContainsKey(dob))
+            catch (KeyNotFoundException)
             {
-                return this.dateOfBirthDictionary[dob].ToArray();
+                throw new ArgumentException($"Records with {propertyName} and value {propertyValue} not exist.");
             }
-
-            return Array.Empty<FileCabinetRecord>();
         }
 
         private void AddRecordToDictionaries(string firstName, string lastName, DateTime dateOfBirth, FileCabinetRecord record)
