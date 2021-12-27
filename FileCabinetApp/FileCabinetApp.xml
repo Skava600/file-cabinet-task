@@ -4,5 +4,346 @@
         <name>FileCabinetApp</name>
     </assembly>
     <members>
+        <member name="T:FileCabinetApp.Converters.InputConverter">
+            <summary>
+            Input parameters converter.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Converters.InputConverter.StringConverter(System.String)">
+            <summary>
+            Strings  converter.
+            </summary>
+            <param name="input">The input.</param>
+            <returns>
+            True if it is possible to convert, input string and resulting string.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.Converters.InputConverter.DateTimeConverter(System.String)">
+            <summary>
+            DateTime converter.
+            </summary>
+            <param name="input">The input.</param>
+            <returns>
+            True if it is possible to convert, input string and resulting DateTime.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.Converters.InputConverter.CharConverter(System.String)">
+            <summary>
+            char converter.
+            </summary>
+            <param name="input">The input.</param>
+            <returns>
+            True if it is possible to convert, input string and resulting char.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.Converters.InputConverter.ShortConverter(System.String)">
+            <summary>
+            short converter.
+            </summary>
+            <param name="input">The input.</param>
+            <returns>
+            True if it is possible to convert, input string and resulting short.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.Converters.InputConverter.DecimalConverter(System.String)">
+            <summary>
+            decimal converter.
+            </summary>
+            <param name="input">The input.</param>
+            <returns>
+            True if it is possible to convert, input string and resulting decimal.
+            </returns>
+        </member>
+        <member name="T:FileCabinetApp.Entities.FileCabinetRecord">
+            <summary>
+            The class to subscribe file cabinet record.
+            </summary>
+        </member>
+        <member name="P:FileCabinetApp.Entities.FileCabinetRecord.Id">
+            <summary>
+            Gets or sets the ID.
+            </summary>
+            <value>
+            The ID.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.Entities.FileCabinetRecord.FirstName">
+            <summary>
+            Gets or sets the first name.
+            </summary>
+            <value>
+            The first name.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.Entities.FileCabinetRecord.LastName">
+            <summary>
+            Gets or sets the last name.
+            </summary>
+            <value>
+            The last name.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.Entities.FileCabinetRecord.DateOfBirth">
+            <summary>
+            Gets or sets the date of birth.
+            </summary>
+            <value>
+            The date of birth.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.Entities.FileCabinetRecord.Sex">
+            <summary>
+            Gets or sets the sex (M or F).
+            </summary>
+            <value>
+            The sex M or F.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.Entities.FileCabinetRecord.Height">
+            <summary>
+            Gets or sets the height in cm.
+            </summary>
+            <value>
+            The height in cm.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.Entities.FileCabinetRecord.Salary">
+            <summary>
+            Gets or sets the salary in dollars.
+            </summary>
+            <value>
+            The salary in dollars.
+            </value>
+        </member>
+        <member name="T:FileCabinetApp.Models.RecordData">
+            <summary>
+             Class to introduce parameter object of FileCabinetService.CreateRecord and FileCabinetService.EditRecord.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Models.RecordData.#ctor(System.String,System.String,System.DateTime,System.Char,System.Int16,System.Decimal)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Models.RecordData"/> class.
+            </summary>
+            <param name="firstName">The first name.</param>
+            <param name="lastName">The last name.</param>
+            <param name="dateOfBirth">The date of birth.</param>
+            <param name="sex">The sex.</param>
+            <param name="height">The height.</param>
+            <param name="salary">The salary.</param>
+        </member>
+        <member name="P:FileCabinetApp.Models.RecordData.FirstName">
+            <summary>
+            Gets the first name.
+            </summary>
+            <value>
+            The first name.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.Models.RecordData.LastName">
+            <summary>
+            Gets the last name.
+            </summary>
+            <value>
+            The last name.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.Models.RecordData.DateOfBirth">
+            <summary>
+            Gets the date of birth.
+            </summary>
+            <value>
+            The date of birth.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.Models.RecordData.Sex">
+            <summary>
+            Gets the sex.
+            </summary>
+            <value>
+            The sex.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.Models.RecordData.Height">
+            <summary>
+            Gets the height.
+            </summary>
+            <value>
+            The height.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.Models.RecordData.Salary">
+            <summary>
+            Gets the salary.
+            </summary>
+            <value>
+            The salary.
+            </value>
+        </member>
+        <member name="T:FileCabinetApp.Program">
+            <summary>
+            The program class.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Program.Main(System.String[])">
+            <summary>
+            Defines the entry point of the application.
+            </summary>
+            <param name="args">The arguments.</param>
+        </member>
+        <member name="T:FileCabinetApp.Services.FileCabinetService">
+            <summary>
+            Class to describe the file cabinet service.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetService.CreateRecord(FileCabinetApp.Models.RecordData)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetService.EditRecord(System.Int32,FileCabinetApp.Models.RecordData)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetService.GetRecords">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetService.IsRecordExists(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetService.GetStat">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetService.FindByProperty(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="T:FileCabinetApp.IFileCabinetService">
+            <summary>
+            Interface to describe the file cabinet service.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.CreateRecord(FileCabinetApp.Models.RecordData)">
+            <summary>
+            This method creates new FileCabinetRecord with given <see cref="T:FileCabinetApp.Models.RecordData"/> class params.
+            </summary>
+            <param name="recordData"><see cref="T:FileCabinetApp.Models.RecordData"/> with params for FileCabinetRecord.</param>
+            <returns>return a number representing id of the new record.</returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.EditRecord(System.Int32,FileCabinetApp.Models.RecordData)">
+            <summary>
+            This method edites FileCabinetRecord found by id with given <see cref="T:FileCabinetApp.Models.RecordData"/> class params.
+            </summary>
+            <param name="id">ID of editing record.</param>
+            <param name="recordData"><see cref="T:FileCabinetApp.Models.RecordData"/> with params for FileCabinetRecord.</param>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.GetRecords">
+            <summary>This method for getting all records.</summary>
+            <returns>Read only collection of registered <see cref="T:FileCabinetApp.Entities.FileCabinetRecord"/>.</returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.IsRecordExists(System.Int32)">
+            <summary>This method checks if the record with given id exists.</summary>
+            <param name="id">id of record.</param>
+            <returns><c>true</c> if record exists and <c>false</c> otherwise.</returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.GetStat">
+            <summary>This method for getting quantity of registered records.</summary>
+            <returns>int number of records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.FindByProperty(System.String)">
+            <summary>
+            Finds the specified records with property name and value.
+            </summary>
+            <param name="property">Name and value of property through white space.</param>
+            <returns>All records with specified last name.</returns>
+        </member>
+        <member name="T:FileCabinetApp.Validation.CustomValidator">
+            <summary>
+            Class for custom validation.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validation.CustomValidator.FirstNameValidator(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Validation.CustomValidator.LastNameValidator(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Validation.CustomValidator.DateOfBirthValidator(System.DateTime)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Validation.CustomValidator.SexValidator(System.Char)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Validation.CustomValidator.HeightValidator(System.Int16)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Validation.CustomValidator.SalaryValidator(System.Decimal)">
+            <inheritdoc/>
+        </member>
+        <member name="T:FileCabinetApp.Validation.DefaultValidator">
+            <summary>
+            Class for dafault validation.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validation.DefaultValidator.FirstNameValidator(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Validation.DefaultValidator.LastNameValidator(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Validation.DefaultValidator.DateOfBirthValidator(System.DateTime)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Validation.DefaultValidator.SexValidator(System.Char)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Validation.DefaultValidator.HeightValidator(System.Int16)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Validation.DefaultValidator.SalaryValidator(System.Decimal)">
+            <inheritdoc/>
+        </member>
+        <member name="T:FileCabinetApp.Validation.IRecordValidator">
+            <summary>
+            This interface can validate parameters from RecordData.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validation.IRecordValidator.FirstNameValidator(System.String)">
+            <summary>
+            This method validates the first name.
+            </summary>
+            <param name="firstName"> The first name. </param>
+            <returns> Validation result. </returns>
+        </member>
+        <member name="M:FileCabinetApp.Validation.IRecordValidator.LastNameValidator(System.String)">
+            <summary>
+            This method validates the last name.
+            </summary>
+            <param name="lastName"> The last name. </param>
+            <returns> Validation result. </returns>
+        </member>
+        <member name="M:FileCabinetApp.Validation.IRecordValidator.DateOfBirthValidator(System.DateTime)">
+            <summary>
+            This method validates the date of birth.
+            </summary>
+            <param name="dateOfBirth"> The date of birth. </param>
+            <returns> Validation result. </returns>
+        </member>
+        <member name="M:FileCabinetApp.Validation.IRecordValidator.SexValidator(System.Char)">
+            <summary>
+            This method validates sex.
+            </summary>
+            <param name="sex"> The sex. </param>
+            <returns> Validation result. </returns>
+        </member>
+        <member name="M:FileCabinetApp.Validation.IRecordValidator.HeightValidator(System.Int16)">
+            <summary>
+            This method validates the height.
+            </summary>
+            <param name="height"> The height. </param>
+            <returns> Validation result. </returns>
+        </member>
+        <member name="M:FileCabinetApp.Validation.IRecordValidator.SalaryValidator(System.Decimal)">
+            <summary>
+            Whis method validates salary.
+            </summary>
+            <param name="salary"> The salary. </param>
+            <returns> Validation result. </returns>
+        </member>
     </members>
 </doc>
