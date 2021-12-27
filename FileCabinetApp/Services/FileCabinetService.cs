@@ -10,7 +10,7 @@ namespace FileCabinetApp.Services
     /// <summary>
     /// Class to describe the file cabinet service.
     /// </summary>
-    public class FileCabinetService
+    public class FileCabinetService : IFileCabinetService
     {
         private readonly List<FileCabinetRecord> records = new List<FileCabinetRecord>();
 
@@ -87,7 +87,7 @@ namespace FileCabinetApp.Services
         }
 
         /// <summary>This method for getting all records.</summary>
-        /// <returns>Read onlu collection of registered <see cref="FileCabinetRecord"/>.</returns>
+        /// <returns>Read only collection of registered <see cref="FileCabinetRecord"/>.</returns>
         public ReadOnlyCollection<FileCabinetRecord> GetRecords()
         {
             return new ReadOnlyCollection<FileCabinetRecord>(this.records);
