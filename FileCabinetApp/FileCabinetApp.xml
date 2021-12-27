@@ -4,6 +4,56 @@
         <name>FileCabinetApp</name>
     </assembly>
     <members>
+        <member name="T:FileCabinetApp.Converters.InputConverter">
+            <summary>
+            Input parameters converter.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Converters.InputConverter.StringConverter(System.String)">
+            <summary>
+            Strings  converter.
+            </summary>
+            <param name="input">The input.</param>
+            <returns>
+            True if it is possible to convert, input string and resulting string.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.Converters.InputConverter.DateTimeConverter(System.String)">
+            <summary>
+            DateTime converter.
+            </summary>
+            <param name="input">The input.</param>
+            <returns>
+            True if it is possible to convert, input string and resulting DateTime.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.Converters.InputConverter.CharConverter(System.String)">
+            <summary>
+            char converter.
+            </summary>
+            <param name="input">The input.</param>
+            <returns>
+            True if it is possible to convert, input string and resulting char.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.Converters.InputConverter.ShortConverter(System.String)">
+            <summary>
+            short converter.
+            </summary>
+            <param name="input">The input.</param>
+            <returns>
+            True if it is possible to convert, input string and resulting short.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.Converters.InputConverter.DecimalConverter(System.String)">
+            <summary>
+            decimal converter.
+            </summary>
+            <param name="input">The input.</param>
+            <returns>
+            True if it is possible to convert, input string and resulting decimal.
+            </returns>
+        </member>
         <member name="T:FileCabinetApp.Entities.FileCabinetRecord">
             <summary>
             The class to subscribe file cabinet record.
@@ -145,45 +195,23 @@
             Class to describe the file cabinet service.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetService.#ctor(FileCabinetApp.Validation.IRecordValidator)">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.Services.FileCabinetService"/> class.
-            </summary>
-            <param name="recordValidator"><see cref="T:FileCabinetApp.Validation.IRecordValidator"/>.</param>
-        </member>
         <member name="M:FileCabinetApp.Services.FileCabinetService.CreateRecord(FileCabinetApp.Models.RecordData)">
-            <summary>
-            This method creates new FileCabinetRecord with given <see cref="T:FileCabinetApp.Models.RecordData"/> class params.
-            </summary>
-            <param name="recordData"><see cref="T:FileCabinetApp.Models.RecordData"/> with params for FileCabinetRecord.</param>
-            <returns>return a number representing id of the new record.</returns>
+            <inheritdoc/>
         </member>
         <member name="M:FileCabinetApp.Services.FileCabinetService.EditRecord(System.Int32,FileCabinetApp.Models.RecordData)">
-            <summary>
-            This method edites FileCabinetRecord found by id with given <see cref="T:FileCabinetApp.Models.RecordData"/> class params.
-            </summary>
-            <param name="id">ID of editing record.</param>
-            <param name="recordData"><see cref="T:FileCabinetApp.Models.RecordData"/> with params for FileCabinetRecord.</param>
+            <inheritdoc/>
         </member>
         <member name="M:FileCabinetApp.Services.FileCabinetService.GetRecords">
-            <summary>This method for getting all records.</summary>
-            <returns>Read only collection of registered <see cref="T:FileCabinetApp.Entities.FileCabinetRecord"/>.</returns>
+            <inheritdoc/>
         </member>
         <member name="M:FileCabinetApp.Services.FileCabinetService.IsRecordExists(System.Int32)">
-            <summary>This method checks if the record with given id exists.</summary>
-            <param name="id">id of record.</param>
-            <returns><c>true</c> if record exists and <c>false</c> otherwise.</returns>
+            <inheritdoc/>
         </member>
         <member name="M:FileCabinetApp.Services.FileCabinetService.GetStat">
-            <summary>This method for getting quantity of registered records.</summary>
-            <returns>int number of records.</returns>
+            <inheritdoc/>
         </member>
         <member name="M:FileCabinetApp.Services.FileCabinetService.FindByProperty(System.String)">
-            <summary>
-            Finds the specified records with property name and value.
-            </summary>
-            <param name="property">Name and value of property through white space.</param>
-            <returns>All records with specified last name.</returns>
+            <inheritdoc/>
         </member>
         <member name="T:FileCabinetApp.IFileCabinetService">
             <summary>
@@ -229,61 +257,93 @@
             Class for custom validation.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.Validation.CustomValidator.ValidateParameters(FileCabinetApp.Models.RecordData)">
-             <summary>This method validates  parameters from given <see cref="T:FileCabinetApp.Models.RecordData"/> class.</summary>
-             <param name="record"><see cref="T:FileCabinetApp.Models.RecordData"/> with params for FileCabinetRecord.</param>
-             <exception cref="T:System.ArgumentNullException">
-             Thrown when the first name is null.
-             or
-             Thrown when the last name is null.
-             </exception>
-            
-             <exception cref="T:System.ArgumentException">
-             Thrown when first or last name less <c>MinNameLength</c> or more than <c>MaxNameLength</c>.
-             or
-             Thrown when first or last name consists of white spaces.
-             or
-             Thrown when date of birth less <c>MinDate</c> or more than Current Date.
-             or
-             Thrown when sex is not M or F with ignore case.
-             or
-             Thrown when height less <c>MinHeight</c> or more than <c>MaxHeight</c>.
-             </exception>
+        <member name="M:FileCabinetApp.Validation.CustomValidator.FirstNameValidator(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Validation.CustomValidator.LastNameValidator(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Validation.CustomValidator.DateOfBirthValidator(System.DateTime)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Validation.CustomValidator.SexValidator(System.Char)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Validation.CustomValidator.HeightValidator(System.Int16)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Validation.CustomValidator.SalaryValidator(System.Decimal)">
+            <inheritdoc/>
         </member>
         <member name="T:FileCabinetApp.Validation.DefaultValidator">
             <summary>
             Class for dafault validation.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.Validation.DefaultValidator.ValidateParameters(FileCabinetApp.Models.RecordData)">
-             <summary>This method validates  parameters from given <see cref="T:FileCabinetApp.Models.RecordData"/> class.</summary>
-             <param name="record"><see cref="T:FileCabinetApp.Models.RecordData"/> with params for FileCabinetRecord.</param>
-             <exception cref="T:System.ArgumentNullException">
-             Thrown when the first name is null.
-             or
-             Thrown when the last name is null.
-             </exception>
-            
-             <exception cref="T:System.ArgumentException">
-             Thrown when first or last name less <c>MinNameLength</c> or more than <c>MaxNameLength</c>.
-             or
-             Thrown when first or last name consists of white spaces.
-             or
-             Thrown when date of birth less <c>MinDate</c> or more than Current Date.
-             or
-             Thrown when sex is not M or F with ignore case.
-             or
-             Thrown when height less <c>MinHeight</c> or more than <c>MaxHeight</c>.
-             </exception>
+        <member name="M:FileCabinetApp.Validation.DefaultValidator.FirstNameValidator(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Validation.DefaultValidator.LastNameValidator(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Validation.DefaultValidator.DateOfBirthValidator(System.DateTime)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Validation.DefaultValidator.SexValidator(System.Char)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Validation.DefaultValidator.HeightValidator(System.Int16)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Validation.DefaultValidator.SalaryValidator(System.Decimal)">
+            <inheritdoc/>
         </member>
         <member name="T:FileCabinetApp.Validation.IRecordValidator">
             <summary>
             This interface can validate parameters from RecordData.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.Validation.IRecordValidator.ValidateParameters(FileCabinetApp.Models.RecordData)">
-            <summary>This method validates  parameters from given <see cref="T:FileCabinetApp.Models.RecordData"/> class.</summary>
-            <param name="record"><see cref="T:FileCabinetApp.Models.RecordData"/> with params for FileCabinetRecord.</param>
+        <member name="M:FileCabinetApp.Validation.IRecordValidator.FirstNameValidator(System.String)">
+            <summary>
+            This method validates the first name.
+            </summary>
+            <param name="firstName"> The first name. </param>
+            <returns> Validation result. </returns>
+        </member>
+        <member name="M:FileCabinetApp.Validation.IRecordValidator.LastNameValidator(System.String)">
+            <summary>
+            This method validates the last name.
+            </summary>
+            <param name="lastName"> The last name. </param>
+            <returns> Validation result. </returns>
+        </member>
+        <member name="M:FileCabinetApp.Validation.IRecordValidator.DateOfBirthValidator(System.DateTime)">
+            <summary>
+            This method validates the date of birth.
+            </summary>
+            <param name="dateOfBirth"> The date of birth. </param>
+            <returns> Validation result. </returns>
+        </member>
+        <member name="M:FileCabinetApp.Validation.IRecordValidator.SexValidator(System.Char)">
+            <summary>
+            This method validates sex.
+            </summary>
+            <param name="sex"> The sex. </param>
+            <returns> Validation result. </returns>
+        </member>
+        <member name="M:FileCabinetApp.Validation.IRecordValidator.HeightValidator(System.Int16)">
+            <summary>
+            This method validates the height.
+            </summary>
+            <param name="height"> The height. </param>
+            <returns> Validation result. </returns>
+        </member>
+        <member name="M:FileCabinetApp.Validation.IRecordValidator.SalaryValidator(System.Decimal)">
+            <summary>
+            Whis method validates salary.
+            </summary>
+            <param name="salary"> The salary. </param>
+            <returns> Validation result. </returns>
         </member>
     </members>
 </doc>

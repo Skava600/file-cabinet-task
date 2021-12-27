@@ -20,85 +20,96 @@ namespace FileCabinetApp.Validation
 
         private static readonly DateTime MinDate = new DateTime(1900, 1, 1);
 
-        /// <summary>This method validates  parameters from given <see cref="RecordData"/> class.</summary>
-        /// <param name="record"><see cref="RecordData"/> with params for FileCabinetRecord.</param>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown when the first name is null.
-        /// or
-        /// Thrown when the last name is null.
-        /// </exception>
-        ///
-        /// <exception cref="ArgumentException">
-        /// Thrown when first or last name less <c>MinNameLength</c> or more than <c>MaxNameLength</c>.
-        /// or
-        /// Thrown when first or last name consists of white spaces.
-        /// or
-        /// Thrown when date of birth less <c>MinDate</c> or more than Current Date.
-        /// or
-        /// Thrown when sex is not M or F with ignore case.
-        /// or
-        /// Thrown when height less <c>MinHeight</c> or more than <c>MaxHeight</c>.
-        /// </exception>
-        public void ValidateParameters(RecordData record)
+        /// <inheritdoc/>
+        public Tuple<bool, string> FirstNameValidator(string firstName)
         {
-            if (record.FirstName == null)
+            if (firstName is null)
             {
-                throw new ArgumentNullException(nameof(record.FirstName));
+                return new Tuple<bool, string>(false, "First name can't be null");
             }
 
-            if (record.FirstName.Length < MinNameLength ||
-                record.FirstName.Length > MaxNameLength)
+            if (string.IsNullOrWhiteSpace(firstName))
             {
-                throw new ArgumentException(
-                    $"Length of first Name must be between {MinNameLength} and {MaxNameLength}.",
-                    nameof(record.FirstName));
+                return new Tuple<bool, string>(false, "First name consists of white spaces.");
             }
 
-            if (string.IsNullOrWhiteSpace(record.FirstName))
+            if (firstName.Length < MinNameLength ||
+               firstName.Length > MaxNameLength)
             {
-                throw new ArgumentException(
-                    "First name consists of white spaces.",
-                    nameof(record.FirstName));
+                return new Tuple<bool, string>(false, $"Length of first name must be between {MinNameLength} and {MaxNameLength}.");
             }
 
-            if (record.LastName == null)
+            return new Tuple<bool, string>(true, nameof(firstName));
+        }
+
+        /// <inheritdoc/>
+        public Tuple<bool, string> LastNameValidator(string lastName)
+        {
+            if (lastName is null)
             {
-                throw new ArgumentNullException(nameof(record.LastName));
+                return new Tuple<bool, string>(false, "Last name can't be null");
             }
 
-            if (record.LastName.Length < MinNameLength || record.LastName.Length > MaxNameLength)
+            if (string.IsNullOrWhiteSpace(lastName))
             {
-                throw new ArgumentException(
-                    $"Length of last Name must be between {MinNameLength} and {MaxNameLength}.",
-                    nameof(record.LastName));
+                return new Tuple<bool, string>(false, "Last name consists of white spaces.");
             }
 
-            if (string.IsNullOrWhiteSpace(record.FirstName))
+            if (lastName.Length < MinNameLength ||
+               lastName.Length > MaxNameLength)
             {
-                throw new ArgumentException(
-                    "Last name consists of white spaces.",
-                    nameof(record.LastName));
+                return new Tuple<bool, string>(
+                    false,
+                    $"Length of Last name must be between {MinNameLength} and {MaxNameLength}.");
             }
 
-            if (record.DateOfBirth < MinDate || record.DateOfBirth > DateTime.Now)
+            return new Tuple<bool, string>(true, nameof(lastName));
+        }
+
+        /// <inheritdoc/>
+        public Tuple<bool, string> DateOfBirthValidator(DateTime dateOfBirth)
+        {
+            if (dateOfBirth < MinDate || dateOfBirth > DateTime.Now)
             {
-                throw new ArgumentException($"Date of birth current must be between {MinDate.ToShortDateString} and {DateTime.Now.ToShortDateString}.", nameof(record.DateOfBirth));
+                return new Tuple<bool, string>(
+                    false,
+                    $"Date of birth current must be between {MinDate.ToShortDateString} and {DateTime.Now.ToShortDateString}");
             }
 
-            if (!char.ToUpper(record.Sex).Equals('M') && !char.ToUpper(record.Sex).Equals('F'))
+            return new Tuple<bool, string>(true, nameof(dateOfBirth));
+        }
+
+        /// <inheritdoc/>
+        public Tuple<bool, string> SexValidator(char sex)
+        {
+            if (!char.ToUpper(sex).Equals('M') && !char.ToUpper(sex).Equals('F'))
             {
-                throw new ArgumentException("sex is only M(male) and F(female).", nameof(record.Sex));
+                return new Tuple<bool, string>(false, "sex is only M(male) and F(female)");
             }
 
-            if (record.Height < MinHeight || record.Height > MaxHeight)
+            return new Tuple<bool, string>(true, nameof(sex));
+        }
+
+        /// <inheritdoc/>
+        public Tuple<bool, string> HeightValidator(short height)
+        {
+            if (height < MinHeight || height > MaxHeight)
             {
-                throw new ArgumentException($"height must be a number between {MinHeight}  and {MaxHeight}.", nameof(record.Height));
+                return new Tuple<bool, string>(false, $"height must be a number between {MinHeight}  and {MaxHeight}");
             }
 
-            if (record.Salary < 0)
+            return new Tuple<bool, string>(true, nameof(height));
+        }
+
+        /// <inheritdoc/>
+        public Tuple<bool, string> SalaryValidator(decimal salary)
+        {
+            if (salary < 0)
             {
-                throw new ArgumentException("salary can't be less zero.", nameof(record.Salary));
+                return new Tuple<bool, string>(false, "salary can't be less zero");
             }
+
+            return new Tuple<bool, string>(true, nameof(salary));
         }
     }
 }

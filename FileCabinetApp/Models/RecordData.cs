@@ -11,8 +11,8 @@ namespace FileCabinetApp.Models
     /// </summary>
     public class RecordData
     {
-        private readonly string? firstName;
-        private readonly string? lastName;
+        private readonly string firstName;
+        private readonly string lastName;
         private readonly DateTime dateOfBirth;
         private readonly char sex;
         private readonly short height;
@@ -27,7 +27,7 @@ namespace FileCabinetApp.Models
         /// <param name="sex">The sex.</param>
         /// <param name="height">The height.</param>
         /// <param name="salary">The salary.</param>
-        public RecordData(string? firstName, string? lastName, DateTime dateOfBirth, char sex, short height, decimal salary)
+        public RecordData(string firstName, string lastName, DateTime dateOfBirth, char sex, short height, decimal salary)
         {
             this.firstName = firstName;
             this.lastName = lastName;
@@ -43,7 +43,7 @@ namespace FileCabinetApp.Models
         /// <value>
         /// The first name.
         /// </value>
-        public string? FirstName { get => this.firstName; }
+        public string FirstName { get => this.firstName; }
 
         /// <summary>
         /// Gets the last name.
@@ -51,7 +51,7 @@ namespace FileCabinetApp.Models
         /// <value>
         /// The last name.
         /// </value>
-        public string? LastName { get => this.lastName; }
+        public string LastName { get => this.lastName; }
 
         /// <summary>
         /// Gets the date of birth.

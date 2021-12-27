@@ -23,25 +23,9 @@ namespace FileCabinetApp.Services
         private readonly Dictionary<DateTime, List<FileCabinetRecord>> dateOfBirthDictionary =
             new Dictionary<DateTime, List<FileCabinetRecord>>();
 
-        private readonly IRecordValidator recordValidator;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FileCabinetService"/> class.
-        /// </summary>
-        /// <param name="recordValidator"><see cref="IRecordValidator"/>.</param>
-        public FileCabinetService(IRecordValidator recordValidator)
-        {
-            this.recordValidator = recordValidator;
-        }
-
-        /// <summary>
-        /// This method creates new FileCabinetRecord with given <see cref="RecordData"/> class params.
-        /// </summary>
-        /// <param name="recordData"><see cref="RecordData"/> with params for FileCabinetRecord.</param>
-        /// <returns>return a number representing id of the new record.</returns>
+        /// <inheritdoc/>
         public int CreateRecord(RecordData recordData)
         {
-            this.recordValidator.ValidateParameters(recordData);
             var record = new FileCabinetRecord
             {
                 Id = this.records.Count + 1,
@@ -60,17 +44,11 @@ namespace FileCabinetApp.Services
             return record.Id;
         }
 
-        /// <summary>
-        /// This method edites FileCabinetRecord found by id with given <see cref="RecordData"/> class params.
-        /// </summary>
-        /// <param name="id">ID of editing record.</param>
-        /// <param name="recordData"><see cref="RecordData"/> with params for FileCabinetRecord.</param>
+        /// <inheritdoc/>
         public void EditRecord(int id, RecordData recordData)
         {
             FileCabinetRecord record = this.records.Find(rec => rec.Id == id)
                 ?? throw new ArgumentOutOfRangeException(nameof(id), $"#{id} record is not found");
-
-            this.recordValidator.ValidateParameters(recordData);
 
             this.firstNameDictionary[record.FirstName !].Remove(record);
             this.lastNameDictionary[record.LastName!].Remove(record);
@@ -86,33 +64,25 @@ namespace FileCabinetApp.Services
             this.AddRecordToDictionaries(recordData.FirstName!, recordData.LastName!, recordData.DateOfBirth, record);
         }
 
-        /// <summary>This method for getting all records.</summary>
-        /// <returns>Read only collection of registered <see cref="FileCabinetRecord"/>.</returns>
+        /// <inheritdoc/>
         public ReadOnlyCollection<FileCabinetRecord> GetRecords()
         {
             return new ReadOnlyCollection<FileCabinetRecord>(this.records);
         }
 
-        /// <summary>This method checks if the record with given id exists.</summary>
-        /// <param name="id">id of record.</param>
-        /// <returns><c>true</c> if record exists and <c>false</c> otherwise.</returns>
+        /// <inheritdoc/>
         public bool IsRecordExists(int id)
         {
             return this.records.Exists(record => record.Id == id);
         }
 
-        /// <summary>This method for getting quantity of registered records.</summary>
-        /// <returns>int number of records.</returns>
+        /// <inheritdoc/>
         public int GetStat()
         {
             return this.records.Count;
         }
 
-        /// <summary>
-        /// Finds the specified records with property name and value.
-        /// </summary>
-        /// <param name="property">Name and value of property through white space.</param>
-        /// <returns>All records with specified last name.</returns>
+        /// <inheritdoc/>
         public ReadOnlyCollection<FileCabinetRecord> FindByProperty(string property)
         {
             string[] inputs = property.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);

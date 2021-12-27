@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Globalization;
+using FileCabinetApp.Converters;
 using FileCabinetApp.Entities;
 using FileCabinetApp.Models;
 using FileCabinetApp.Services;
@@ -42,7 +43,8 @@ namespace FileCabinetApp
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
         };
 
-        private static IFileCabinetService fileCabinetService = new FileCabinetService(new DefaultValidator());
+        private static IFileCabinetService fileCabinetService = new FileCabinetService();
+        private static IRecordValidator recordValidator = new DefaultValidator();
 
         private enum ValidationRule
         {
@@ -108,10 +110,10 @@ namespace FileCabinetApp
                 }
             }
 
-            fileCabinetService = systemValidationBehaviour switch
+            recordValidator = systemValidationBehaviour switch
             {
-                ValidationRule.Custom => new FileCabinetService(new CustomValidator()),
-                _ => new FileCabinetService(new DefaultValidator()),
+                ValidationRule.Custom => new CustomValidator(),
+                _ => new DefaultValidator(),
             };
             Console.WriteLine($"Using {systemValidationBehaviour} validation rules.");
         }
@@ -151,10 +153,9 @@ namespace FileCabinetApp
 
         private static void Create(string parameters)
         {
-            RecordData recordData = GetRecordInput();
-
             try
             {
+                RecordData recordData = GetRecordInput();
                 Console.WriteLine($"Record #{fileCabinetService.CreateRecord(recordData)} is created.");
             }
             catch (Exception ex)
@@ -179,10 +180,9 @@ namespace FileCabinetApp
                 return;
             }
 
-            RecordData recordData = GetRecordInput();
-
             try
             {
+                RecordData recordData = GetRecordInput();
                 fileCabinetService.EditRecord(id, recordData);
                 Console.WriteLine($"Record #{id} is updated.");
             }
@@ -257,32 +257,68 @@ namespace FileCabinetApp
 
         private static RecordData GetRecordInput()
         {
+            Func<string, Tuple<bool, string, string>> stringConverter = InputConverter.StringConverter;
+            Func<string, Tuple<bool, string, DateTime>> dateTimeConverter = InputConverter.DateTimeConverter;
+            Func<string, Tuple<bool, string, char>> charConverter = InputConverter.CharConverter;
+            Func<string, Tuple<bool, string, short>> shortConverter = InputConverter.ShortConverter;
+            Func<string, Tuple<bool, string, decimal>> decimalConverter = InputConverter.DecimalConverter;
+
+            Func<string, Tuple<bool, string>> firstNameValidator = recordValidator.FirstNameValidator;
+            Func<string, Tuple<bool, string>> lastNameValidator = recordValidator.LastNameValidator;
+            Func<DateTime, Tuple<bool, string>> dateOfBirthValidator = recordValidator.DateOfBirthValidator;
+            Func<char, Tuple<bool, string>> sexValidator = recordValidator.SexValidator;
+            Func<short, Tuple<bool, string>> heightValidator = recordValidator.HeightValidator;
+            Func<decimal, Tuple<bool, string>> salaryValidator = recordValidator.SalaryValidator;
+
             Console.Write("First name: ");
-            string? firstName = Console.ReadLine();
+            var firstName = ReadInput(stringConverter, firstNameValidator);
 
             Console.Write("Last name: ");
-            string? lastName = Console.ReadLine();
+            var lastName = ReadInput(stringConverter, lastNameValidator);
 
             Console.Write("Date of birth: ");
-            CultureInfo culture = CultureInfo.CreateSpecificCulture("en-US");
-            DateTimeStyles styles = DateTimeStyles.None;
-            DateTime.TryParse(
-                Console.ReadLine(),
-                culture,
-                styles,
-                out DateTime dateOfBirth);
+            var dateOfBirth = ReadInput(dateTimeConverter, dateOfBirthValidator);
 
             Console.Write("Sex (M or F): ");
-            char.TryParse(Console.ReadLine(), out char sex);
+            var sex = ReadInput(charConverter, sexValidator);
 
             Console.Write("Height: ");
-            short.TryParse(Console.ReadLine(), out short height);
+            var height = ReadInput(shortConverter, heightValidator);
 
             Console.Write("Salary ($): ");
-            decimal.TryParse(Console.ReadLine(), out decimal salary);
+            var salary = ReadInput(decimalConverter, salaryValidator);
 
             RecordData record = new RecordData(firstName, lastName, dateOfBirth, sex, height, salary);
             return record;
+        }
+
+        private static T ReadInput<T>(Func<string, Tuple<bool, string, T>> converter, Func<T, Tuple<bool, string>> validator)
+        {
+            do
+            {
+                T value;
+
+                var input = Console.ReadLine();
+                var conversionResult = converter(input!);
+
+                if (!conversionResult.Item1)
+                {
+                    Console.WriteLine($"Conversion failed: {conversionResult.Item2}. Please, correct your input.");
+                    continue;
+                }
+
+                value = conversionResult.Item3;
+
+                var validationResult = validator(value);
+                if (!validationResult.Item1)
+                {
+                    Console.WriteLine($"Validation failed: {validationResult.Item2}. Please, correct your input.");
+                    continue;
+                }
+
+                return value;
+            }
+            while (true);
         }
     }
 }
