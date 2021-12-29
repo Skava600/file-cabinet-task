@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using FileCabinetApp.Entities;
 using FileCabinetApp.Models;
+using FileCabinetApp.Services;
 
 namespace FileCabinetApp
 {
@@ -28,24 +29,36 @@ namespace FileCabinetApp
         /// <param name="recordData"><see cref="RecordData"/> with params for FileCabinetRecord.</param>
         void EditRecord(int id, RecordData recordData);
 
-        /// <summary>This method for getting all records.</summary>
+        /// <summary>
+        /// This method for getting all records.
+        /// </summary>
         /// <returns>Read only collection of registered <see cref="FileCabinetRecord"/>.</returns>
         ReadOnlyCollection<FileCabinetRecord> GetRecords();
 
-        /// <summary>This method checks if the record with given id exists.</summary>
+        /// <summary>
+        /// This method checks if the record with given id exists.
+        /// </summary>
         /// <param name="id">id of record.</param>
-        /// <returns><c>true</c> if record exists and <c>false</c> otherwise.</returns>
+        /// <returns> <c>true</c> if record exists and <c>false</c> otherwise.</returns>
         bool IsRecordExists(int id);
 
-        /// <summary>This method for getting quantity of registered records.</summary>
-        /// <returns>int number of records.</returns>
+        /// <summary>
+        /// This method for getting quantity of registered records.
+        /// </summary>
+        /// <returns> int number of records.</returns>
         int GetStat();
+
+        /// <summary>
+        /// This method creates a snapshot of a file cabinet service.
+        /// </summary>
+        /// <returns> <see cref="FileCabinetServiceSnapshot"/>.</returns>
+        FileCabinetServiceSnapshot MakeSnapshot();
 
         /// <summary>
         /// Finds the specified records with property name and value.
         /// </summary>
-        /// <param name="property">Name and value of property through white space.</param>
-        /// <returns>All records with specified last name.</returns>
+        /// <param name="property"> Name and value of property through white space. </param>
+        /// <returns> All records with specified last name. </returns>
         ReadOnlyCollection<FileCabinetRecord> FindByProperty(string property);
     }
 }

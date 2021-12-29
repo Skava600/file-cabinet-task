@@ -87,6 +87,12 @@ namespace FileCabinetApp.Services
         {
             string[] inputs = property.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
 
+            if (inputs.Length < 2)
+            {
+                throw new InvalidOperationException($"The '{property}' isn't valid command parameters. " +
+                    $"Should be name of property and value through white space.");
+            }
+
             int nameIndex = 0;
             string propertyName = inputs[nameIndex];
 
@@ -119,6 +125,12 @@ namespace FileCabinetApp.Services
             {
                 throw new ArgumentException($"Records with {propertyName} and value {propertyValue} not exist.");
             }
+        }
+
+        /// <inheritdoc/>
+        public FileCabinetServiceSnapshot MakeSnapshot()
+        {
+            return new FileCabinetServiceSnapshot(this.records.ToArray());
         }
 
         private void AddRecordToDictionaries(string firstName, string lastName, DateTime dateOfBirth, FileCabinetRecord record)
