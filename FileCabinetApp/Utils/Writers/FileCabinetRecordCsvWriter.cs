@@ -1,8 +1,11 @@
-﻿using FileCabinetApp.Entities;
-using System.Globalization;
+﻿using System.Globalization;
+using FileCabinetApp.Entities;
 
 namespace FileCabinetApp.Utils.Writers
 {
+    /// <summary>
+    /// Class that exports file cabinet record to CSV.
+    /// </summary>
     public class FileCabinetRecordCsvWriter
     {
         private TextWriter writer;
@@ -10,7 +13,7 @@ namespace FileCabinetApp.Utils.Writers
         /// <summary>
         /// Initializes a new instance of the <see cref="FileCabinetRecordCsvWriter"/> class.
         /// </summary>
-        /// <param name="writer"> The Text. </param>
+        /// <param name="writer"> The text writer. </param>
         public FileCabinetRecordCsvWriter(TextWriter writer)
         {
             this.writer = writer;

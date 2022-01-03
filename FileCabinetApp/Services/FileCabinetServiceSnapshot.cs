@@ -1,4 +1,5 @@
-﻿using FileCabinetApp.Entities;
+﻿using System.Xml;
+using FileCabinetApp.Entities;
 using FileCabinetApp.Utils.Writers;
 
 namespace FileCabinetApp.Services
@@ -32,6 +33,31 @@ namespace FileCabinetApp.Services
             {
                 csvWriter.Write(record);
             }
+        }
+
+        /// <summary>
+        /// Saves a records to a xml file.
+        /// </summary>
+        /// <param name="streamWriter"> Stream for exporting. </param>
+        public void SaveToXml(StreamWriter streamWriter)
+        {
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Indent = true;
+
+            XmlWriter xmlWriter = XmlWriter.Create(streamWriter, settings);
+
+            var fileCabinetStreamWriter = new FileCabinetRecordXmlWriter(xmlWriter);
+
+            xmlWriter.WriteStartDocument();
+            xmlWriter.WriteStartElement("records");
+
+            foreach (var record in this.records)
+            {
+                fileCabinetStreamWriter.Write(record);
+            }
+
+            xmlWriter.WriteEndElement();
+            xmlWriter.Close();
         }
     }
 }

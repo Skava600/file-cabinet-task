@@ -40,7 +40,7 @@ namespace FileCabinetApp
             new string[] { "edit", "edites record", "The 'edit <id>' command edites existing record." },
             new string[] { "list", "prints the array of records", "The 'list' command prints array of records." },
             new string[] { "find", "prints the array of records found by given property", "The 'find <parameter name> <parameter value>' command prints array of records by given property." },
-            new string[] { "export", "exports service data into file .csv", "The 'export <format> <file path>' command exports service data into specified format"},
+            new string[] { "export", "exports service data into file .csv or .xml", "The 'export <format> <file path>' command exports service data into specified format" },
             new string[] { "stat", "prints the count of records", "The 'stat' command prints count of the records in service." },
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
         };
@@ -294,6 +294,18 @@ namespace FileCabinetApp
                         fileCabinetService.MakeSnapshot().SaveToCsv(sw);
                         Console.WriteLine($"All records are exported to file {filePath}.");
                     }
+                }
+                else if (format.Equals("xml", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    using (StreamWriter sw = new StreamWriter(filePath))
+                    {
+                        fileCabinetService.MakeSnapshot().SaveToXml(sw);
+                        Console.WriteLine($"All records are exported to file {filePath}.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"{format} is not correct format, available only xml and csv");
                 }
             }
             catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException)

@@ -213,6 +213,32 @@
         <member name="M:FileCabinetApp.Services.FileCabinetService.FindByProperty(System.String)">
             <inheritdoc/>
         </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetService.MakeSnapshot">
+            <inheritdoc/>
+        </member>
+        <member name="T:FileCabinetApp.Services.FileCabinetServiceSnapshot">
+            <summary>
+            Class for representing file cabinet service snapshot.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetServiceSnapshot.#ctor(FileCabinetApp.Entities.FileCabinetRecord[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Services.FileCabinetServiceSnapshot"/> class.
+            </summary>
+            <param name="records"> array of records. </param>
+        </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetServiceSnapshot.SaveToCsv(System.IO.StreamWriter)">
+            <summary>
+            Saves a records to a csv file.
+            </summary>
+            <param name="streamWriter"> Stream for exporting. </param>
+        </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetServiceSnapshot.SaveToXml(System.IO.StreamWriter)">
+            <summary>
+            Saves a records to a xml file.
+            </summary>
+            <param name="streamWriter"> Stream for exporting. </param>
+        </member>
         <member name="T:FileCabinetApp.IFileCabinetService">
             <summary>
             Interface to describe the file cabinet service.
@@ -233,24 +259,70 @@
             <param name="recordData"><see cref="T:FileCabinetApp.Models.RecordData"/> with params for FileCabinetRecord.</param>
         </member>
         <member name="M:FileCabinetApp.IFileCabinetService.GetRecords">
-            <summary>This method for getting all records.</summary>
+            <summary>
+            This method for getting all records.
+            </summary>
             <returns>Read only collection of registered <see cref="T:FileCabinetApp.Entities.FileCabinetRecord"/>.</returns>
         </member>
         <member name="M:FileCabinetApp.IFileCabinetService.IsRecordExists(System.Int32)">
-            <summary>This method checks if the record with given id exists.</summary>
+            <summary>
+            This method checks if the record with given id exists.
+            </summary>
             <param name="id">id of record.</param>
-            <returns><c>true</c> if record exists and <c>false</c> otherwise.</returns>
+            <returns> <c>true</c> if record exists and <c>false</c> otherwise.</returns>
         </member>
         <member name="M:FileCabinetApp.IFileCabinetService.GetStat">
-            <summary>This method for getting quantity of registered records.</summary>
-            <returns>int number of records.</returns>
+            <summary>
+            This method for getting quantity of registered records.
+            </summary>
+            <returns> int number of records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.MakeSnapshot">
+            <summary>
+            This method creates a snapshot of a file cabinet service.
+            </summary>
+            <returns> <see cref="T:FileCabinetApp.Services.FileCabinetServiceSnapshot"/>.</returns>
         </member>
         <member name="M:FileCabinetApp.IFileCabinetService.FindByProperty(System.String)">
             <summary>
             Finds the specified records with property name and value.
             </summary>
-            <param name="property">Name and value of property through white space.</param>
-            <returns>All records with specified last name.</returns>
+            <param name="property"> Name and value of property through white space. </param>
+            <returns> All records with specified last name. </returns>
+        </member>
+        <member name="T:FileCabinetApp.Utils.Writers.FileCabinetRecordCsvWriter">
+            <summary>
+            Class that exports file cabinet record to CSV.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Utils.Writers.FileCabinetRecordCsvWriter.#ctor(System.IO.TextWriter)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Utils.Writers.FileCabinetRecordCsvWriter"/> class.
+            </summary>
+            <param name="writer"> The text writer. </param>
+        </member>
+        <member name="M:FileCabinetApp.Utils.Writers.FileCabinetRecordCsvWriter.Write(FileCabinetApp.Entities.FileCabinetRecord)">
+            <summary>
+            Writes a record to a csv file.
+            </summary>
+            <param name="record"> file cabinet record. </param>
+        </member>
+        <member name="T:FileCabinetApp.Utils.Writers.FileCabinetRecordXmlWriter">
+            <summary>
+            Class that exports file cabinet record to XML.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Utils.Writers.FileCabinetRecordXmlWriter.#ctor(System.Xml.XmlWriter)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Utils.Writers.FileCabinetRecordXmlWriter"/> class.
+            </summary>
+            <param name="writer"> The text writer. </param>
+        </member>
+        <member name="M:FileCabinetApp.Utils.Writers.FileCabinetRecordXmlWriter.Write(FileCabinetApp.Entities.FileCabinetRecord)">
+            <summary>
+            Writes a record to a xml file.
+            </summary>
+            <param name="record"> file cabinet record. </param>
         </member>
         <member name="T:FileCabinetApp.Validation.CustomValidator">
             <summary>
