@@ -18,6 +18,7 @@ namespace FileCabinetApp
         private const int CommandHelpIndex = 0;
         private const int DescriptionHelpIndex = 1;
         private const int ExplanationHelpIndex = 2;
+        private const string FileStorageName = "cabinet-records.db";
 
         private static bool isRunning = true;
 
@@ -97,7 +98,7 @@ namespace FileCabinetApp
 
         private static void SetServiceBehaviour(string[] args)
         {
-            args = string.Join(' ', args).Split(new char[] { ' ', '=' });
+            args = string.Join(' ', args).Split(new char[] { ' ', '=' }, StringSplitOptions.RemoveEmptyEntries);
 
             ValidationRule systemValidationBehaviour = ValidationRule.Default;
 
@@ -108,6 +109,18 @@ namespace FileCabinetApp
                 {
                     systemValidationBehaviour = args[i + 1].Equals("DEFAULT", StringComparison.InvariantCultureIgnoreCase) ?
                         ValidationRule.Default : ValidationRule.Custom;
+                    i += 1;
+                }
+                else if (args[i].Equals("-s", StringComparison.InvariantCulture) ||
+                    args[i].Equals("--storage", StringComparison.InvariantCulture))
+                {
+                    fileCabinetService = args[i + 1].Equals("file", StringComparison.InvariantCultureIgnoreCase) ?
+                        new FileCabinetFilesystemService(new FileStream(FileStorageName, FileMode.OpenOrCreate, FileAccess.ReadWrite)) :
+                        new FileCabinetMemoryService();
+                    i += 1;
+                }
+                else
+                {
                     break;
                 }
             }
@@ -118,6 +131,7 @@ namespace FileCabinetApp
                 _ => new DefaultValidator(),
             };
             Console.WriteLine($"Using {systemValidationBehaviour} validation rules.");
+            Console.WriteLine($"Using {fileCabinetService.GetType().Name}.");
         }
 
         private static void PrintMissedCommandInfo(string command)

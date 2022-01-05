@@ -190,30 +190,62 @@
             </summary>
             <param name="args">The arguments.</param>
         </member>
-        <member name="T:FileCabinetApp.Services.FileCabinetService">
+        <member name="T:FileCabinetApp.Services.FileCabinetFilesystemService">
             <summary>
             Class to describe the file cabinet service.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetService.CreateRecord(FileCabinetApp.Models.RecordData)">
+        <member name="M:FileCabinetApp.Services.FileCabinetFilesystemService.#ctor(System.IO.FileStream)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Services.FileCabinetFilesystemService"/> class.
+            </summary>
+            <param name="fileStream"> Provides a stream for a service. </param>
+        </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetFilesystemService.CreateRecord(FileCabinetApp.Models.RecordData)">
             <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetService.EditRecord(System.Int32,FileCabinetApp.Models.RecordData)">
+        <member name="M:FileCabinetApp.Services.FileCabinetFilesystemService.EditRecord(System.Int32,FileCabinetApp.Models.RecordData)">
             <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetService.GetRecords">
+        <member name="M:FileCabinetApp.Services.FileCabinetFilesystemService.FindByProperty(System.String)">
             <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetService.IsRecordExists(System.Int32)">
+        <member name="M:FileCabinetApp.Services.FileCabinetFilesystemService.GetRecords">
             <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetService.GetStat">
+        <member name="M:FileCabinetApp.Services.FileCabinetFilesystemService.GetStat">
             <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetService.FindByProperty(System.String)">
+        <member name="M:FileCabinetApp.Services.FileCabinetFilesystemService.IsRecordExists(System.Int32)">
             <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetService.MakeSnapshot">
+        <member name="M:FileCabinetApp.Services.FileCabinetFilesystemService.MakeSnapshot">
+            <inheritdoc/>
+        </member>
+        <member name="T:FileCabinetApp.Services.FileCabinetMemoryService">
+            <summary>
+            Class to describe the file cabinet service.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.CreateRecord(FileCabinetApp.Models.RecordData)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.EditRecord(System.Int32,FileCabinetApp.Models.RecordData)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.GetRecords">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.IsRecordExists(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.GetStat">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.FindByProperty(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.MakeSnapshot">
             <inheritdoc/>
         </member>
         <member name="T:FileCabinetApp.Services.FileCabinetServiceSnapshot">
