@@ -10,7 +10,7 @@ namespace FileCabinetApp.Services
     /// <summary>
     /// Class to describe the file cabinet service.
     /// </summary>
-    public class FileCabinetService : IFileCabinetService
+    public class FileCabinetMemoryService : IFileCabinetService
     {
         private readonly List<FileCabinetRecord> records = new List<FileCabinetRecord>();
 

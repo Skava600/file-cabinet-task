@@ -45,7 +45,7 @@ namespace FileCabinetApp
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
         };
 
-        private static IFileCabinetService fileCabinetService = new FileCabinetService();
+        private static IFileCabinetService fileCabinetService = new FileCabinetMemoryService();
         private static IRecordValidator recordValidator = new DefaultValidator();
 
         private enum ValidationRule
