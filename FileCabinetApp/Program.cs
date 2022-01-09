@@ -108,15 +108,15 @@ namespace FileCabinetApp
                     args[i].Equals("--validation-rules", StringComparison.InvariantCulture))
                 {
                     systemValidationBehaviour = args[i + 1].Equals("DEFAULT", StringComparison.InvariantCultureIgnoreCase) ?
-                        ValidationRule.Default : ValidationRule.Custom;
+                            ValidationRule.Default : ValidationRule.Custom;
                     i += 1;
                 }
                 else if (args[i].Equals("-s", StringComparison.InvariantCulture) ||
-                    args[i].Equals("--storage", StringComparison.InvariantCulture))
+                        args[i].Equals("--storage", StringComparison.InvariantCulture))
                 {
                     fileCabinetService = args[i + 1].Equals("file", StringComparison.InvariantCultureIgnoreCase) ?
-                        new FileCabinetFilesystemService(new FileStream(FileStorageName, FileMode.OpenOrCreate, FileAccess.ReadWrite)) :
-                        new FileCabinetMemoryService();
+                            new FileCabinetFilesystemService(new FileStream(FileStorageName, FileMode.OpenOrCreate, FileAccess.ReadWrite)) :
+                            new FileCabinetMemoryService();
                     i += 1;
                 }
                 else

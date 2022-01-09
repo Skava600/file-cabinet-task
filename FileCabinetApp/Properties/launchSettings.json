@@ -2,7 +2,7 @@
   "profiles": {
     "FileCabinetApp": {
       "commandName": "Project",
-      "commandLineArgs": "--storage=file --validation-rules=custom -v default -s memory"
+      "commandLineArgs": "--storage=file --validation-rules=custom"
     }
   }
 }

@@ -14,6 +14,19 @@ namespace FileCabinetApp.Services
     /// </summary>
     public class FileCabinetFilesystemService : IFileCabinetService
     {
+        private const int NameFieldSize = 120;
+        private const int RecordSize =
+            sizeof(short)
+            + sizeof(int)
+            + NameFieldSize
+            + NameFieldSize
+            + sizeof(int)
+            + sizeof(int)
+            + sizeof(int)
+            + sizeof(char)
+            + sizeof(short)
+            + sizeof(decimal);
+
         private FileStream fileStream;
 
         /// <summary>
@@ -28,7 +41,32 @@ namespace FileCabinetApp.Services
         /// <inheritdoc/>
         public int CreateRecord(RecordData recordData)
         {
-            throw new NotImplementedException();
+            var record = new FileCabinetRecord
+            {
+                Id = ((int)this.fileStream.Length / RecordSize) + 1,
+                FirstName = recordData.FirstName,
+                LastName = recordData.LastName,
+                DateOfBirth = recordData.DateOfBirth,
+                Sex = char.ToUpper(recordData.Sex),
+                Height = recordData.Height,
+                Salary = recordData.Salary,
+            };
+
+            using (BinaryWriter binaryWriter = new BinaryWriter(this.fileStream, Encoding.UTF8, false))
+            {
+                binaryWriter.Write(default(short));
+                binaryWriter.Write(record.Id);
+                binaryWriter.Write(record.FirstName.PadRight(NameFieldSize / sizeof(char)));
+                binaryWriter.Write(record.LastName.PadRight(NameFieldSize / sizeof(char)));
+                binaryWriter.Write(record.DateOfBirth.Year);
+                binaryWriter.Write(record.DateOfBirth.Month);
+                binaryWriter.Write(record.DateOfBirth.Day);
+                binaryWriter.Write(record.Sex);
+                binaryWriter.Write(record.Height);
+                binaryWriter.Write(record.Salary);
+            }
+
+            return record.Id;
         }
 
         /// <inheritdoc/>

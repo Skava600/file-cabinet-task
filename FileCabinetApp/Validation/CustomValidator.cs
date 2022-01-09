@@ -13,7 +13,7 @@ namespace FileCabinetApp.Validation
     public class CustomValidator : IRecordValidator
     {
         private const int MinNameLength = 3;
-        private const int MaxNameLength = 80;
+        private const int MaxNameLength = 50;
 
         private const short MinHeight = 0;
         private const short MaxHeight = 300;
