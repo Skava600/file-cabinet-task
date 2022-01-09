@@ -189,6 +189,12 @@ namespace FileCabinetApp
                 return;
             }
 
+            if (id < 0)
+            {
+                Console.WriteLine($"Id can't be less zero.");
+                return;
+            }
+
             if (!fileCabinetService.IsRecordExists(id))
             {
                 Console.WriteLine($"#{id} record is not found.");
@@ -201,14 +207,9 @@ namespace FileCabinetApp
                 fileCabinetService.EditRecord(id, recordData);
                 Console.WriteLine($"Record #{id} is updated.");
             }
-            catch (ArgumentOutOfRangeException ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
             catch (Exception ex)
             {
-                Console.WriteLine($"{ex.Message}. Input data again.");
-                Edit(parameters);
+                Console.WriteLine(ex.Message);
             }
         }
 
