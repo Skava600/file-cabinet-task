@@ -52,12 +52,12 @@ namespace FileCabinetApp.Services
                 Salary = recordData.Salary,
             };
 
-            using (BinaryWriter binaryWriter = new BinaryWriter(this.fileStream, Encoding.UTF8, false))
+            using (BinaryWriter binaryWriter = new BinaryWriter(this.fileStream, Encoding.Unicode, true))
             {
                 binaryWriter.Write(default(short));
                 binaryWriter.Write(record.Id);
-                binaryWriter.Write(record.FirstName.PadRight(NameFieldSize / sizeof(char)));
-                binaryWriter.Write(record.LastName.PadRight(NameFieldSize / sizeof(char)));
+                binaryWriter.Write(record.FirstName.PadRight(NameFieldSize / sizeof(char)).ToCharArray());
+                binaryWriter.Write(record.LastName.PadRight(NameFieldSize / sizeof(char)).ToCharArray());
                 binaryWriter.Write(record.DateOfBirth.Year);
                 binaryWriter.Write(record.DateOfBirth.Month);
                 binaryWriter.Write(record.DateOfBirth.Day);
@@ -84,7 +84,28 @@ namespace FileCabinetApp.Services
         /// <inheritdoc/>
         public ReadOnlyCollection<FileCabinetRecord> GetRecords()
         {
-            throw new NotImplementedException();
+            this.fileStream.Position = 0;
+            List<FileCabinetRecord> records = new List<FileCabinetRecord>();
+
+            using (BinaryReader binaryReader = new BinaryReader(this.fileStream, Encoding.Unicode, true))
+            {
+                while (binaryReader.PeekChar() > -1)
+                {
+                    binaryReader.ReadInt16();
+                    records.Add(new FileCabinetRecord
+                    {
+                        Id = binaryReader.ReadInt32(),
+                        FirstName = Encoding.Unicode.GetString(binaryReader.ReadBytes(NameFieldSize)).Trim(),
+                        LastName = Encoding.Unicode.GetString(binaryReader.ReadBytes(NameFieldSize)).Trim(),
+                        DateOfBirth = new DateTime(binaryReader.ReadInt32(), binaryReader.ReadInt32(), binaryReader.ReadInt32()),
+                        Sex = binaryReader.ReadChar(),
+                        Height = binaryReader.ReadInt16(),
+                        Salary = binaryReader.ReadDecimal(),
+                    });
+                }
+            }
+
+            return new ReadOnlyCollection<FileCabinetRecord>(records);
         }
 
         /// <inheritdoc/>
