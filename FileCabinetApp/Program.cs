@@ -218,14 +218,45 @@ namespace FileCabinetApp
             ReadOnlyCollection<FileCabinetRecord> foundRecords;
             try
             {
-                foundRecords = fileCabinetService.FindByProperty(parameters);
+                string[] inputs = parameters.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
+                if (inputs.Length < 2)
+                {
+                    Console.WriteLine($"The '{parameters}' isn't valid command parameters. " +
+                        $"Should be name of property and value through white space.");
+                    return;
+                }
+
+                const int nameIndex = 0;
+                string propertyName = inputs[nameIndex];
+
+                const int valueIndex = 1;
+                string propertyValue = inputs[valueIndex].Trim('"');
+
+                if (propertyName.Equals(nameof(FileCabinetRecord.FirstName), StringComparison.InvariantCultureIgnoreCase))
+                {
+                    foundRecords = fileCabinetService.FindByFirstName(propertyValue);
+                }
+                else if (propertyName.Equals(nameof(FileCabinetRecord.LastName), StringComparison.InvariantCultureIgnoreCase))
+                {
+                    foundRecords = fileCabinetService.FindByLastName(propertyValue);
+                }
+                else if (propertyName.Equals(nameof(FileCabinetRecord.DateOfBirth), StringComparison.InvariantCultureIgnoreCase))
+                {
+                    foundRecords = fileCabinetService.FindByDateOfBirth(propertyValue);
+                }
+                else
+                {
+                    throw new InvalidOperationException($"The {propertyName} isn't valid command searching property. Only " +
+                        $"'{nameof(FileCabinetRecord.FirstName)}', '{nameof(FileCabinetRecord.LastName)}' and " +
+                        $"'{nameof(FileCabinetRecord.DateOfBirth)}' allowed.");
+                }
             }
-            catch (InvalidOperationException ex)
+            catch (ArgumentException ex)
             {
                 Console.WriteLine(ex.Message);
                 return;
             }
-            catch (ArgumentException ex)
+            catch (InvalidOperationException ex)
             {
                 Console.WriteLine(ex.Message);
                 return;
