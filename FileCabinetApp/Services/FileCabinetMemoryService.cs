@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using FileCabinetApp.Entities;
 using FileCabinetApp.Models;
 using FileCabinetApp.Validation;
@@ -10,7 +11,7 @@ namespace FileCabinetApp.Services
     /// <summary>
     /// Class to describe the file cabinet service.
     /// </summary>
-    public class FileCabinetService : IFileCabinetService
+    public class FileCabinetMemoryService : IFileCabinetService
     {
         private readonly List<FileCabinetRecord> records = new List<FileCabinetRecord>();
 
@@ -83,47 +84,50 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
-        public ReadOnlyCollection<FileCabinetRecord> FindByProperty(string property)
+        public ReadOnlyCollection<FileCabinetRecord> FindByFirstName(string firstname)
         {
-            string[] inputs = property.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
-
-            if (inputs.Length < 2)
-            {
-                throw new InvalidOperationException($"The '{property}' isn't valid command parameters. " +
-                    $"Should be name of property and value through white space.");
-            }
-
-            int nameIndex = 0;
-            string propertyName = inputs[nameIndex];
-
-            int valueIndex = 1;
-            string propertyValue = inputs[valueIndex].Trim('"');
-
             try
             {
-                if (propertyName.Equals(nameof(FileCabinetRecord.FirstName), StringComparison.InvariantCultureIgnoreCase))
-                {
-                    return this.firstNameDictionary[propertyValue].AsReadOnly();
-                }
-                else if (propertyName.Equals(nameof(FileCabinetRecord.LastName), StringComparison.InvariantCultureIgnoreCase))
-                {
-                    return this.lastNameDictionary[propertyValue].AsReadOnly();
-                }
-                else if (propertyName.Equals(nameof(FileCabinetRecord.DateOfBirth), StringComparison.InvariantCultureIgnoreCase))
-                {
-                    DateTime.TryParse(propertyValue, out DateTime dob);
-                    return this.dateOfBirthDictionary[dob].AsReadOnly();
-                }
-                else
-                {
-                    throw new InvalidOperationException($"The {propertyName} isn't valid command searching property. Only " +
-                        $"'{nameof(FileCabinetRecord.FirstName)}', '{nameof(FileCabinetRecord.LastName)}' and " +
-                        $"'{nameof(FileCabinetRecord.DateOfBirth)}' allowed.");
-                }
+                return this.firstNameDictionary[firstname].AsReadOnly();
             }
             catch (KeyNotFoundException)
             {
-                throw new ArgumentException($"Records with {propertyName} and value {propertyValue} not exist.");
+                throw new ArgumentException($"Records with {firstname} first name not exist.");
+            }
+        }
+
+        /// <inheritdoc/>
+        public ReadOnlyCollection<FileCabinetRecord> FindByLastName(string lastName)
+        {
+            try
+            {
+                return this.lastNameDictionary[lastName].AsReadOnly();
+            }
+            catch (KeyNotFoundException)
+            {
+                throw new ArgumentException($"Records with {lastName} last name not exist.");
+            }
+        }
+
+        /// <inheritdoc/>
+        public ReadOnlyCollection<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth)
+        {
+            try
+            {
+                DateTime dob = DateTime.Parse(dateOfBirth, CultureInfo.InvariantCulture);
+                return this.dateOfBirthDictionary[dob].AsReadOnly();
+            }
+            catch (KeyNotFoundException)
+            {
+                throw new ArgumentException($"Records with {dateOfBirth} date of birth not exist.");
+            }
+            catch (ArgumentNullException)
+            {
+                throw new ArgumentException($"Date of birth can't be null.");
+            }
+            catch (FormatException)
+            {
+                throw new ArgumentException($"{dateOfBirth} is invalid date format.");
             }
         }
 

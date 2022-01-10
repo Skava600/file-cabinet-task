@@ -18,6 +18,7 @@ namespace FileCabinetApp
         private const int CommandHelpIndex = 0;
         private const int DescriptionHelpIndex = 1;
         private const int ExplanationHelpIndex = 2;
+        private const string FileStorageName = "cabinet-records.db";
 
         private static bool isRunning = true;
 
@@ -45,7 +46,7 @@ namespace FileCabinetApp
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
         };
 
-        private static IFileCabinetService fileCabinetService = new FileCabinetService();
+        private static IFileCabinetService fileCabinetService = new FileCabinetMemoryService();
         private static IRecordValidator recordValidator = new DefaultValidator();
 
         private enum ValidationRule
@@ -97,7 +98,7 @@ namespace FileCabinetApp
 
         private static void SetServiceBehaviour(string[] args)
         {
-            args = string.Join(' ', args).Split(new char[] { ' ', '=' });
+            args = string.Join(' ', args).Split(new char[] { ' ', '=' }, StringSplitOptions.RemoveEmptyEntries);
 
             ValidationRule systemValidationBehaviour = ValidationRule.Default;
 
@@ -107,7 +108,19 @@ namespace FileCabinetApp
                     args[i].Equals("--validation-rules", StringComparison.InvariantCulture))
                 {
                     systemValidationBehaviour = args[i + 1].Equals("DEFAULT", StringComparison.InvariantCultureIgnoreCase) ?
-                        ValidationRule.Default : ValidationRule.Custom;
+                            ValidationRule.Default : ValidationRule.Custom;
+                    i += 1;
+                }
+                else if (args[i].Equals("-s", StringComparison.InvariantCulture) ||
+                        args[i].Equals("--storage", StringComparison.InvariantCulture))
+                {
+                    fileCabinetService = args[i + 1].Equals("file", StringComparison.InvariantCultureIgnoreCase) ?
+                            new FileCabinetFilesystemService(new FileStream(FileStorageName, FileMode.OpenOrCreate, FileAccess.ReadWrite)) :
+                            new FileCabinetMemoryService();
+                    i += 1;
+                }
+                else
+                {
                     break;
                 }
             }
@@ -118,6 +131,7 @@ namespace FileCabinetApp
                 _ => new DefaultValidator(),
             };
             Console.WriteLine($"Using {systemValidationBehaviour} validation rules.");
+            Console.WriteLine($"Using {fileCabinetService.GetType().Name}.");
         }
 
         private static void PrintMissedCommandInfo(string command)
@@ -175,6 +189,12 @@ namespace FileCabinetApp
                 return;
             }
 
+            if (id < 0)
+            {
+                Console.WriteLine($"Id can't be less zero.");
+                return;
+            }
+
             if (!fileCabinetService.IsRecordExists(id))
             {
                 Console.WriteLine($"#{id} record is not found.");
@@ -187,14 +207,9 @@ namespace FileCabinetApp
                 fileCabinetService.EditRecord(id, recordData);
                 Console.WriteLine($"Record #{id} is updated.");
             }
-            catch (ArgumentOutOfRangeException ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
             catch (Exception ex)
             {
-                Console.WriteLine($"{ex.Message}. Input data again.");
-                Edit(parameters);
+                Console.WriteLine(ex.Message);
             }
         }
 
@@ -203,14 +218,45 @@ namespace FileCabinetApp
             ReadOnlyCollection<FileCabinetRecord> foundRecords;
             try
             {
-                foundRecords = fileCabinetService.FindByProperty(parameters);
+                string[] inputs = parameters.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
+                if (inputs.Length < 2)
+                {
+                    Console.WriteLine($"The '{parameters}' isn't valid command parameters. " +
+                        $"Should be name of property and value through white space.");
+                    return;
+                }
+
+                const int nameIndex = 0;
+                string propertyName = inputs[nameIndex];
+
+                const int valueIndex = 1;
+                string propertyValue = inputs[valueIndex].Trim('"');
+
+                if (propertyName.Equals(nameof(FileCabinetRecord.FirstName), StringComparison.InvariantCultureIgnoreCase))
+                {
+                    foundRecords = fileCabinetService.FindByFirstName(propertyValue);
+                }
+                else if (propertyName.Equals(nameof(FileCabinetRecord.LastName), StringComparison.InvariantCultureIgnoreCase))
+                {
+                    foundRecords = fileCabinetService.FindByLastName(propertyValue);
+                }
+                else if (propertyName.Equals(nameof(FileCabinetRecord.DateOfBirth), StringComparison.InvariantCultureIgnoreCase))
+                {
+                    foundRecords = fileCabinetService.FindByDateOfBirth(propertyValue);
+                }
+                else
+                {
+                    throw new InvalidOperationException($"The {propertyName} isn't valid command searching property. Only " +
+                        $"'{nameof(FileCabinetRecord.FirstName)}', '{nameof(FileCabinetRecord.LastName)}' and " +
+                        $"'{nameof(FileCabinetRecord.DateOfBirth)}' allowed.");
+                }
             }
-            catch (InvalidOperationException ex)
+            catch (ArgumentException ex)
             {
                 Console.WriteLine(ex.Message);
                 return;
             }
-            catch (ArgumentException ex)
+            catch (InvalidOperationException ex)
             {
                 Console.WriteLine(ex.Message);
                 return;

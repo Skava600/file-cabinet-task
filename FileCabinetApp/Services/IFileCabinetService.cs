@@ -55,10 +55,24 @@ namespace FileCabinetApp
         FileCabinetServiceSnapshot MakeSnapshot();
 
         /// <summary>
-        /// Finds the specified records with property name and value.
+        /// Finds the specified records by firstname.
         /// </summary>
-        /// <param name="property"> Name and value of property through white space. </param>
+        /// <param name="firstname"> First Name of record. </param>
+        /// <returns> All records with specified first name. </returns>
+        ReadOnlyCollection<FileCabinetRecord> FindByFirstName(string firstname);
+
+        /// <summary>
+        /// Finds the specified records by lastname.
+        /// </summary>
+        /// <param name="lastname"> Last Name of record. </param>
         /// <returns> All records with specified last name. </returns>
-        ReadOnlyCollection<FileCabinetRecord> FindByProperty(string property);
+        ReadOnlyCollection<FileCabinetRecord> FindByLastName(string lastname);
+
+        /// <summary>
+        /// Finds the specified records by date of birth.
+        /// </summary>
+        /// <param name="dateOfBirth"> Date of birth of record. </param>
+        /// <returns> All records with specified date of birth. </returns>
+        ReadOnlyCollection<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth);
     }
 }
