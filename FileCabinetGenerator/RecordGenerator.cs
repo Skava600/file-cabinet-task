@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using FileCabinetApp.Entities;
+using FileCabinetApp.Models;
 
 namespace FileCabinetGenerator
 {
@@ -21,14 +22,17 @@ namespace FileCabinetGenerator
         /// </summary>
         /// <param name="id">id of generated record.</param>
         /// <returns>Generated <see cref="FileCabinetRecord"/>.</returns>
-        public static FileCabinetRecord GenerateRecord(int id)
+        public static RecordSerializable GenerateRecord(int id)
         {
             Random random = new Random();
-            FileCabinetRecord newRecord = new FileCabinetRecord()
+            RecordSerializable newRecord = new RecordSerializable()
             {
                 Id = id,
-                FirstName = GenerateName(random.Next(MinNameLength, MaxNameLength + 1)),
-                LastName = GenerateName(random.Next(MinNameLength, MaxNameLength + 1)),
+                Name = new Name()
+                {
+                    FirstName = GenerateName(random.Next(MinNameLength, MaxNameLength + 1)),
+                    LastName = GenerateName(random.Next(MinNameLength, MaxNameLength + 1)),
+                },
                 DateOfBirth = GenerateDateOfBirth(),
                 Sex = GenerateSex(),
                 Height = (short)random.Next(MinHeight, MaxHeight + 1),

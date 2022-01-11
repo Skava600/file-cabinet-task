@@ -115,6 +115,27 @@
             The salary in dollars.
             </value>
         </member>
+        <member name="T:FileCabinetApp.Models.Name">
+            <summary>
+            Class for full name representation.
+            </summary>
+        </member>
+        <member name="P:FileCabinetApp.Models.Name.FirstName">
+            <summary>
+            Gets or sets first name of a record.
+            </summary>
+            <value>
+            first name of a record.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.Models.Name.LastName">
+            <summary>
+            Gets or sets last name of a record.
+            </summary>
+            <value>
+            last name of a record.
+            </value>
+        </member>
         <member name="T:FileCabinetApp.Models.RecordData">
             <summary>
              Class to introduce parameter object of FileCabinetService.CreateRecord and FileCabinetService.EditRecord.
@@ -177,6 +198,91 @@
             </summary>
             <value>
             The salary.
+            </value>
+        </member>
+        <member name="T:FileCabinetApp.Models.RecordSerializable">
+            <summary>
+            Class For serialization of <see cref="T:FileCabinetApp.Entities.FileCabinetRecord"/>.
+            </summary>
+        </member>
+        <member name="P:FileCabinetApp.Models.RecordSerializable.Name">
+            <summary>
+            Gets or sets the name of record.
+            </summary>
+            <value>
+            The name of record.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.Models.RecordSerializable.Id">
+            <summary>
+            Gets or sets the id of record.
+            </summary>
+            <value>
+            The id of record.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.Models.RecordSerializable.DateOfBirth">
+            <summary>
+            Gets or sets the date of birth of record.
+            </summary>
+            <value>
+            The date of birth of record.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.Models.RecordSerializable.Sex">
+            <summary>
+            Gets or sets the sex of record.
+            </summary>
+            <value>
+            The sex of record.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.Models.RecordSerializable.Height">
+            <summary>
+            Gets or sets the height of a record.
+            </summary>
+            <value>
+            The height of a record.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.Models.RecordSerializable.Salary">
+            <summary>
+            Gets or sets the salary of record.
+            </summary>
+            <value>
+            The salary of a record.
+            </value>
+        </member>
+        <member name="M:FileCabinetApp.Models.RecordSerializable.ToString">
+            <summary>
+            Overriding method ToString representation of serialization model.
+            </summary>
+            <returns>String.</returns>
+        </member>
+        <member name="T:FileCabinetApp.Models.RecordsSerializable">
+            <summary>
+            Model for record serialization".
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Models.RecordsSerializable.#ctor(System.Collections.Generic.List{FileCabinetApp.Models.RecordSerializable})">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Models.RecordsSerializable"/> class.
+            </summary>
+            <param name="records">
+            File Cabinet records to serialize.
+            </param>
+        </member>
+        <member name="M:FileCabinetApp.Models.RecordsSerializable.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Models.RecordsSerializable"/> class.
+            </summary>
+        </member>
+        <member name="P:FileCabinetApp.Models.RecordsSerializable.Records">
+            <summary>
+            Gets records to serialize.
+            </summary>
+            <value>
+            Records.
             </value>
         </member>
         <member name="T:FileCabinetApp.Program">

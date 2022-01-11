@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Xml;
+using System.Xml.Serialization;
 using FileCabinetApp.Entities;
+using FileCabinetApp.Models;
 using FileCabinetApp.Services;
 using FileCabinetApp.Utils.Enums;
 using FileCabinetGenerator;
@@ -82,13 +85,13 @@ public static class Program
             return;
         }
 
-        List<FileCabinetRecord> generatedRecords = GenerateRecords(int.Parse(startId!), int.Parse(recordsAmount!));
+        List<RecordSerializable> generatedRecords = GenerateRecords(int.Parse(startId!), int.Parse(recordsAmount!));
         Export(generatedRecords);
     }
 
-    private static List<FileCabinetRecord> GenerateRecords(int startId, int recordsAmount)
+    private static List<RecordSerializable> GenerateRecords(int startId, int recordsAmount)
     {
-        List<FileCabinetRecord> generatedRecords = new List<FileCabinetRecord>();
+        List<RecordSerializable> generatedRecords = new List<RecordSerializable>();
 
         for (int i = startId; i < recordsAmount + startId; i++)
         {
@@ -98,7 +101,7 @@ public static class Program
         return generatedRecords;
     }
 
-    private static void Export(List<FileCabinetRecord> generatedRecords)
+    private static void Export(List<RecordSerializable> generatedRecords)
     {
         if (File.Exists(outputFileName))
         {
@@ -124,22 +127,43 @@ public static class Program
             {
                 using (StreamWriter sw = new StreamWriter(outputFileName!))
                 {
-                    new FileCabinetServiceSnapshot(generatedRecords.ToArray()).SaveToCsv(sw);
-                    Console.WriteLine($"{generatedRecords.Count} records were written to {outputFileName}.");
+                    foreach (var record in generatedRecords)
+                    {
+                        sw.WriteLine(record.ToString());
+                    }
                 }
             }
             else if (outputType.Equals(nameof(FormatType.Xml), StringComparison.InvariantCultureIgnoreCase))
             {
-                throw new NotImplementedException();
+                XmlWriterSettings settings = new XmlWriterSettings()
+                {
+                    Indent = true,
+                };
+                using (var fileWriter = XmlWriter.Create(outputFileName!, settings))
+                {
+                    var serializableRecords = new RecordsSerializable(generatedRecords);
+
+                    var xmlSerializerNamespaces = new XmlSerializerNamespaces();
+                    xmlSerializerNamespaces.Add(string.Empty, string.Empty);
+
+                    var serializer = new XmlSerializer(typeof(RecordsSerializable));
+                    serializer.Serialize(fileWriter, serializableRecords, xmlSerializerNamespaces);
+                }
             }
             else
             {
-                Console.WriteLine($"{outputType} is not correct format, available only xml and csv");
+                throw new ArgumentException($"{outputType} is not correct format, available only xml and csv.");
             }
+
+            Console.WriteLine($"{generatedRecords.Count} records were written to {outputFileName}.");
         }
         catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException)
         {
             Console.WriteLine($"Export failed: can't open file {outputFileName}.");
+        }
+        catch (ArgumentException ex)
+        {
+            Console.WriteLine(ex.Message);
         }
     }
 
