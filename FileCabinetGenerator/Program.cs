@@ -1,5 +1,6 @@
 ﻿using System;
 using FileCabinetApp.Entities;
+using FileCabinetApp.Services;
 using FileCabinetApp.Utils.Enums;
 using FileCabinetGenerator;
 
@@ -82,6 +83,7 @@ public static class Program
         }
 
         List<FileCabinetRecord> generatedRecords = GenerateRecords(int.Parse(startId!), int.Parse(recordsAmount!));
+        Export(generatedRecords);
     }
 
     private static List<FileCabinetRecord> GenerateRecords(int startId, int recordsAmount)
@@ -94,6 +96,51 @@ public static class Program
         }
 
         return generatedRecords;
+    }
+
+    private static void Export(List<FileCabinetRecord> generatedRecords)
+    {
+        if (File.Exists(outputFileName))
+        {
+            char answer;
+
+            do
+            {
+                Console.Write($"File is exist - rewrite {outputFileName}? [Y/n] ");
+                answer = Console.ReadKey().KeyChar;
+                Console.WriteLine();
+            }
+            while (!char.ToLower(answer).Equals('y') && !char.ToLower(answer).Equals('n'));
+
+            if (char.ToLower(answer).Equals('n'))
+            {
+                return;
+            }
+        }
+
+        try
+        {
+            if (outputType!.Equals(nameof(FormatType.Csv), StringComparison.InvariantCultureIgnoreCase))
+            {
+                using (StreamWriter sw = new StreamWriter(outputFileName!))
+                {
+                    new FileCabinetServiceSnapshot(generatedRecords.ToArray()).SaveToCsv(sw);
+                    Console.WriteLine($"{generatedRecords.Count} records were written to {outputFileName}.");
+                }
+            }
+            else if (outputType.Equals(nameof(FormatType.Xml), StringComparison.InvariantCultureIgnoreCase))
+            {
+                throw new NotImplementedException();
+            }
+            else
+            {
+                Console.WriteLine($"{outputType} is not correct format, available only xml and csv");
+            }
+        }
+        catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException)
+        {
+            Console.WriteLine($"Export failed: can't open file {outputFileName}.");
+        }
     }
 
     private static void ValidateCommandParameters()
