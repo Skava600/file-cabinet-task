@@ -13,7 +13,19 @@
             <summary>
             Entry point of the application.
             </summary>
-            <param name="args">The arguments of application</param>
+            <param name="args">The arguments of application.</param>
+        </member>
+        <member name="T:FileCabinetGenerator.RecordGenerator">
+            <summary>
+            Class for generating data for <see cref="T:FileCabinetApp.Entities.FileCabinetRecord"/>.
+            </summary>
+        </member>
+        <member name="M:FileCabinetGenerator.RecordGenerator.GenerateRecord(System.Int32)">
+            <summary>
+            This method generates <see cref="T:FileCabinetApp.Entities.FileCabinetRecord"/> with random properties.
+            </summary>
+            <param name="id">id of generated record.</param>
+            <returns>Generated <see cref="T:FileCabinetApp.Entities.FileCabinetRecord"/>.</returns>
         </member>
     </members>
 </doc>
