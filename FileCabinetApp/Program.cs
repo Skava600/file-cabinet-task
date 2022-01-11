@@ -4,6 +4,7 @@ using FileCabinetApp.Converters;
 using FileCabinetApp.Entities;
 using FileCabinetApp.Models;
 using FileCabinetApp.Services;
+using FileCabinetApp.Utils.Enums;
 using FileCabinetApp.Validation;
 
 namespace FileCabinetApp
@@ -48,12 +49,6 @@ namespace FileCabinetApp
 
         private static IFileCabinetService fileCabinetService = new FileCabinetMemoryService();
         private static IRecordValidator recordValidator = new DefaultValidator();
-
-        private enum ValidationRule
-        {
-            Default,
-            Custom,
-        }
 
         /// <summary>
         /// Defines the entry point of the application.
@@ -107,8 +102,8 @@ namespace FileCabinetApp
                 if (args[i].Equals("-v", StringComparison.InvariantCulture) ||
                     args[i].Equals("--validation-rules", StringComparison.InvariantCulture))
                 {
-                    systemValidationBehaviour = args[i + 1].Equals("DEFAULT", StringComparison.InvariantCultureIgnoreCase) ?
-                            ValidationRule.Default : ValidationRule.Custom;
+                    systemValidationBehaviour = args[i + 1].Equals("CUSTOM", StringComparison.InvariantCultureIgnoreCase) ?
+                            ValidationRule.Custom : ValidationRule.Default;
                     i += 1;
                 }
                 else if (args[i].Equals("-s", StringComparison.InvariantCulture) ||

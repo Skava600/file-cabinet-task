@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "FileCabinetGenerator": {
+      "commandName": "Project",
+      "commandLineArgs": "-t csv -o fh"
+    }
+  }
+}
