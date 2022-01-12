@@ -32,6 +32,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("list", List),
             new Tuple<string, Action<string>>("stat", Stat),
             new Tuple<string, Action<string>>("export", Export),
+            new Tuple<string, Action<string>>("import", Import),
             new Tuple<string, Action<string>>("exit", Exit),
         };
 
@@ -42,7 +43,8 @@ namespace FileCabinetApp
             new string[] { "edit", "edites record", "The 'edit <id>' command edites existing record." },
             new string[] { "list", "prints the array of records", "The 'list' command prints array of records." },
             new string[] { "find", "prints the array of records found by given property", "The 'find <parameter name> <parameter value>' command prints array of records by given property." },
-            new string[] { "export", "exports service data into file .csv or .xml", "The 'export <format> <file path>' command exports service data into specified format" },
+            new string[] { "export", "exports service data into file .csv or .xml", "The 'export <format> <file path>' command exports service data into specified format." },
+            new string[] { "import", "imports servcie data from file .csv or .xml", "The 'export <format> <file path>' command imports service data from file with specified format." },
             new string[] { "stat", "prints the count of records", "The 'stat' command prints count of the records in service." },
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
         };
@@ -352,6 +354,50 @@ namespace FileCabinetApp
             catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException)
             {
                 Console.WriteLine($"Export failed: can't open file {filePath}.");
+            }
+        }
+
+        private static void Import(string parameters)
+        {
+            string[] inputs = parameters.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
+
+            if (inputs.Length < 2)
+            {
+                Console.WriteLine($"The '{parameters}' isn't valid command parameters. " +
+                    $"Should be import format and file path through white space.");
+                return;
+            }
+
+            const int formatIndex = 0;
+            string format = inputs[formatIndex];
+
+            const int pathIndex = 1;
+            string filePath = inputs[pathIndex];
+
+            if (!File.Exists(filePath))
+            {
+                Console.WriteLine($"Import error: file {filePath} is not exist.");
+                return;
+            }
+
+            try
+            {
+                if (format.Equals("csv", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    throw new NotImplementedException();
+                }
+                else if (format.Equals("xml", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    throw new NotImplementedException();
+                }
+                else
+                {
+                    Console.WriteLine($"{format} is not correct format, available only xml and csv");
+                }
+            }
+            catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException)
+            {
+                Console.WriteLine($"Import failed: can't open file {filePath}.");
             }
         }
 

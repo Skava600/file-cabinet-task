@@ -454,21 +454,6 @@
             <param name="dateOfBirth"> Date of birth of record. </param>
             <returns> All records with specified date of birth. </returns>
         </member>
-        <member name="T:FileCabinetApp.Utils.Enums.FormatType">
-            <summary>
-            Represents data format types.
-            </summary>
-        </member>
-        <member name="F:FileCabinetApp.Utils.Enums.FormatType.Xml">
-            <summary>
-            Xml format.
-            </summary>
-        </member>
-        <member name="F:FileCabinetApp.Utils.Enums.FormatType.Csv">
-            <summary>
-            Csv format.
-            </summary>
-        </member>
         <member name="T:FileCabinetApp.Utils.Enums.ValidationRule">
             <summary>
             Represents validation rules for <see cref="T:FileCabinetApp.Entities.FileCabinetRecord"/>.

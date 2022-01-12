@@ -123,7 +123,7 @@ public static class Program
 
         try
         {
-            if (outputType!.Equals(nameof(FormatType.Csv), StringComparison.InvariantCultureIgnoreCase))
+            if (outputType!.Equals("csv", StringComparison.InvariantCultureIgnoreCase))
             {
                 using (StreamWriter sw = new StreamWriter(outputFileName!))
                 {
@@ -133,7 +133,7 @@ public static class Program
                     }
                 }
             }
-            else if (outputType.Equals(nameof(FormatType.Xml), StringComparison.InvariantCultureIgnoreCase))
+            else if (outputType.Equals("xml", StringComparison.InvariantCultureIgnoreCase))
             {
                 XmlWriterSettings settings = new XmlWriterSettings()
                 {
@@ -189,8 +189,8 @@ public static class Program
             throw new ArgumentException("error: start id not set.");
         }
 
-        if (!outputType.Equals(nameof(FormatType.Csv), StringComparison.InvariantCultureIgnoreCase) &&
-            !outputType.Equals(nameof(FormatType.Xml), StringComparison.InvariantCultureIgnoreCase))
+        if (!outputType.Equals("csv", StringComparison.InvariantCultureIgnoreCase) &&
+            !outputType.Equals("xml", StringComparison.InvariantCultureIgnoreCase))
         {
             throw new ArgumentException($"error: Invalid format type mode '{outputType}'.");
         }
