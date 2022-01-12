@@ -1,6 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using System.Xml;
+using System.Xml.Serialization;
 using FileCabinetApp.Entities;
+using FileCabinetApp.Models;
 using FileCabinetApp.Utils.Readers;
 using FileCabinetApp.Utils.Writers;
 
@@ -80,6 +82,19 @@ namespace FileCabinetApp.Services
 
             xmlWriter.WriteEndElement();
             xmlWriter.Close();
+        }
+
+        /// <summary>
+        /// Loads records from xml file.
+        /// </summary>
+        /// <param name="streamReader"> Stream Reader. </param>
+        public void LoadFromXml(StreamReader streamReader)
+        {
+            XmlReader xmlReader = new XmlTextReader(streamReader);
+
+            var fileCabinetXmlReader = new FileCabinetRecordXmlReader(xmlReader);
+
+            this.records = fileCabinetXmlReader.ReadAlL().ToArray();
         }
     }
 }

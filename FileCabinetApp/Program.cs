@@ -395,7 +395,7 @@ namespace FileCabinetApp
                 }
                 else if (format.Equals("xml", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    throw new NotImplementedException();
+                    snapshot.LoadFromXml(reader);
                 }
                 else
                 {

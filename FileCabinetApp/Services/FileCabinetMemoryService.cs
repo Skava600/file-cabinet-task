@@ -166,6 +166,7 @@ namespace FileCabinetApp.Services
                 catch (ArgumentException ex)
                 {
                     Console.WriteLine($"Record with id {record.Id} didn't complete validation with message: {ex.Message}");
+                    continue;
                 }
 
                 if (this.IsRecordExists(record.Id))

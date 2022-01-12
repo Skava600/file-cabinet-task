@@ -9,7 +9,7 @@ using FileCabinetApp.Entities;
 namespace FileCabinetApp.Utils.Readers
 {
     /// <summary>
-    /// Class for reading records from stream reader.
+    /// Class for reading records from stream reader in csv format.
     /// </summary>
     public class FileCabinetRecordCsvReader
     {
