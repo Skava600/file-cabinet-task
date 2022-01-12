@@ -1,5 +1,7 @@
-﻿using System.Xml;
+﻿using System.Collections.ObjectModel;
+using System.Xml;
 using FileCabinetApp.Entities;
+using FileCabinetApp.Utils.Readers;
 using FileCabinetApp.Utils.Writers;
 
 namespace FileCabinetApp.Services
@@ -21,6 +23,15 @@ namespace FileCabinetApp.Services
         }
 
         /// <summary>
+        /// Gets read only collection of records.
+        /// </summary>
+        /// <value> Read only collection of records. </value>
+        public ReadOnlyCollection<FileCabinetRecord> Records
+        {
+            get { return new ReadOnlyCollection<FileCabinetRecord>(this.records);  }
+        }
+
+        /// <summary>
         /// Saves a records to a csv file.
         /// </summary>
         /// <param name="streamWriter"> Stream for exporting. </param>
@@ -36,7 +47,18 @@ namespace FileCabinetApp.Services
         }
 
         /// <summary>
-        /// Saves a records to a xml file.
+        /// Loads records from csv file.
+        /// </summary>
+        /// <param name="streamReader"> Stream Reader. </param>
+        public void LoadFromCsv(StreamReader streamReader)
+        {
+            FileCabinetRecordCsvReader csvReader = new FileCabinetRecordCsvReader(streamReader);
+
+            this.records = csvReader.ReadAll().ToArray();
+        }
+
+        /// <summary>
+        /// Saves records to a xml file.
         /// </summary>
         /// <param name="streamWriter"> Stream for exporting. </param>
         public void SaveToXml(StreamWriter streamWriter)

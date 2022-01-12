@@ -24,6 +24,17 @@ namespace FileCabinetApp.Services
         private readonly Dictionary<DateTime, List<FileCabinetRecord>> dateOfBirthDictionary =
             new Dictionary<DateTime, List<FileCabinetRecord>>();
 
+        private readonly IRecordValidator validator;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FileCabinetMemoryService"/> class.
+        /// </summary>
+        /// <param name="validator"><see cref="IRecordValidator"/>.</param>
+        public FileCabinetMemoryService(IRecordValidator validator)
+        {
+            this.validator = validator;
+        }
+
         /// <inheritdoc/>
         public int CreateRecord(RecordData recordData)
         {
@@ -40,7 +51,7 @@ namespace FileCabinetApp.Services
 
             this.records.Add(record);
 
-            this.AddRecordToDictionaries(record.FirstName !, record.LastName !, record.DateOfBirth, record);
+            this.AddRecordToDictionaries(record.FirstName, record.LastName, record.DateOfBirth, record);
 
             return record.Id;
         }
@@ -62,7 +73,7 @@ namespace FileCabinetApp.Services
             record.Height = recordData.Height;
             record.Salary = recordData.Salary;
 
-            this.AddRecordToDictionaries(recordData.FirstName!, recordData.LastName!, recordData.DateOfBirth, record);
+            this.AddRecordToDictionaries(recordData.FirstName, recordData.LastName, recordData.DateOfBirth, record);
         }
 
         /// <inheritdoc/>
@@ -135,6 +146,37 @@ namespace FileCabinetApp.Services
         public FileCabinetServiceSnapshot MakeSnapshot()
         {
             return new FileCabinetServiceSnapshot(this.records.ToArray());
+        }
+
+        /// <inheritdoc/>
+        public void Restore(FileCabinetServiceSnapshot snapshot)
+        {
+            if (snapshot == null)
+            {
+                throw new ArgumentNullException(nameof(snapshot));
+            }
+
+            foreach (var record in snapshot.Records)
+            {
+                var recordData = new RecordData(record);
+                try
+                {
+                    this.validator.ValidateParameters(recordData);
+                }
+                catch (ArgumentException ex)
+                {
+                    Console.WriteLine($"Record with id {record.Id} didn't complete validation with message: {ex.Message}");
+                }
+
+                if (this.IsRecordExists(record.Id))
+                {
+                    this.EditRecord(record.Id, recordData);
+                }
+                else
+                {
+                    this.CreateRecord(recordData);
+                }
+            }
         }
 
         private void AddRecordToDictionaries(string firstName, string lastName, DateTime dateOfBirth, FileCabinetRecord record)

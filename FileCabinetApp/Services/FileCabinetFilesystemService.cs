@@ -278,6 +278,12 @@ namespace FileCabinetApp.Services
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc/>
+        public void Restore(FileCabinetServiceSnapshot snapshot)
+        {
+            throw new NotImplementedException();
+        }
+
         private void WriteRecordToStream(FileCabinetRecord record)
         {
             using (BinaryWriter binaryWriter = new BinaryWriter(this.fileStream, Encoding.Unicode, true))

@@ -49,7 +49,7 @@ namespace FileCabinetApp
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
         };
 
-        private static IFileCabinetService fileCabinetService = new FileCabinetMemoryService();
+        private static IFileCabinetService fileCabinetService = new FileCabinetMemoryService(new DefaultValidator());
         private static IRecordValidator recordValidator = new DefaultValidator();
 
         /// <summary>
@@ -99,6 +99,7 @@ namespace FileCabinetApp
 
             ValidationRule systemValidationBehaviour = ValidationRule.Default;
 
+            string memoryBehaviour = "default";
             for (int i = 0; i + 1 < args.Length; i++)
             {
                 if (args[i].Equals("-v", StringComparison.InvariantCulture) ||
@@ -111,9 +112,7 @@ namespace FileCabinetApp
                 else if (args[i].Equals("-s", StringComparison.InvariantCulture) ||
                         args[i].Equals("--storage", StringComparison.InvariantCulture))
                 {
-                    fileCabinetService = args[i + 1].Equals("file", StringComparison.InvariantCultureIgnoreCase) ?
-                            new FileCabinetFilesystemService(new FileStream(FileStorageName, FileMode.OpenOrCreate, FileAccess.ReadWrite)) :
-                            new FileCabinetMemoryService();
+                    memoryBehaviour = args[i + 1].ToLower();
                     i += 1;
                 }
                 else
@@ -127,6 +126,13 @@ namespace FileCabinetApp
                 ValidationRule.Custom => new CustomValidator(),
                 _ => new DefaultValidator(),
             };
+
+            fileCabinetService = memoryBehaviour switch
+            {
+                "file" => new FileCabinetFilesystemService(new FileStream(FileStorageName, FileMode.OpenOrCreate, FileAccess.ReadWrite)),
+                _ => new FileCabinetMemoryService(recordValidator),
+            };
+
             Console.WriteLine($"Using {systemValidationBehaviour} validation rules.");
             Console.WriteLine($"Using {fileCabinetService.GetType().Name}.");
         }
@@ -380,11 +386,12 @@ namespace FileCabinetApp
                 return;
             }
 
-            try
+            using (StreamReader reader = new StreamReader(filePath))
             {
+                var snapshot = new FileCabinetServiceSnapshot(Array.Empty<FileCabinetRecord>());
                 if (format.Equals("csv", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    throw new NotImplementedException();
+                    snapshot.LoadFromCsv(reader);
                 }
                 else if (format.Equals("xml", StringComparison.InvariantCultureIgnoreCase))
                 {
@@ -394,10 +401,9 @@ namespace FileCabinetApp
                 {
                     Console.WriteLine($"{format} is not correct format, available only xml and csv");
                 }
-            }
-            catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException)
-            {
-                Console.WriteLine($"Import failed: can't open file {filePath}.");
+
+                fileCabinetService.Restore(snapshot);
+                Console.WriteLine($"{snapshot.Records.Count} were imported from {filePath}.");
             }
         }
 

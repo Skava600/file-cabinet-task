@@ -21,6 +21,46 @@ namespace FileCabinetApp.Validation
         private static readonly DateTime MinDate = new DateTime(1900, 1, 1);
 
         /// <inheritdoc/>
+        public void ValidateParameters(RecordData record)
+        {
+            var firstNameValidationResult = this.FirstNameValidator(record.FirstName);
+            if (!firstNameValidationResult.Item1)
+            {
+                throw new ArgumentException(firstNameValidationResult.Item2);
+            }
+
+            var lastNameValidationResult = this.LastNameValidator(record.LastName);
+            if (!lastNameValidationResult.Item1)
+            {
+                throw new ArgumentException(lastNameValidationResult.Item2);
+            }
+
+            var dateOfBirthValidationResult = this.DateOfBirthValidator(record.DateOfBirth);
+            if (!dateOfBirthValidationResult.Item1)
+            {
+                throw new ArgumentException(dateOfBirthValidationResult.Item2);
+            }
+
+            var sexValidationResult = this.SexValidator(record.Sex);
+            if (!sexValidationResult.Item1)
+            {
+                throw new ArgumentException(sexValidationResult.Item2);
+            }
+
+            var heightValidationResult = this.HeightValidator(record.Height);
+            if (!heightValidationResult.Item1)
+            {
+                throw new ArgumentException(heightValidationResult.Item2);
+            }
+
+            var salaryValildationResult = this.SalaryValidator(record.Salary);
+            if (!salaryValildationResult.Item1)
+            {
+                throw new ArgumentException(salaryValildationResult.Item2);
+            }
+        }
+
+        /// <inheritdoc/>
         public Tuple<bool, string> FirstNameValidator(string firstName)
         {
             if (firstName is null)

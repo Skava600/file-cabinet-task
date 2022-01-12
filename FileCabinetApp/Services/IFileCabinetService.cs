@@ -74,5 +74,11 @@ namespace FileCabinetApp
         /// <param name="dateOfBirth"> Date of birth of record. </param>
         /// <returns> All records with specified date of birth. </returns>
         ReadOnlyCollection<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth);
+
+        /// <summary>
+        /// Restores records from snapshot.
+        /// </summary>
+        /// <param name="snapshot"> <see cref="FileCabinetServiceSnapshot"/>. </param>
+        void Restore(FileCabinetServiceSnapshot snapshot);
     }
 }
