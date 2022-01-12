@@ -4,6 +4,7 @@ using FileCabinetApp.Converters;
 using FileCabinetApp.Entities;
 using FileCabinetApp.Models;
 using FileCabinetApp.Services;
+using FileCabinetApp.Utils.Enums;
 using FileCabinetApp.Validation;
 
 namespace FileCabinetApp
@@ -31,6 +32,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("list", List),
             new Tuple<string, Action<string>>("stat", Stat),
             new Tuple<string, Action<string>>("export", Export),
+            new Tuple<string, Action<string>>("import", Import),
             new Tuple<string, Action<string>>("exit", Exit),
         };
 
@@ -41,19 +43,14 @@ namespace FileCabinetApp
             new string[] { "edit", "edites record", "The 'edit <id>' command edites existing record." },
             new string[] { "list", "prints the array of records", "The 'list' command prints array of records." },
             new string[] { "find", "prints the array of records found by given property", "The 'find <parameter name> <parameter value>' command prints array of records by given property." },
-            new string[] { "export", "exports service data into file .csv or .xml", "The 'export <format> <file path>' command exports service data into specified format" },
+            new string[] { "export", "exports service data into file .csv or .xml", "The 'export <format> <file path>' command exports service data into specified format." },
+            new string[] { "import", "imports servcie data from file .csv or .xml", "The 'export <format> <file path>' command imports service data from file with specified format." },
             new string[] { "stat", "prints the count of records", "The 'stat' command prints count of the records in service." },
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
         };
 
-        private static IFileCabinetService fileCabinetService = new FileCabinetMemoryService();
+        private static IFileCabinetService fileCabinetService = new FileCabinetMemoryService(new DefaultValidator());
         private static IRecordValidator recordValidator = new DefaultValidator();
-
-        private enum ValidationRule
-        {
-            Default,
-            Custom,
-        }
 
         /// <summary>
         /// Defines the entry point of the application.
@@ -102,21 +99,20 @@ namespace FileCabinetApp
 
             ValidationRule systemValidationBehaviour = ValidationRule.Default;
 
+            string memoryBehaviour = "default";
             for (int i = 0; i + 1 < args.Length; i++)
             {
                 if (args[i].Equals("-v", StringComparison.InvariantCulture) ||
                     args[i].Equals("--validation-rules", StringComparison.InvariantCulture))
                 {
-                    systemValidationBehaviour = args[i + 1].Equals("DEFAULT", StringComparison.InvariantCultureIgnoreCase) ?
-                            ValidationRule.Default : ValidationRule.Custom;
+                    systemValidationBehaviour = args[i + 1].Equals("CUSTOM", StringComparison.InvariantCultureIgnoreCase) ?
+                            ValidationRule.Custom : ValidationRule.Default;
                     i += 1;
                 }
                 else if (args[i].Equals("-s", StringComparison.InvariantCulture) ||
                         args[i].Equals("--storage", StringComparison.InvariantCulture))
                 {
-                    fileCabinetService = args[i + 1].Equals("file", StringComparison.InvariantCultureIgnoreCase) ?
-                            new FileCabinetFilesystemService(new FileStream(FileStorageName, FileMode.OpenOrCreate, FileAccess.ReadWrite)) :
-                            new FileCabinetMemoryService();
+                    memoryBehaviour = args[i + 1].ToLower();
                     i += 1;
                 }
                 else
@@ -130,6 +126,13 @@ namespace FileCabinetApp
                 ValidationRule.Custom => new CustomValidator(),
                 _ => new DefaultValidator(),
             };
+
+            fileCabinetService = memoryBehaviour switch
+            {
+                "file" => new FileCabinetFilesystemService(new FileStream(FileStorageName, FileMode.OpenOrCreate, FileAccess.ReadWrite), recordValidator),
+                _ => new FileCabinetMemoryService(recordValidator),
+            };
+
             Console.WriteLine($"Using {systemValidationBehaviour} validation rules.");
             Console.WriteLine($"Using {fileCabinetService.GetType().Name}.");
         }
@@ -357,6 +360,50 @@ namespace FileCabinetApp
             catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException)
             {
                 Console.WriteLine($"Export failed: can't open file {filePath}.");
+            }
+        }
+
+        private static void Import(string parameters)
+        {
+            string[] inputs = parameters.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
+
+            if (inputs.Length < 2)
+            {
+                Console.WriteLine($"The '{parameters}' isn't valid command parameters. " +
+                    $"Should be import format and file path through white space.");
+                return;
+            }
+
+            const int formatIndex = 0;
+            string format = inputs[formatIndex];
+
+            const int pathIndex = 1;
+            string filePath = inputs[pathIndex];
+
+            if (!File.Exists(filePath))
+            {
+                Console.WriteLine($"Import error: file {filePath} is not exist.");
+                return;
+            }
+
+            using (StreamReader reader = new StreamReader(filePath))
+            {
+                var snapshot = new FileCabinetServiceSnapshot(Array.Empty<FileCabinetRecord>());
+                if (format.Equals("csv", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    snapshot.LoadFromCsv(reader);
+                }
+                else if (format.Equals("xml", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    snapshot.LoadFromXml(reader);
+                }
+                else
+                {
+                    Console.WriteLine($"{format} is not correct format, available only xml and csv");
+                }
+
+                fileCabinetService.Restore(snapshot);
+                Console.WriteLine($"{snapshot.Records.Count} were imported from {filePath}.");
             }
         }
 

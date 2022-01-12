@@ -115,6 +115,27 @@
             The salary in dollars.
             </value>
         </member>
+        <member name="T:FileCabinetApp.Models.Name">
+            <summary>
+            Class for full name representation.
+            </summary>
+        </member>
+        <member name="P:FileCabinetApp.Models.Name.FirstName">
+            <summary>
+            Gets or sets first name of a record.
+            </summary>
+            <value>
+            first name of a record.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.Models.Name.LastName">
+            <summary>
+            Gets or sets last name of a record.
+            </summary>
+            <value>
+            last name of a record.
+            </value>
+        </member>
         <member name="T:FileCabinetApp.Models.RecordData">
             <summary>
              Class to introduce parameter object of FileCabinetService.CreateRecord and FileCabinetService.EditRecord.
@@ -130,6 +151,12 @@
             <param name="sex">The sex.</param>
             <param name="height">The height.</param>
             <param name="salary">The salary.</param>
+        </member>
+        <member name="M:FileCabinetApp.Models.RecordData.#ctor(FileCabinetApp.Entities.FileCabinetRecord)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Models.RecordData"/> class.
+            </summary>
+            <param name="record"> FileCabinetRecord. </param>
         </member>
         <member name="P:FileCabinetApp.Models.RecordData.FirstName">
             <summary>
@@ -179,6 +206,91 @@
             The salary.
             </value>
         </member>
+        <member name="T:FileCabinetApp.Models.RecordSerializable">
+            <summary>
+            Class For serialization of <see cref="T:FileCabinetApp.Entities.FileCabinetRecord"/>.
+            </summary>
+        </member>
+        <member name="P:FileCabinetApp.Models.RecordSerializable.Name">
+            <summary>
+            Gets or sets the name of record.
+            </summary>
+            <value>
+            The name of record.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.Models.RecordSerializable.Id">
+            <summary>
+            Gets or sets the id of record.
+            </summary>
+            <value>
+            The id of record.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.Models.RecordSerializable.DateOfBirth">
+            <summary>
+            Gets or sets the date of birth of record.
+            </summary>
+            <value>
+            The date of birth of record.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.Models.RecordSerializable.Sex">
+            <summary>
+            Gets or sets the sex of record.
+            </summary>
+            <value>
+            The sex of record.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.Models.RecordSerializable.Height">
+            <summary>
+            Gets or sets the height of a record.
+            </summary>
+            <value>
+            The height of a record.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.Models.RecordSerializable.Salary">
+            <summary>
+            Gets or sets the salary of record.
+            </summary>
+            <value>
+            The salary of a record.
+            </value>
+        </member>
+        <member name="M:FileCabinetApp.Models.RecordSerializable.ToString">
+            <summary>
+            Overriding method ToString representation of serialization model.
+            </summary>
+            <returns>String.</returns>
+        </member>
+        <member name="T:FileCabinetApp.Models.RecordsSerializable">
+            <summary>
+            Model for record serialization".
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Models.RecordsSerializable.#ctor(System.Collections.Generic.List{FileCabinetApp.Models.RecordSerializable})">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Models.RecordsSerializable"/> class.
+            </summary>
+            <param name="records">
+            File Cabinet records to serialize.
+            </param>
+        </member>
+        <member name="M:FileCabinetApp.Models.RecordsSerializable.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Models.RecordsSerializable"/> class.
+            </summary>
+        </member>
+        <member name="P:FileCabinetApp.Models.RecordsSerializable.Records">
+            <summary>
+            Gets records to serialize.
+            </summary>
+            <value>
+            Records.
+            </value>
+        </member>
         <member name="T:FileCabinetApp.Program">
             <summary>
             The program class.
@@ -195,11 +307,12 @@
             Class to describe the file cabinet service.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetFilesystemService.#ctor(System.IO.FileStream)">
+        <member name="M:FileCabinetApp.Services.FileCabinetFilesystemService.#ctor(System.IO.FileStream,FileCabinetApp.Validation.IRecordValidator)">
             <summary>
             Initializes a new instance of the <see cref="T:FileCabinetApp.Services.FileCabinetFilesystemService"/> class.
             </summary>
             <param name="fileStream"> Provides a stream for a service. </param>
+            <param name="validator"> Validator for a service. </param>
         </member>
         <member name="M:FileCabinetApp.Services.FileCabinetFilesystemService.CreateRecord(FileCabinetApp.Models.RecordData)">
             <inheritdoc/>
@@ -228,10 +341,19 @@
         <member name="M:FileCabinetApp.Services.FileCabinetFilesystemService.MakeSnapshot">
             <inheritdoc/>
         </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetFilesystemService.Restore(FileCabinetApp.Services.FileCabinetServiceSnapshot)">
+            <inheritdoc/>
+        </member>
         <member name="T:FileCabinetApp.Services.FileCabinetMemoryService">
             <summary>
             Class to describe the file cabinet service.
             </summary>
+        </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.#ctor(FileCabinetApp.Validation.IRecordValidator)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Services.FileCabinetMemoryService"/> class.
+            </summary>
+            <param name="validator"><see cref="T:FileCabinetApp.Validation.IRecordValidator"/>.</param>
         </member>
         <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.CreateRecord(FileCabinetApp.Models.RecordData)">
             <inheritdoc/>
@@ -260,6 +382,9 @@
         <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.MakeSnapshot">
             <inheritdoc/>
         </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.Restore(FileCabinetApp.Services.FileCabinetServiceSnapshot)">
+            <inheritdoc/>
+        </member>
         <member name="T:FileCabinetApp.Services.FileCabinetServiceSnapshot">
             <summary>
             Class for representing file cabinet service snapshot.
@@ -271,15 +396,27 @@
             </summary>
             <param name="records"> array of records. </param>
         </member>
+        <member name="P:FileCabinetApp.Services.FileCabinetServiceSnapshot.Records">
+            <summary>
+            Gets read only collection of records.
+            </summary>
+            <value> Read only collection of records. </value>
+        </member>
         <member name="M:FileCabinetApp.Services.FileCabinetServiceSnapshot.SaveToCsv(System.IO.StreamWriter)">
             <summary>
             Saves a records to a csv file.
             </summary>
             <param name="streamWriter"> Stream for exporting. </param>
         </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetServiceSnapshot.LoadFromCsv(System.IO.StreamReader)">
+            <summary>
+            Loads records from csv file.
+            </summary>
+            <param name="streamReader"> Stream Reader. </param>
+        </member>
         <member name="M:FileCabinetApp.Services.FileCabinetServiceSnapshot.SaveToXml(System.IO.StreamWriter)">
             <summary>
-            Saves a records to a xml file.
+            Saves records to a xml file.
             </summary>
             <param name="streamWriter"> Stream for exporting. </param>
         </member>
@@ -348,6 +485,44 @@
             <param name="dateOfBirth"> Date of birth of record. </param>
             <returns> All records with specified date of birth. </returns>
         </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.Restore(FileCabinetApp.Services.FileCabinetServiceSnapshot)">
+            <summary>
+            Restores records from snapshot.
+            </summary>
+            <param name="snapshot"> <see cref="T:FileCabinetApp.Services.FileCabinetServiceSnapshot"/>. </param>
+        </member>
+        <member name="T:FileCabinetApp.Utils.Enums.ValidationRule">
+            <summary>
+            Represents validation rules for <see cref="T:FileCabinetApp.Entities.FileCabinetRecord"/>.
+            </summary>
+        </member>
+        <member name="F:FileCabinetApp.Utils.Enums.ValidationRule.Default">
+            <summary>
+            Default rules.
+            </summary>
+        </member>
+        <member name="F:FileCabinetApp.Utils.Enums.ValidationRule.Custom">
+            <summary>
+            Custom rules.
+            </summary>
+        </member>
+        <member name="T:FileCabinetApp.Utils.Readers.FileCabinetRecordCsvReader">
+            <summary>
+            Class for reading records from stream reader.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Utils.Readers.FileCabinetRecordCsvReader.#ctor(System.IO.StreamReader)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Utils.Readers.FileCabinetRecordCsvReader"/> class.
+            </summary>
+            <param name="reader"> Stream reader. </param>
+        </member>
+        <member name="M:FileCabinetApp.Utils.Readers.FileCabinetRecordCsvReader.ReadAll">
+            <summary>
+            Read all records from stream reader.
+            </summary>
+            <returns> Collection of FileCabinetRecord. </returns>
+        </member>
         <member name="T:FileCabinetApp.Utils.Writers.FileCabinetRecordCsvWriter">
             <summary>
             Class that exports file cabinet record to CSV.
@@ -387,6 +562,9 @@
             Class for custom validation.
             </summary>
         </member>
+        <member name="M:FileCabinetApp.Validation.CustomValidator.ValidateParameters(FileCabinetApp.Models.RecordData)">
+            <inheritdoc/>
+        </member>
         <member name="M:FileCabinetApp.Validation.CustomValidator.FirstNameValidator(System.String)">
             <inheritdoc/>
         </member>
@@ -410,6 +588,9 @@
             Class for dafault validation.
             </summary>
         </member>
+        <member name="M:FileCabinetApp.Validation.DefaultValidator.ValidateParameters(FileCabinetApp.Models.RecordData)">
+            <inheritdoc/>
+        </member>
         <member name="M:FileCabinetApp.Validation.DefaultValidator.FirstNameValidator(System.String)">
             <inheritdoc/>
         </member>
@@ -432,6 +613,12 @@
             <summary>
             This interface can validate parameters from RecordData.
             </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validation.IRecordValidator.ValidateParameters(FileCabinetApp.Models.RecordData)">
+            <summary>
+            This method validates fields of <see cref="T:FileCabinetApp.Models.RecordData"/>.
+            </summary>
+            <param name="record">Record data.</param>
         </member>
         <member name="M:FileCabinetApp.Validation.IRecordValidator.FirstNameValidator(System.String)">
             <summary>

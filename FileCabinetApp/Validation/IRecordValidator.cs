@@ -13,6 +13,12 @@ namespace FileCabinetApp.Validation
     public interface IRecordValidator
     {
         /// <summary>
+        /// This method validates fields of <see cref="RecordData"/>.
+        /// </summary>
+        /// <param name="record">Record data.</param>
+        void ValidateParameters(RecordData record);
+
+        /// <summary>
         /// This method validates the first name.
         /// </summary>
         /// <param name="firstName"> The first name. </param>

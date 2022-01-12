@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FileCabinetApp.Entities;
 
 namespace FileCabinetApp.Models
 {
@@ -35,6 +36,20 @@ namespace FileCabinetApp.Models
             this.sex = sex;
             this.height = height;
             this.salary = salary;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RecordData"/> class.
+        /// </summary>
+        /// <param name="record"> FileCabinetRecord. </param>
+        public RecordData(FileCabinetRecord record)
+        {
+            this.firstName = record.FirstName!;
+            this.lastName = record.LastName!;
+            this.dateOfBirth = record.DateOfBirth;
+            this.sex = record.Sex;
+            this.height = record.Height;
+            this.salary = record.Salary;
         }
 
         /// <summary>

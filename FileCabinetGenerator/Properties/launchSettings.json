@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "FileCabinetGenerator": {
+      "commandName": "Project",
+      "commandLineArgs": "FileCabinetGenerator.exe -t csv -o c:\\data\\records.csv -a 10 -i 1"
+    }
+  }
+}
