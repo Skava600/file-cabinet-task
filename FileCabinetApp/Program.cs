@@ -129,7 +129,7 @@ namespace FileCabinetApp
 
             fileCabinetService = memoryBehaviour switch
             {
-                "file" => new FileCabinetFilesystemService(new FileStream(FileStorageName, FileMode.OpenOrCreate, FileAccess.ReadWrite)),
+                "file" => new FileCabinetFilesystemService(new FileStream(FileStorageName, FileMode.OpenOrCreate, FileAccess.ReadWrite), recordValidator),
                 _ => new FileCabinetMemoryService(recordValidator),
             };
 

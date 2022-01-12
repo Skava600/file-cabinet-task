@@ -156,7 +156,7 @@
             <summary>
             Initializes a new instance of the <see cref="T:FileCabinetApp.Models.RecordData"/> class.
             </summary>
-            <param name="record"> FileCabinetRecord</param>
+            <param name="record"> FileCabinetRecord. </param>
         </member>
         <member name="P:FileCabinetApp.Models.RecordData.FirstName">
             <summary>
@@ -307,11 +307,12 @@
             Class to describe the file cabinet service.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetFilesystemService.#ctor(System.IO.FileStream)">
+        <member name="M:FileCabinetApp.Services.FileCabinetFilesystemService.#ctor(System.IO.FileStream,FileCabinetApp.Validation.IRecordValidator)">
             <summary>
             Initializes a new instance of the <see cref="T:FileCabinetApp.Services.FileCabinetFilesystemService"/> class.
             </summary>
             <param name="fileStream"> Provides a stream for a service. </param>
+            <param name="validator"> Validator for a service. </param>
         </member>
         <member name="M:FileCabinetApp.Services.FileCabinetFilesystemService.CreateRecord(FileCabinetApp.Models.RecordData)">
             <inheritdoc/>
@@ -338,6 +339,9 @@
             <inheritdoc/>
         </member>
         <member name="M:FileCabinetApp.Services.FileCabinetFilesystemService.MakeSnapshot">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetFilesystemService.Restore(FileCabinetApp.Services.FileCabinetServiceSnapshot)">
             <inheritdoc/>
         </member>
         <member name="T:FileCabinetApp.Services.FileCabinetMemoryService">
@@ -404,9 +408,15 @@
             </summary>
             <param name="streamWriter"> Stream for exporting. </param>
         </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetServiceSnapshot.LoadFromCsv(System.IO.StreamReader)">
+            <summary>
+            Loads records from csv file.
+            </summary>
+            <param name="streamReader"> Stream Reader. </param>
+        </member>
         <member name="M:FileCabinetApp.Services.FileCabinetServiceSnapshot.SaveToXml(System.IO.StreamWriter)">
             <summary>
-            Saves a records to a xml file.
+            Saves records to a xml file.
             </summary>
             <param name="streamWriter"> Stream for exporting. </param>
         </member>
@@ -475,6 +485,12 @@
             <param name="dateOfBirth"> Date of birth of record. </param>
             <returns> All records with specified date of birth. </returns>
         </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.Restore(FileCabinetApp.Services.FileCabinetServiceSnapshot)">
+            <summary>
+            Restores records from snapshot.
+            </summary>
+            <param name="snapshot"> <see cref="T:FileCabinetApp.Services.FileCabinetServiceSnapshot"/>. </param>
+        </member>
         <member name="T:FileCabinetApp.Utils.Enums.ValidationRule">
             <summary>
             Represents validation rules for <see cref="T:FileCabinetApp.Entities.FileCabinetRecord"/>.
@@ -489,6 +505,23 @@
             <summary>
             Custom rules.
             </summary>
+        </member>
+        <member name="T:FileCabinetApp.Utils.Readers.FileCabinetRecordCsvReader">
+            <summary>
+            Class for reading records from stream reader.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Utils.Readers.FileCabinetRecordCsvReader.#ctor(System.IO.StreamReader)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Utils.Readers.FileCabinetRecordCsvReader"/> class.
+            </summary>
+            <param name="reader"> Stream reader. </param>
+        </member>
+        <member name="M:FileCabinetApp.Utils.Readers.FileCabinetRecordCsvReader.ReadAll">
+            <summary>
+            Read all records from stream reader.
+            </summary>
+            <returns> Collection of FileCabinetRecord. </returns>
         </member>
         <member name="T:FileCabinetApp.Utils.Writers.FileCabinetRecordCsvWriter">
             <summary>

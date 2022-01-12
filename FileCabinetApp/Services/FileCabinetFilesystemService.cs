@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using FileCabinetApp.Entities;
 using FileCabinetApp.Models;
+using FileCabinetApp.Validation;
 
 namespace FileCabinetApp.Services
 {
@@ -28,15 +29,18 @@ namespace FileCabinetApp.Services
             + sizeof(short)
             + sizeof(decimal);
 
-        private FileStream fileStream;
+        private readonly IRecordValidator validator;
+        private readonly FileStream fileStream;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FileCabinetFilesystemService"/> class.
         /// </summary>
         /// <param name="fileStream"> Provides a stream for a service. </param>
-        public FileCabinetFilesystemService(FileStream fileStream)
+        /// <param name="validator"> Validator for a service. </param>
+        public FileCabinetFilesystemService(FileStream fileStream, IRecordValidator validator)
         {
             this.fileStream = fileStream;
+            this.validator = validator;
         }
 
         /// <inheritdoc/>
@@ -281,7 +285,32 @@ namespace FileCabinetApp.Services
         /// <inheritdoc/>
         public void Restore(FileCabinetServiceSnapshot snapshot)
         {
-            throw new NotImplementedException();
+            if (snapshot == null)
+            {
+                throw new ArgumentNullException(nameof(snapshot));
+            }
+
+            foreach (var record in snapshot.Records)
+            {
+                var recordData = new RecordData(record);
+                try
+                {
+                    this.validator.ValidateParameters(recordData);
+                }
+                catch (ArgumentException ex)
+                {
+                    Console.WriteLine($"Record with id {record.Id} didn't complete validation with message: {ex.Message}");
+                }
+
+                if (this.IsRecordExists(record.Id))
+                {
+                    this.EditRecord(record.Id, recordData);
+                }
+                else
+                {
+                    this.CreateRecord(recordData);
+                }
+            }
         }
 
         private void WriteRecordToStream(FileCabinetRecord record)
