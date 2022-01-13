@@ -320,6 +320,9 @@
         <member name="M:FileCabinetApp.Services.FileCabinetFilesystemService.EditRecord(System.Int32,FileCabinetApp.Models.RecordData)">
             <inheritdoc/>
         </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetFilesystemService.RemoveRecord(System.Int32)">
+            <inheritdoc/>
+        </member>
         <member name="M:FileCabinetApp.Services.FileCabinetFilesystemService.FindByFirstName(System.String)">
             <inheritdoc/>
         </member>
@@ -359,6 +362,9 @@
             <inheritdoc/>
         </member>
         <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.EditRecord(System.Int32,FileCabinetApp.Models.RecordData)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.RemoveRecord(System.Int32)">
             <inheritdoc/>
         </member>
         <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.GetRecords">
@@ -420,6 +426,12 @@
             </summary>
             <param name="streamWriter"> Stream for exporting. </param>
         </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetServiceSnapshot.LoadFromXml(System.IO.StreamReader)">
+            <summary>
+            Loads records from xml file.
+            </summary>
+            <param name="streamReader"> Stream Reader. </param>
+        </member>
         <member name="T:FileCabinetApp.IFileCabinetService">
             <summary>
             Interface to describe the file cabinet service.
@@ -438,6 +450,12 @@
             </summary>
             <param name="id">ID of editing record.</param>
             <param name="recordData"><see cref="T:FileCabinetApp.Models.RecordData"/> with params for FileCabinetRecord.</param>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.RemoveRecord(System.Int32)">
+            <summary>
+            This method removes FileCabinetRecord from service with given id.
+            </summary>
+            <param name="id"> Id of removing record. </param>
         </member>
         <member name="M:FileCabinetApp.IFileCabinetService.GetRecords">
             <summary>
@@ -508,7 +526,7 @@
         </member>
         <member name="T:FileCabinetApp.Utils.Readers.FileCabinetRecordCsvReader">
             <summary>
-            Class for reading records from stream reader.
+            Class for reading records from stream reader in csv format.
             </summary>
         </member>
         <member name="M:FileCabinetApp.Utils.Readers.FileCabinetRecordCsvReader.#ctor(System.IO.StreamReader)">
@@ -518,6 +536,23 @@
             <param name="reader"> Stream reader. </param>
         </member>
         <member name="M:FileCabinetApp.Utils.Readers.FileCabinetRecordCsvReader.ReadAll">
+            <summary>
+            Read all records from stream reader.
+            </summary>
+            <returns> Collection of FileCabinetRecord. </returns>
+        </member>
+        <member name="T:FileCabinetApp.Utils.Readers.FileCabinetRecordXmlReader">
+            <summary>
+            Class for reading records from xml reader in xml format.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Utils.Readers.FileCabinetRecordXmlReader.#ctor(System.Xml.XmlReader)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Utils.Readers.FileCabinetRecordXmlReader"/> class.
+            </summary>
+            <param name="reader"> Stream reader. </param>
+        </member>
+        <member name="M:FileCabinetApp.Utils.Readers.FileCabinetRecordXmlReader.ReadAlL">
             <summary>
             Read all records from stream reader.
             </summary>

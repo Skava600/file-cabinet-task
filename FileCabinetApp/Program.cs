@@ -28,6 +28,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("help", PrintHelp),
             new Tuple<string, Action<string>>("create", Create),
             new Tuple<string, Action<string>>("edit", Edit),
+            new Tuple<string, Action<string>>("remove", Remove),
             new Tuple<string, Action<string>>("find", Find),
             new Tuple<string, Action<string>>("list", List),
             new Tuple<string, Action<string>>("stat", Stat),
@@ -41,6 +42,7 @@ namespace FileCabinetApp
             new string[] { "help", "prints the help screen", "The 'help' command prints the help screen." },
             new string[] { "create", "creates a new record", "The 'create' command creates a record to the service." },
             new string[] { "edit", "edites record", "The 'edit <id>' command edites existing record." },
+            new string[] { "remove", "removes record", "THE 'remove <id>' command removes existing record." },
             new string[] { "list", "prints the array of records", "The 'list' command prints array of records." },
             new string[] { "find", "prints the array of records found by given property", "The 'find <parameter name> <parameter value>' command prints array of records by given property." },
             new string[] { "export", "exports service data into file .csv or .xml", "The 'export <format> <file path>' command exports service data into specified format." },
@@ -192,12 +194,6 @@ namespace FileCabinetApp
                 return;
             }
 
-            if (id < 0)
-            {
-                Console.WriteLine($"Id can't be less zero.");
-                return;
-            }
-
             if (!fileCabinetService.IsRecordExists(id))
             {
                 Console.WriteLine($"#{id} record is not found.");
@@ -209,6 +205,24 @@ namespace FileCabinetApp
                 RecordData recordData = GetRecordInput();
                 fileCabinetService.EditRecord(id, recordData);
                 Console.WriteLine($"Record #{id} is updated.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        private static void Remove(string parameters)
+        {
+            if (!int.TryParse(parameters, out int id))
+            {
+                Console.WriteLine($"Invalid input parameters. Should be integer but received '{parameters}'");
+                return;
+            }
+
+            try
+            {
+                fileCabinetService.RemoveRecord(id);
             }
             catch (Exception ex)
             {

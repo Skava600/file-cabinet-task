@@ -30,6 +30,12 @@ namespace FileCabinetApp
         void EditRecord(int id, RecordData recordData);
 
         /// <summary>
+        /// This method removes FileCabinetRecord from service with given id.
+        /// </summary>
+        /// <param name="id"> Id of removing record. </param>
+        void RemoveRecord(int id);
+
+        /// <summary>
         /// This method for getting all records.
         /// </summary>
         /// <returns>Read only collection of registered <see cref="FileCabinetRecord"/>.</returns>

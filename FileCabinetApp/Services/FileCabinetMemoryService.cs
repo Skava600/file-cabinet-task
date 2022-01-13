@@ -77,6 +77,17 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
+        public void RemoveRecord(int id)
+        {
+            if (!this.IsRecordExists(id))
+            {
+                Console.WriteLine($"#{id} record is not found.");
+            }
+
+            this.records.RemoveAll(rec => rec.Id == id);
+        }
+
+        /// <inheritdoc/>
         public ReadOnlyCollection<FileCabinetRecord> GetRecords()
         {
             return new ReadOnlyCollection<FileCabinetRecord>(this.records);

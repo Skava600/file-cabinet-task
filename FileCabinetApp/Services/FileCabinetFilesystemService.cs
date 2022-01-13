@@ -110,6 +110,21 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
+        public void RemoveRecord(int id)
+        {
+            if (!this.IsRecordExists(id))
+            {
+                throw new ArgumentException($"#{id} record is not found.");
+            }
+
+            int isDeletedPosition = (RecordSize * (id - 1)) + 1;
+            this.fileStream.Seek(isDeletedPosition, SeekOrigin.Begin);
+            this.fileStream.WriteByte(1);
+
+            this.fileStream.Seek(0, SeekOrigin.End);
+        }
+
+        /// <inheritdoc/>
         public ReadOnlyCollection<FileCabinetRecord> FindByFirstName(string firstname)
         {
             const int startPosition = sizeof(short) + sizeof(int);
@@ -126,7 +141,14 @@ namespace FileCabinetApp.Services
                     if (currentFirstName.Equals(firstname, StringComparison.InvariantCultureIgnoreCase))
                     {
                         binaryReader.BaseStream.Seek(-(propertyFieldSize + startPosition), SeekOrigin.Current);
-                        records.Add(this.ReadRecordFromStream(binaryReader));
+                        try
+                        {
+                            records.Add(this.ReadRecordFromStream(binaryReader));
+                        }
+                        catch (ArgumentException)
+                        {
+                        }
+
                         binaryReader.BaseStream.Seek(startPosition, SeekOrigin.Current);
                     }
                     else
@@ -163,7 +185,14 @@ namespace FileCabinetApp.Services
                     if (currentLastName.Equals(lastname, StringComparison.InvariantCultureIgnoreCase))
                     {
                         binaryReader.BaseStream.Seek(-(propertyFieldSize + startPosition), SeekOrigin.Current);
-                        records.Add(this.ReadRecordFromStream(binaryReader));
+                        try
+                        {
+                            records.Add(this.ReadRecordFromStream(binaryReader));
+                        }
+                        catch (ArgumentException)
+                        {
+                        }
+
                         binaryReader.BaseStream.Seek(startPosition, SeekOrigin.Current);
                     }
                     else
@@ -214,7 +243,14 @@ namespace FileCabinetApp.Services
                     if (currentDateOfBirth.Equals(dob))
                     {
                         binaryReader.BaseStream.Seek(-(propertyFieldSize + startPosition), SeekOrigin.Current);
-                        records.Add(this.ReadRecordFromStream(binaryReader));
+                        try
+                        {
+                            records.Add(this.ReadRecordFromStream(binaryReader));
+                        }
+                        catch (ArgumentException)
+                        {
+                        }
+
                         binaryReader.BaseStream.Seek(startPosition, SeekOrigin.Current);
                     }
                     else
@@ -243,7 +279,14 @@ namespace FileCabinetApp.Services
             {
                 while (binaryReader.PeekChar() > -1)
                 {
-                    records.Add(this.ReadRecordFromStream(binaryReader));
+                    try
+                    {
+                        records.Add(this.ReadRecordFromStream(binaryReader));
+                    }
+                    catch (ArgumentException)
+                    {
+                        binaryReader.ReadBytes(RecordSize - sizeof(short));
+                    }
                 }
             }
 
@@ -261,17 +304,25 @@ namespace FileCabinetApp.Services
         {
             using (BinaryReader binaryReader = new BinaryReader(this.fileStream, Encoding.Unicode, true))
             {
-                this.fileStream.Position = 2;
+                this.fileStream.Seek(1, SeekOrigin.Begin);
                 while (binaryReader.PeekChar() > -1)
                 {
-                    if (binaryReader.ReadInt32() == id)
+                    byte isDeleted = binaryReader.ReadByte();
+                    int currentId = binaryReader.ReadInt32();
+                    if (currentId == id && isDeleted == 0)
                     {
                         return true;
                     }
+                    else if (currentId == id && isDeleted == 1)
+                    {
+                        return false;
+                    }
 
-                    this.fileStream.Position += RecordSize - sizeof(int);
+                    this.fileStream.Seek(RecordSize - sizeof(int) - sizeof(byte), SeekOrigin.Current);
                 }
             }
+
+            this.fileStream.Seek(0, SeekOrigin.End);
 
             return false;
         }
@@ -333,7 +384,13 @@ namespace FileCabinetApp.Services
 
         private FileCabinetRecord ReadRecordFromStream(BinaryReader binaryReader)
         {
-            binaryReader.ReadInt16();
+            binaryReader.ReadByte();
+            byte b = binaryReader.ReadByte();
+            if (b == 1)
+            {
+                throw new ArgumentException("This record is deleted.");
+            }
+
             return new FileCabinetRecord
             {
                 Id = binaryReader.ReadInt32(),
