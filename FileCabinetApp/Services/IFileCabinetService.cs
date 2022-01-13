@@ -56,8 +56,8 @@ namespace FileCabinetApp
         /// <summary>
         /// This method for getting quantity of registered records.
         /// </summary>
-        /// <returns> int number of records.</returns>
-        int GetStat();
+        /// <returns> Tuple, where first compomet is - number of records and second - number of deleted records. </returns>
+        Tuple<int, int> GetStat();
 
         /// <summary>
         /// This method creates a snapshot of a file cabinet service.

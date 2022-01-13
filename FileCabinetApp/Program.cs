@@ -225,6 +225,7 @@ namespace FileCabinetApp
             try
             {
                 fileCabinetService.RemoveRecord(id);
+                Console.WriteLine($"Record #{id} is removed.");
             }
             catch (Exception ex)
             {
@@ -236,8 +237,9 @@ namespace FileCabinetApp
         {
             try
             {
+                var records = fileCabinetService.GetStat();
                 fileCabinetService.Purge();
-                Console.WriteLine("Data file processing is completed:.");
+                Console.WriteLine($"Data file processing is completed: {records.Item2} of {records.Item1} records were purged.");
             }
             catch (NotImplementedException)
             {
@@ -325,7 +327,7 @@ namespace FileCabinetApp
         private static void Stat(string parameters)
         {
             var recordsCount = Program.fileCabinetService.GetStat();
-            Console.WriteLine($"{recordsCount} record(s).");
+            Console.WriteLine($"{recordsCount.Item1} record(s), {recordsCount.Item2} deleted record(s).");
         }
 
         private static void Export(string parameters)

@@ -485,7 +485,7 @@
             <summary>
             This method for getting quantity of registered records.
             </summary>
-            <returns> int number of records.</returns>
+            <returns> Tuple, where first compomet is - number of records and second - number of deleted records. </returns>
         </member>
         <member name="M:FileCabinetApp.IFileCabinetService.MakeSnapshot">
             <summary>

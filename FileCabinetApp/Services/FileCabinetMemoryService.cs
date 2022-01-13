@@ -35,7 +35,7 @@ namespace FileCabinetApp.Services
         public FileCabinetMemoryService(IRecordValidator validator)
         {
             this.validator = validator;
-            this.lastId = this.GetRecords().Max(rec => rec.Id);
+            this.lastId = this.records.Count > 0 ? this.GetRecords().Max(rec => rec.Id) : 0;
         }
 
         /// <inheritdoc/>
@@ -109,9 +109,9 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
-        public int GetStat()
+        public Tuple<int, int> GetStat()
         {
-            return this.records.Count;
+            return new Tuple<int, int>(this.records.Count, 0);
         }
 
         /// <inheritdoc/>
