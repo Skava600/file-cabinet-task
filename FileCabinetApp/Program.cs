@@ -29,6 +29,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("create", Create),
             new Tuple<string, Action<string>>("edit", Edit),
             new Tuple<string, Action<string>>("remove", Remove),
+            new Tuple<string, Action<string>>("purge", Purge),
             new Tuple<string, Action<string>>("find", Find),
             new Tuple<string, Action<string>>("list", List),
             new Tuple<string, Action<string>>("stat", Stat),
@@ -43,6 +44,7 @@ namespace FileCabinetApp
             new string[] { "create", "creates a new record", "The 'create' command creates a record to the service." },
             new string[] { "edit", "edites record", "The 'edit <id>' command edites existing record." },
             new string[] { "remove", "removes record", "THE 'remove <id>' command removes existing record." },
+            new string[] { "purge", "Defragmentate data file ", "The 'purge' command removes deleted records from a data file." },
             new string[] { "list", "prints the array of records", "The 'list' command prints array of records." },
             new string[] { "find", "prints the array of records found by given property", "The 'find <parameter name> <parameter value>' command prints array of records by given property." },
             new string[] { "export", "exports service data into file .csv or .xml", "The 'export <format> <file path>' command exports service data into specified format." },
@@ -227,6 +229,19 @@ namespace FileCabinetApp
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+            }
+        }
+
+        private static void Purge(string parameters)
+        {
+            try
+            {
+                fileCabinetService.Purge();
+                Console.WriteLine("Data file processing is completed:.");
+            }
+            catch (NotImplementedException)
+            {
+                Console.WriteLine("Purge available only for file data stotage.");
             }
         }
 

@@ -36,6 +36,11 @@ namespace FileCabinetApp
         void RemoveRecord(int id);
 
         /// <summary>
+        /// This method defragmentate data file from deleted records.
+        /// </summary>
+        void Purge();
+
+        /// <summary>
         /// This method for getting all records.
         /// </summary>
         /// <returns>Read only collection of registered <see cref="FileCabinetRecord"/>.</returns>

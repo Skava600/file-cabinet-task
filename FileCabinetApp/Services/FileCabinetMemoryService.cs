@@ -26,6 +26,8 @@ namespace FileCabinetApp.Services
 
         private readonly IRecordValidator validator;
 
+        private int lastId;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="FileCabinetMemoryService"/> class.
         /// </summary>
@@ -33,6 +35,7 @@ namespace FileCabinetApp.Services
         public FileCabinetMemoryService(IRecordValidator validator)
         {
             this.validator = validator;
+            this.lastId = this.GetRecords().Max(rec => rec.Id);
         }
 
         /// <inheritdoc/>
@@ -40,7 +43,7 @@ namespace FileCabinetApp.Services
         {
             var record = new FileCabinetRecord
             {
-                Id = this.records.Count + 1,
+                Id = this.GenerateId(),
                 FirstName = recordData.FirstName,
                 LastName = recordData.LastName,
                 DateOfBirth = recordData.DateOfBirth,
@@ -85,6 +88,12 @@ namespace FileCabinetApp.Services
             }
 
             this.records.RemoveAll(rec => rec.Id == id);
+        }
+
+        /// <inheritdoc/>
+        public void Purge()
+        {
+            throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
@@ -211,6 +220,22 @@ namespace FileCabinetApp.Services
             this.firstNameDictionary[firstName].Add(record);
             this.lastNameDictionary[lastName].Add(record);
             this.dateOfBirthDictionary[dateOfBirth].Add(record);
+        }
+
+        private int GenerateId()
+        {
+            int id = this.lastId != int.MaxValue ? this.lastId : 0;
+
+            while (++id != int.MinValue)
+            {
+                if (!this.IsRecordExists(id))
+                {
+                    this.lastId = id;
+                    return id;
+                }
+            }
+
+            throw new ArgumentException("All ids are occupied.");
         }
     }
 }
