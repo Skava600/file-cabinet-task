@@ -30,6 +30,17 @@ namespace FileCabinetApp
         void EditRecord(int id, RecordData recordData);
 
         /// <summary>
+        /// This method removes FileCabinetRecord from service with given id.
+        /// </summary>
+        /// <param name="id"> Id of removing record. </param>
+        void RemoveRecord(int id);
+
+        /// <summary>
+        /// This method defragmentate data file from deleted records.
+        /// </summary>
+        void Purge();
+
+        /// <summary>
         /// This method for getting all records.
         /// </summary>
         /// <returns>Read only collection of registered <see cref="FileCabinetRecord"/>.</returns>
@@ -45,8 +56,8 @@ namespace FileCabinetApp
         /// <summary>
         /// This method for getting quantity of registered records.
         /// </summary>
-        /// <returns> int number of records.</returns>
-        int GetStat();
+        /// <returns> Tuple, where first compomet is - number of records and second - number of deleted records. </returns>
+        Tuple<int, int> GetStat();
 
         /// <summary>
         /// This method creates a snapshot of a file cabinet service.

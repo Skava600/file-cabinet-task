@@ -28,6 +28,8 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("help", PrintHelp),
             new Tuple<string, Action<string>>("create", Create),
             new Tuple<string, Action<string>>("edit", Edit),
+            new Tuple<string, Action<string>>("remove", Remove),
+            new Tuple<string, Action<string>>("purge", Purge),
             new Tuple<string, Action<string>>("find", Find),
             new Tuple<string, Action<string>>("list", List),
             new Tuple<string, Action<string>>("stat", Stat),
@@ -41,6 +43,8 @@ namespace FileCabinetApp
             new string[] { "help", "prints the help screen", "The 'help' command prints the help screen." },
             new string[] { "create", "creates a new record", "The 'create' command creates a record to the service." },
             new string[] { "edit", "edites record", "The 'edit <id>' command edites existing record." },
+            new string[] { "remove", "removes record", "THE 'remove <id>' command removes existing record." },
+            new string[] { "purge", "Defragmentate data file ", "The 'purge' command removes deleted records from a data file." },
             new string[] { "list", "prints the array of records", "The 'list' command prints array of records." },
             new string[] { "find", "prints the array of records found by given property", "The 'find <parameter name> <parameter value>' command prints array of records by given property." },
             new string[] { "export", "exports service data into file .csv or .xml", "The 'export <format> <file path>' command exports service data into specified format." },
@@ -192,12 +196,6 @@ namespace FileCabinetApp
                 return;
             }
 
-            if (id < 0)
-            {
-                Console.WriteLine($"Id can't be less zero.");
-                return;
-            }
-
             if (!fileCabinetService.IsRecordExists(id))
             {
                 Console.WriteLine($"#{id} record is not found.");
@@ -213,6 +211,39 @@ namespace FileCabinetApp
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+            }
+        }
+
+        private static void Remove(string parameters)
+        {
+            if (!int.TryParse(parameters, out int id))
+            {
+                Console.WriteLine($"Invalid input parameters. Should be integer but received '{parameters}'");
+                return;
+            }
+
+            try
+            {
+                fileCabinetService.RemoveRecord(id);
+                Console.WriteLine($"Record #{id} is removed.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        private static void Purge(string parameters)
+        {
+            try
+            {
+                var records = fileCabinetService.GetStat();
+                fileCabinetService.Purge();
+                Console.WriteLine($"Data file processing is completed: {records.Item2} of {records.Item1} records were purged.");
+            }
+            catch (NotImplementedException)
+            {
+                Console.WriteLine("Purge available only for file data stotage.");
             }
         }
 
@@ -296,7 +327,7 @@ namespace FileCabinetApp
         private static void Stat(string parameters)
         {
             var recordsCount = Program.fileCabinetService.GetStat();
-            Console.WriteLine($"{recordsCount} record(s).");
+            Console.WriteLine($"{recordsCount.Item1} record(s), {recordsCount.Item2} deleted record(s).");
         }
 
         private static void Export(string parameters)

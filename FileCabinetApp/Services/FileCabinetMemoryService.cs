@@ -26,6 +26,8 @@ namespace FileCabinetApp.Services
 
         private readonly IRecordValidator validator;
 
+        private int lastId;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="FileCabinetMemoryService"/> class.
         /// </summary>
@@ -33,6 +35,7 @@ namespace FileCabinetApp.Services
         public FileCabinetMemoryService(IRecordValidator validator)
         {
             this.validator = validator;
+            this.lastId = this.records.Count > 0 ? this.GetRecords().Max(rec => rec.Id) : 0;
         }
 
         /// <inheritdoc/>
@@ -40,7 +43,7 @@ namespace FileCabinetApp.Services
         {
             var record = new FileCabinetRecord
             {
-                Id = this.records.Count + 1,
+                Id = this.GenerateId(),
                 FirstName = recordData.FirstName,
                 LastName = recordData.LastName,
                 DateOfBirth = recordData.DateOfBirth,
@@ -77,6 +80,23 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
+        public void RemoveRecord(int id)
+        {
+            if (!this.IsRecordExists(id))
+            {
+                Console.WriteLine($"#{id} record is not found.");
+            }
+
+            this.records.RemoveAll(rec => rec.Id == id);
+        }
+
+        /// <inheritdoc/>
+        public void Purge()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
         public ReadOnlyCollection<FileCabinetRecord> GetRecords()
         {
             return new ReadOnlyCollection<FileCabinetRecord>(this.records);
@@ -89,9 +109,9 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
-        public int GetStat()
+        public Tuple<int, int> GetStat()
         {
-            return this.records.Count;
+            return new Tuple<int, int>(this.records.Count, 0);
         }
 
         /// <inheritdoc/>
@@ -200,6 +220,22 @@ namespace FileCabinetApp.Services
             this.firstNameDictionary[firstName].Add(record);
             this.lastNameDictionary[lastName].Add(record);
             this.dateOfBirthDictionary[dateOfBirth].Add(record);
+        }
+
+        private int GenerateId()
+        {
+            int id = this.lastId != int.MaxValue ? this.lastId : 0;
+
+            while (++id != int.MinValue)
+            {
+                if (!this.IsRecordExists(id))
+                {
+                    this.lastId = id;
+                    return id;
+                }
+            }
+
+            throw new ArgumentException("All ids are occupied.");
         }
     }
 }
