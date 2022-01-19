@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FileCabinetApp.Entities;
-using FileCabinetApp.RecordPrinters;
 
 namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
 {
@@ -15,14 +14,14 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
     /// </summary>
     internal class FindCommandHandler : ServiceCommandHandlerBase
     {
-        private readonly IRecordPrinter printer;
+        private readonly Action<IEnumerable<FileCabinetRecord>> printer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FindCommandHandler"/> class.
         /// </summary>
         /// <param name="service"> File cabinet service. </param>
         /// <param name="printer"> Record printer. </param>
-        public FindCommandHandler(IFileCabinetService service, IRecordPrinter printer)
+        public FindCommandHandler(IFileCabinetService service, Action<IEnumerable<FileCabinetRecord>> printer)
             : base(service)
         {
             this.printer = printer;
@@ -90,7 +89,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
                 return;
             }
 
-            this.printer.Print(foundRecords);
+            this.printer(foundRecords);
         }
     }
 }
