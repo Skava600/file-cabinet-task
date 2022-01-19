@@ -106,11 +106,12 @@
             Find command handler.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.CommandHandlers.ConcreteHandlers.FindCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
+        <member name="M:FileCabinetApp.CommandHandlers.ConcreteHandlers.FindCommandHandler.#ctor(FileCabinetApp.IFileCabinetService,FileCabinetApp.RecordPrinters.IRecordPrinter)">
             <summary>
             Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.ConcreteHandlers.FindCommandHandler"/> class.
             </summary>
             <param name="service"> File cabinet service. </param>
+            <param name="printer"> Record printer. </param>
         </member>
         <member name="M:FileCabinetApp.CommandHandlers.ConcreteHandlers.FindCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
             <inheritdoc/>
@@ -142,11 +143,12 @@
             List command handler.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.CommandHandlers.ConcreteHandlers.ListCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
+        <member name="M:FileCabinetApp.CommandHandlers.ConcreteHandlers.ListCommandHandler.#ctor(FileCabinetApp.IFileCabinetService,FileCabinetApp.RecordPrinters.IRecordPrinter)">
             <summary>
             Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.ConcreteHandlers.ListCommandHandler"/> class.
             </summary>
             <param name="service"> File cabinet service. </param>
+            <param name="printer"> Record printer. </param>
         </member>
         <member name="M:FileCabinetApp.CommandHandlers.ConcreteHandlers.ListCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
             <inheritdoc/>
@@ -526,6 +528,25 @@
             Defines the entry point of the application.
             </summary>
             <param name="args">The arguments.</param>
+        </member>
+        <member name="T:FileCabinetApp.RecordPrinters.DefaultRecordPrinter">
+            <summary>
+            Default record printer.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.RecordPrinters.DefaultRecordPrinter.Print(System.Collections.Generic.IEnumerable{FileCabinetApp.Entities.FileCabinetRecord})">
+            <inheritdoc/>
+        </member>
+        <member name="T:FileCabinetApp.RecordPrinters.IRecordPrinter">
+            <summary>
+            Record printer interface.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.RecordPrinters.IRecordPrinter.Print(System.Collections.Generic.IEnumerable{FileCabinetApp.Entities.FileCabinetRecord})">
+            <summary>
+            Prints file cabinet records.
+            </summary>
+            <param name="records"> file cabinet record. </param>
         </member>
         <member name="T:FileCabinetApp.Services.FileCabinetFilesystemService">
             <summary>

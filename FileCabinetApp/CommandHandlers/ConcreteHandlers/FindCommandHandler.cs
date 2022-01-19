@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FileCabinetApp.Entities;
+using FileCabinetApp.RecordPrinters;
 
 namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
 {
@@ -14,13 +15,17 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
     /// </summary>
     internal class FindCommandHandler : ServiceCommandHandlerBase
     {
+        private readonly IRecordPrinter printer;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="FindCommandHandler"/> class.
         /// </summary>
         /// <param name="service"> File cabinet service. </param>
-        public FindCommandHandler(IFileCabinetService service)
+        /// <param name="printer"> Record printer. </param>
+        public FindCommandHandler(IFileCabinetService service, IRecordPrinter printer)
             : base(service)
         {
+            this.printer = printer;
         }
 
         /// <inheritdoc/>
@@ -85,16 +90,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
                 return;
             }
 
-            foreach (var record in foundRecords)
-            {
-                string date = record.DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture);
-                Console.WriteLine($"#{record.Id}, " +
-                    $"{record.FirstName}, " +
-                    $"{record.LastName}, " +
-                    $"{date}, {record.Sex}, " +
-                    $"{record.Height}, " +
-                    $"{record.Salary}");
-            }
+            this.printer.Print(foundRecords);
         }
     }
 }

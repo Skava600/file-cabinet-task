@@ -5,6 +5,7 @@ using FileCabinetApp.CommandHandlers.ConcreteHandlers;
 using FileCabinetApp.Converters;
 using FileCabinetApp.Entities;
 using FileCabinetApp.Models;
+using FileCabinetApp.RecordPrinters;
 using FileCabinetApp.Services;
 using FileCabinetApp.Utils.Enums;
 using FileCabinetApp.Validation;
@@ -65,8 +66,8 @@ namespace FileCabinetApp
             var createCommandHandler = new CreateCommandHandler(fileCabinetService, recordValidator);
             var editCommandHandler = new EditCommandHandler(fileCabinetService, recordValidator);
             var statCommandHandler = new StatCommandHandler(fileCabinetService);
-            var listCommandHandler = new ListCommandHandler(fileCabinetService);
-            var findCommandHandler = new FindCommandHandler(fileCabinetService);
+            var listCommandHandler = new ListCommandHandler(fileCabinetService, new DefaultRecordPrinter());
+            var findCommandHandler = new FindCommandHandler(fileCabinetService, new DefaultRecordPrinter());
             var removeCommandHandler = new RemoveCommandHandler(fileCabinetService);
             var purgeCommandHandler = new PurgeCommandHandler(fileCabinetService);
             var importCommandHandler = new ImportCommandHandler(fileCabinetService);
