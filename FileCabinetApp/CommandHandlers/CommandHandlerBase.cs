@@ -6,10 +6,14 @@ using System.Threading.Tasks;
 
 namespace FileCabinetApp.CommandHandlers
 {
+    /// <summary>
+    /// Base command handler.
+    /// </summary>
     internal class CommandHandlerBase : ICommandHandler
     {
         private ICommandHandler? nextHandler;
 
+        /// <inheritdoc/>
         public virtual void Handle(AppCommandRequest request)
         {
             if (this.nextHandler != null)
@@ -22,7 +26,8 @@ namespace FileCabinetApp.CommandHandlers
             }
         }
 
-        void ICommandHandler.SetNext(ICommandHandler commandHandler)
+        /// <inheritdoc/>
+        public void SetNext(ICommandHandler commandHandler)
         {
             if (commandHandler != null)
             {

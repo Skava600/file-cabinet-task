@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Globalization;
 using FileCabinetApp.CommandHandlers;
+using FileCabinetApp.CommandHandlers.ConcreteHandlers;
 using FileCabinetApp.Converters;
 using FileCabinetApp.Entities;
 using FileCabinetApp.Models;
@@ -60,8 +61,30 @@ namespace FileCabinetApp
 
         private static ICommandHandler CreateCommandHandlers()
         {
-            var commandHandler = new CommandHandler();
-            return commandHandler;
+            var helpCommandHandler = new HelpCommandHandler();
+            var createCommandHandler = new CreateCommandHandler();
+            var editCommandHandler = new EditCommandHandler();
+            var statCommandHandler = new StatCommandHandler();
+            var listCommandHandler = new ListCommandHandler();
+            var findCommandHandler = new FindCommandHandler();
+            var removeCommandHandler = new RemoveCommandHandler();
+            var purgeCommandHandler = new PurgeCommandHandler();
+            var importCommandHandler = new ImportCommandHandler();
+            var exportCommandHandler = new ExportCommandHandler();
+            var exitCommandHandler = new ExitCommandHandler();
+
+            helpCommandHandler.SetNext(createCommandHandler);
+            createCommandHandler.SetNext(editCommandHandler);
+            editCommandHandler.SetNext(statCommandHandler);
+            statCommandHandler.SetNext(listCommandHandler);
+            listCommandHandler.SetNext(findCommandHandler);
+            findCommandHandler.SetNext(removeCommandHandler);
+            removeCommandHandler.SetNext(purgeCommandHandler);
+            purgeCommandHandler.SetNext(importCommandHandler);
+            importCommandHandler.SetNext(exportCommandHandler);
+            exportCommandHandler.SetNext(exitCommandHandler);
+
+            return helpCommandHandler;
         }
 
         private static void SetServiceBehaviour(string[] args)
@@ -107,7 +130,5 @@ namespace FileCabinetApp
             Console.WriteLine($"Using {systemValidationBehaviour} validation rules.");
             Console.WriteLine($"Using {FileCabinetService.GetType().Name}.");
         }
-
-        
     }
 }

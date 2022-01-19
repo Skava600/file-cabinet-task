@@ -4,6 +4,150 @@
         <name>FileCabinetApp</name>
     </assembly>
     <members>
+        <member name="T:FileCabinetApp.CommandHandlers.AppCommandRequest">
+            <summary>
+            This class represents app request.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.AppCommandRequest.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.AppCommandRequest"/> class.
+            </summary>
+            <param name="command"> Request command. </param>
+            <param name="parameters"> Request parameters. </param>
+        </member>
+        <member name="P:FileCabinetApp.CommandHandlers.AppCommandRequest.Command">
+            <summary>
+            Gets or sets request command.
+            </summary>
+            <value>
+            request command.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.CommandHandlers.AppCommandRequest.Parameters">
+            <summary>
+            Gets or sets request parameters.
+            </summary>
+            <value>
+            request parameters.
+            </value>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.CommandHandlerBase">
+            <summary>
+            Base command handler.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.CommandHandlerBase.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.CommandHandlerBase.SetNext(FileCabinetApp.CommandHandlers.ICommandHandler)">
+            <inheritdoc/>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.ConcreteHandlers.CreateCommandHandler">
+            <summary>
+            Create command handler.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.ConcreteHandlers.CreateCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <inheritdoc/>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.ConcreteHandlers.EditCommandHandler">
+            <summary>
+            Edit command handler.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.ConcreteHandlers.EditCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <inheritdoc/>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.ConcreteHandlers.ExitCommandHandler">
+            <summary>
+            Exit command handler.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.ConcreteHandlers.ExitCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <inheritdoc/>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.ConcreteHandlers.ExportCommandHandler">
+            <summary>
+            Export command handler.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.ConcreteHandlers.ExportCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <inheritdoc/>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.ConcreteHandlers.FindCommandHandler">
+            <summary>
+            Find command handler.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.ConcreteHandlers.FindCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <inheritdoc/>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.ConcreteHandlers.HelpCommandHandler">
+            <summary>
+            Help command handler.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.ConcreteHandlers.HelpCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <inheritdoc/>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.ConcreteHandlers.ImportCommandHandler">
+            <summary>
+            Import command handler.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.ConcreteHandlers.ImportCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <inheritdoc/>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.ConcreteHandlers.ListCommandHandler">
+            <summary>
+            List command handler.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.ConcreteHandlers.ListCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <inheritdoc/>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.ConcreteHandlers.PurgeCommandHandler">
+            <summary>
+            Purge command handler.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.ConcreteHandlers.PurgeCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <inheritdoc/>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.ConcreteHandlers.RemoveCommandHandler">
+            <summary>
+            Remove  command handler.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.ConcreteHandlers.RemoveCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <inheritdoc/>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.ConcreteHandlers.StatCommandHandler">
+            <summary>
+            Stat command handler.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.ConcreteHandlers.StatCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <inheritdoc/>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.ICommandHandler">
+            <summary>
+            Command Handler interface.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.ICommandHandler.SetNext(FileCabinetApp.CommandHandlers.ICommandHandler)">
+            <summary>
+            Sets next command hadler.
+            </summary>
+            <param name="commandHandler"> next command handler. </param>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.ICommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <summary>
+            Handle request.
+            </summary>
+            <param name="request"> Command request. </param>
+        </member>
         <member name="T:FileCabinetApp.Converters.InputConverter">
             <summary>
             Input parameters converter.
@@ -534,6 +678,17 @@
             <summary>
             Custom rules.
             </summary>
+        </member>
+        <member name="T:FileCabinetApp.Utils.Input.RecordInputReader">
+            <summary>
+            Record input reader.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Utils.Input.RecordInputReader.GetRecordInput">
+            <summary>
+            Reads users record input.
+            </summary>
+            <returns> Data for FileCabinetRecord. </returns>
         </member>
         <member name="T:FileCabinetApp.Utils.Readers.FileCabinetRecordCsvReader">
             <summary>
