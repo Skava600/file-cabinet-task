@@ -16,14 +16,14 @@ namespace FileCabinetApp
     /// </summary>
     public static class Program
     {
-        public static IFileCabinetService FileCabinetService = new FileCabinetMemoryService(new DefaultValidator());
-        public static IRecordValidator RecordValidator = new DefaultValidator();
         public static bool IsRunning = true;
-
         private const string DeveloperName = "Vladislav Skovorodnik";
         private const string HintMessage = "Enter your command, or enter 'help' to get help.";
 
         private const string FileStorageName = "cabinet-records.db";
+
+        private static IFileCabinetService fileCabinetService = new FileCabinetMemoryService(new DefaultValidator());
+        private static IRecordValidator recordValidator = new DefaultValidator();
 
         /// <summary>
         /// Defines the entry point of the application.
@@ -62,15 +62,15 @@ namespace FileCabinetApp
         private static ICommandHandler CreateCommandHandlers()
         {
             var helpCommandHandler = new HelpCommandHandler();
-            var createCommandHandler = new CreateCommandHandler();
-            var editCommandHandler = new EditCommandHandler();
-            var statCommandHandler = new StatCommandHandler();
-            var listCommandHandler = new ListCommandHandler();
-            var findCommandHandler = new FindCommandHandler();
-            var removeCommandHandler = new RemoveCommandHandler();
-            var purgeCommandHandler = new PurgeCommandHandler();
-            var importCommandHandler = new ImportCommandHandler();
-            var exportCommandHandler = new ExportCommandHandler();
+            var createCommandHandler = new CreateCommandHandler(fileCabinetService, recordValidator);
+            var editCommandHandler = new EditCommandHandler(fileCabinetService, recordValidator);
+            var statCommandHandler = new StatCommandHandler(fileCabinetService);
+            var listCommandHandler = new ListCommandHandler(fileCabinetService);
+            var findCommandHandler = new FindCommandHandler(fileCabinetService);
+            var removeCommandHandler = new RemoveCommandHandler(fileCabinetService);
+            var purgeCommandHandler = new PurgeCommandHandler(fileCabinetService);
+            var importCommandHandler = new ImportCommandHandler(fileCabinetService);
+            var exportCommandHandler = new ExportCommandHandler(fileCabinetService);
             var exitCommandHandler = new ExitCommandHandler();
 
             helpCommandHandler.SetNext(createCommandHandler);
@@ -115,20 +115,20 @@ namespace FileCabinetApp
                 }
             }
 
-            RecordValidator = systemValidationBehaviour switch
+            recordValidator = systemValidationBehaviour switch
             {
                 ValidationRule.Custom => new CustomValidator(),
                 _ => new DefaultValidator(),
             };
 
-            FileCabinetService = memoryBehaviour switch
+            fileCabinetService = memoryBehaviour switch
             {
-                "file" => new FileCabinetFilesystemService(new FileStream(FileStorageName, FileMode.OpenOrCreate, FileAccess.ReadWrite), RecordValidator),
-                _ => new FileCabinetMemoryService(RecordValidator),
+                "file" => new FileCabinetFilesystemService(new FileStream(FileStorageName, FileMode.OpenOrCreate, FileAccess.ReadWrite), recordValidator),
+                _ => new FileCabinetMemoryService(recordValidator),
             };
 
             Console.WriteLine($"Using {systemValidationBehaviour} validation rules.");
-            Console.WriteLine($"Using {FileCabinetService.GetType().Name}.");
+            Console.WriteLine($"Using {fileCabinetService.GetType().Name}.");
         }
     }
 }

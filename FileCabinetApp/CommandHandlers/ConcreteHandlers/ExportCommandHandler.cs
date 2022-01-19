@@ -11,12 +11,23 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
     /// </summary>
     internal class ExportCommandHandler : CommandHandlerBase
     {
+        private readonly IFileCabinetService fileCabinetService;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ExportCommandHandler"/> class.
+        /// </summary>
+        /// <param name="service"> File cabinet service. </param>
+        public ExportCommandHandler(IFileCabinetService service)
+        {
+            this.fileCabinetService = service;
+        }
+
         /// <inheritdoc/>
         public override void Handle(AppCommandRequest request)
         {
             if (request.Command.Equals("export", StringComparison.InvariantCultureIgnoreCase))
             {
-                Export(request.Parameters);
+                this.Export(request.Parameters);
             }
             else
             {
@@ -24,7 +35,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
             }
         }
 
-        private static void Export(string parameters)
+        private void Export(string parameters)
         {
             string[] inputs = parameters.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
 
@@ -65,7 +76,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
                 {
                     using (StreamWriter sw = new StreamWriter(filePath))
                     {
-                        Program.FileCabinetService.MakeSnapshot().SaveToCsv(sw);
+                        this.fileCabinetService.MakeSnapshot().SaveToCsv(sw);
                         Console.WriteLine($"All records are exported to file {filePath}.");
                     }
                 }
@@ -73,7 +84,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
                 {
                     using (StreamWriter sw = new StreamWriter(filePath))
                     {
-                        Program.FileCabinetService.MakeSnapshot().SaveToXml(sw);
+                        this.fileCabinetService.MakeSnapshot().SaveToXml(sw);
                         Console.WriteLine($"All records are exported to file {filePath}.");
                     }
                 }

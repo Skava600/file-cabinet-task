@@ -1,18 +1,30 @@
 ﻿using FileCabinetApp.Converters;
 using FileCabinetApp.Models;
+using FileCabinetApp.Validation;
 
 namespace FileCabinetApp.Utils.Input
 {
     /// <summary>
     /// Record input reader.
     /// </summary>
-    public static class RecordInputReader
+    public class RecordInputReader
     {
+        private readonly IRecordValidator recordValidator;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RecordInputReader"/> class.
+        /// </summary>
+        /// <param name="recordValidator"> Record validator. </param>
+        public RecordInputReader(IRecordValidator recordValidator)
+        {
+            this.recordValidator = recordValidator;
+        }
+
         /// <summary>
         /// Reads users record input.
         /// </summary>
         /// <returns> Data for FileCabinetRecord. </returns>
-        public static RecordData GetRecordInput()
+        public RecordData GetRecordInput()
         {
             Func<string, Tuple<bool, string, string>> stringConverter = InputConverter.StringConverter;
             Func<string, Tuple<bool, string, DateTime>> dateTimeConverter = InputConverter.DateTimeConverter;
@@ -20,12 +32,12 @@ namespace FileCabinetApp.Utils.Input
             Func<string, Tuple<bool, string, short>> shortConverter = InputConverter.ShortConverter;
             Func<string, Tuple<bool, string, decimal>> decimalConverter = InputConverter.DecimalConverter;
 
-            Func<string, Tuple<bool, string>> firstNameValidator = Program.RecordValidator.FirstNameValidator;
-            Func<string, Tuple<bool, string>> lastNameValidator = Program.RecordValidator.LastNameValidator;
-            Func<DateTime, Tuple<bool, string>> dateOfBirthValidator = Program.RecordValidator.DateOfBirthValidator;
-            Func<char, Tuple<bool, string>> sexValidator = Program.RecordValidator.SexValidator;
-            Func<short, Tuple<bool, string>> heightValidator = Program.RecordValidator.HeightValidator;
-            Func<decimal, Tuple<bool, string>> salaryValidator = Program.RecordValidator.SalaryValidator;
+            Func<string, Tuple<bool, string>> firstNameValidator = this.recordValidator.FirstNameValidator;
+            Func<string, Tuple<bool, string>> lastNameValidator = this.recordValidator.LastNameValidator;
+            Func<DateTime, Tuple<bool, string>> dateOfBirthValidator = this.recordValidator.DateOfBirthValidator;
+            Func<char, Tuple<bool, string>> sexValidator = this.recordValidator.SexValidator;
+            Func<short, Tuple<bool, string>> heightValidator = this.recordValidator.HeightValidator;
+            Func<decimal, Tuple<bool, string>> salaryValidator = this.recordValidator.SalaryValidator;
 
             Console.Write("First name: ");
             var firstName = ReadInput(stringConverter, firstNameValidator);

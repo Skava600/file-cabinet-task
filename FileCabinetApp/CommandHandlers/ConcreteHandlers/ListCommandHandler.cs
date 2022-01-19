@@ -14,12 +14,23 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
     /// </summary>
     internal class ListCommandHandler : CommandHandlerBase
     {
+        private readonly IFileCabinetService fileCabinetService;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ListCommandHandler"/> class.
+        /// </summary>
+        /// <param name="service"> File cabinet service. </param>
+        public ListCommandHandler(IFileCabinetService service)
+        {
+            this.fileCabinetService = service;
+        }
+
         /// <inheritdoc/>
         public override void Handle(AppCommandRequest request)
         {
             if (request.Command.Equals("list", StringComparison.InvariantCultureIgnoreCase))
             {
-                List(request.Parameters);
+                this.List(request.Parameters);
             }
             else
             {
@@ -27,9 +38,9 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
             }
         }
 
-        private static void List(string parameters)
+        private void List(string parameters)
         {
-            ReadOnlyCollection<FileCabinetRecord> records = Program.FileCabinetService.GetRecords();
+            ReadOnlyCollection<FileCabinetRecord> records = this.fileCabinetService.GetRecords();
 
             foreach (var record in records)
             {

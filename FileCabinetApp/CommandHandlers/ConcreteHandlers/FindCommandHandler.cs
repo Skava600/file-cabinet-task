@@ -14,12 +14,23 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
     /// </summary>
     internal class FindCommandHandler : CommandHandlerBase
     {
+        private readonly IFileCabinetService fileCabinetService;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FindCommandHandler"/> class.
+        /// </summary>
+        /// <param name="service"> File cabinet service. </param>
+        public FindCommandHandler(IFileCabinetService service)
+        {
+            this.fileCabinetService = service;
+        }
+
         /// <inheritdoc/>
         public override void Handle(AppCommandRequest request)
         {
             if (request.Command.Equals("find", StringComparison.InvariantCultureIgnoreCase))
             {
-                Find(request.Parameters);
+                this.Find(request.Parameters);
             }
             else
             {
@@ -27,7 +38,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
             }
         }
 
-        private static void Find(string parameters)
+        private void Find(string parameters)
         {
             ReadOnlyCollection<FileCabinetRecord> foundRecords;
             try
@@ -48,15 +59,15 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
 
                 if (propertyName.Equals(nameof(FileCabinetRecord.FirstName), StringComparison.InvariantCultureIgnoreCase))
                 {
-                    foundRecords = Program.FileCabinetService.FindByFirstName(propertyValue);
+                    foundRecords = this.fileCabinetService.FindByFirstName(propertyValue);
                 }
                 else if (propertyName.Equals(nameof(FileCabinetRecord.LastName), StringComparison.InvariantCultureIgnoreCase))
                 {
-                    foundRecords = Program.FileCabinetService.FindByLastName(propertyValue);
+                    foundRecords = this.fileCabinetService.FindByLastName(propertyValue);
                 }
                 else if (propertyName.Equals(nameof(FileCabinetRecord.DateOfBirth), StringComparison.InvariantCultureIgnoreCase))
                 {
-                    foundRecords = Program.FileCabinetService.FindByDateOfBirth(propertyValue);
+                    foundRecords = this.fileCabinetService.FindByDateOfBirth(propertyValue);
                 }
                 else
                 {

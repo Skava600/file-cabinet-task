@@ -43,7 +43,7 @@ namespace FileCabinetApp.Services
         {
             this.fileStream = fileStream;
             this.validator = validator;
-            this.lastId = this.GetRecords().Max(rec => rec.Id);
+            this.lastId = this.GetStat().Item1 > 0 ? this.GetRecords().Max(rec => rec.Id) : 0;
         }
 
         /// <inheritdoc/>

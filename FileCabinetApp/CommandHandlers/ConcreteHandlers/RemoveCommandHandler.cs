@@ -11,12 +11,23 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
     /// </summary>
     internal class RemoveCommandHandler : CommandHandlerBase
     {
+        private readonly IFileCabinetService fileCabinetService;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RemoveCommandHandler"/> class.
+        /// </summary>
+        /// <param name="service"> File cabinet service. </param>
+        public RemoveCommandHandler(IFileCabinetService service)
+        {
+            this.fileCabinetService = service;
+        }
+
         /// <inheritdoc/>
         public override void Handle(AppCommandRequest request)
         {
             if (request.Command.Equals("remove", StringComparison.InvariantCultureIgnoreCase))
             {
-                Remove(request.Parameters);
+                this.Remove(request.Parameters);
             }
             else
             {
@@ -24,7 +35,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
             }
         }
 
-        private static void Remove(string parameters)
+        private void Remove(string parameters)
         {
             if (!int.TryParse(parameters, out int id))
             {
@@ -34,7 +45,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
 
             try
             {
-                Program.FileCabinetService.RemoveRecord(id);
+                this.fileCabinetService.RemoveRecord(id);
                 Console.WriteLine($"Record #{id} is removed.");
             }
             catch (Exception ex)

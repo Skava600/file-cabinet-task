@@ -13,12 +13,23 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
     /// </summary>
     internal class ImportCommandHandler : CommandHandlerBase
     {
+        private readonly IFileCabinetService fileCabinetService;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ImportCommandHandler"/> class.
+        /// </summary>
+        /// <param name="service"> File cabinet service. </param>
+        public ImportCommandHandler(IFileCabinetService service)
+        {
+            this.fileCabinetService = service;
+        }
+
         /// <inheritdoc/>
         public override void Handle(AppCommandRequest request)
         {
             if (request.Command.Equals("import", StringComparison.InvariantCultureIgnoreCase))
             {
-                Import(request.Parameters);
+                this.Import(request.Parameters);
             }
             else
             {
@@ -26,7 +37,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
             }
         }
 
-        private static void Import(string parameters)
+        private void Import(string parameters)
         {
             string[] inputs = parameters.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
 
@@ -65,7 +76,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
                     Console.WriteLine($"{format} is not correct format, available only xml and csv");
                 }
 
-                Program.FileCabinetService.Restore(snapshot);
+                this.fileCabinetService.Restore(snapshot);
                 Console.WriteLine($"{snapshot.Records.Count} were imported from {filePath}.");
             }
         }

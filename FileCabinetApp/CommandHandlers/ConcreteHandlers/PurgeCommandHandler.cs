@@ -11,12 +11,23 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
     /// </summary>
     internal class PurgeCommandHandler : CommandHandlerBase
     {
+        private readonly IFileCabinetService fileCabinetService;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PurgeCommandHandler"/> class.
+        /// </summary>
+        /// <param name="service"> File cabinet service. </param>
+        public PurgeCommandHandler(IFileCabinetService service)
+        {
+            this.fileCabinetService = service;
+        }
+
         /// <inheritdoc/>
         public override void Handle(AppCommandRequest request)
         {
             if (request.Command.Equals("purge", StringComparison.InvariantCultureIgnoreCase))
             {
-                Purge(request.Parameters);
+                this.Purge(request.Parameters);
             }
             else
             {
@@ -24,12 +35,12 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
             }
         }
 
-        private static void Purge(string parameters)
+        private void Purge(string parameters)
         {
             try
             {
-                var records = Program.FileCabinetService.GetStat();
-                Program.FileCabinetService.Purge();
+                var records = this.fileCabinetService.GetStat();
+                this.fileCabinetService.Purge();
                 Console.WriteLine($"Data file processing is completed: {records.Item2} of {records.Item1} records were purged.");
             }
             catch (NotImplementedException)
