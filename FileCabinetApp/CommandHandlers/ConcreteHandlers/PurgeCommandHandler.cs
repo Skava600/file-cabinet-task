@@ -9,17 +9,15 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
     /// <summary>
     /// Purge command handler.
     /// </summary>
-    internal class PurgeCommandHandler : CommandHandlerBase
+    internal class PurgeCommandHandler : ServiceCommandHandlerBase
     {
-        private readonly IFileCabinetService fileCabinetService;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="PurgeCommandHandler"/> class.
         /// </summary>
         /// <param name="service"> File cabinet service. </param>
         public PurgeCommandHandler(IFileCabinetService service)
+            : base(service)
         {
-            this.fileCabinetService = service;
         }
 
         /// <inheritdoc/>
@@ -39,8 +37,8 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
         {
             try
             {
-                var records = this.fileCabinetService.GetStat();
-                this.fileCabinetService.Purge();
+                var records = this.FileCabinetService.GetStat();
+                this.FileCabinetService.Purge();
                 Console.WriteLine($"Data file processing is completed: {records.Item2} of {records.Item1} records were purged.");
             }
             catch (NotImplementedException)

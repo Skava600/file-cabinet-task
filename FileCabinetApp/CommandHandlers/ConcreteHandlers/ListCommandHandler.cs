@@ -12,17 +12,15 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
     /// <summary>
     /// List command handler.
     /// </summary>
-    internal class ListCommandHandler : CommandHandlerBase
+    internal class ListCommandHandler : ServiceCommandHandlerBase
     {
-        private readonly IFileCabinetService fileCabinetService;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ListCommandHandler"/> class.
         /// </summary>
         /// <param name="service"> File cabinet service. </param>
         public ListCommandHandler(IFileCabinetService service)
+            : base(service)
         {
-            this.fileCabinetService = service;
         }
 
         /// <inheritdoc/>
@@ -40,7 +38,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
 
         private void List(string parameters)
         {
-            ReadOnlyCollection<FileCabinetRecord> records = this.fileCabinetService.GetRecords();
+            ReadOnlyCollection<FileCabinetRecord> records = this.FileCabinetService.GetRecords();
 
             foreach (var record in records)
             {

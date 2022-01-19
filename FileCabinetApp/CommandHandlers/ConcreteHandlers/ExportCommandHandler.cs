@@ -9,17 +9,15 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
     /// <summary>
     /// Export command handler.
     /// </summary>
-    internal class ExportCommandHandler : CommandHandlerBase
+    internal class ExportCommandHandler : ServiceCommandHandlerBase
     {
-        private readonly IFileCabinetService fileCabinetService;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ExportCommandHandler"/> class.
         /// </summary>
         /// <param name="service"> File cabinet service. </param>
         public ExportCommandHandler(IFileCabinetService service)
+            : base(service)
         {
-            this.fileCabinetService = service;
         }
 
         /// <inheritdoc/>
@@ -76,7 +74,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
                 {
                     using (StreamWriter sw = new StreamWriter(filePath))
                     {
-                        this.fileCabinetService.MakeSnapshot().SaveToCsv(sw);
+                        this.FileCabinetService.MakeSnapshot().SaveToCsv(sw);
                         Console.WriteLine($"All records are exported to file {filePath}.");
                     }
                 }
@@ -84,7 +82,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
                 {
                     using (StreamWriter sw = new StreamWriter(filePath))
                     {
-                        this.fileCabinetService.MakeSnapshot().SaveToXml(sw);
+                        this.FileCabinetService.MakeSnapshot().SaveToXml(sw);
                         Console.WriteLine($"All records are exported to file {filePath}.");
                     }
                 }

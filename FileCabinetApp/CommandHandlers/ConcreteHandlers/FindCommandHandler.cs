@@ -12,17 +12,15 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
     /// <summary>
     /// Find command handler.
     /// </summary>
-    internal class FindCommandHandler : CommandHandlerBase
+    internal class FindCommandHandler : ServiceCommandHandlerBase
     {
-        private readonly IFileCabinetService fileCabinetService;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="FindCommandHandler"/> class.
         /// </summary>
         /// <param name="service"> File cabinet service. </param>
         public FindCommandHandler(IFileCabinetService service)
+            : base(service)
         {
-            this.fileCabinetService = service;
         }
 
         /// <inheritdoc/>
@@ -59,15 +57,15 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
 
                 if (propertyName.Equals(nameof(FileCabinetRecord.FirstName), StringComparison.InvariantCultureIgnoreCase))
                 {
-                    foundRecords = this.fileCabinetService.FindByFirstName(propertyValue);
+                    foundRecords = this.FileCabinetService.FindByFirstName(propertyValue);
                 }
                 else if (propertyName.Equals(nameof(FileCabinetRecord.LastName), StringComparison.InvariantCultureIgnoreCase))
                 {
-                    foundRecords = this.fileCabinetService.FindByLastName(propertyValue);
+                    foundRecords = this.FileCabinetService.FindByLastName(propertyValue);
                 }
                 else if (propertyName.Equals(nameof(FileCabinetRecord.DateOfBirth), StringComparison.InvariantCultureIgnoreCase))
                 {
-                    foundRecords = this.fileCabinetService.FindByDateOfBirth(propertyValue);
+                    foundRecords = this.FileCabinetService.FindByDateOfBirth(propertyValue);
                 }
                 else
                 {

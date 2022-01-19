@@ -12,9 +12,8 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
     /// <summary>
     /// Create command handler.
     /// </summary>
-    internal class CreateCommandHandler : CommandHandlerBase
+    internal class CreateCommandHandler : ServiceCommandHandlerBase
     {
-        private readonly IFileCabinetService fileCabinetService;
         private readonly IRecordValidator recordValidator;
 
         /// <summary>
@@ -23,8 +22,8 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
         /// <param name="service"> File cabinet service. </param>
         /// <param name="validator"> Record validator. </param>
         public CreateCommandHandler(IFileCabinetService service, IRecordValidator validator)
+            : base(service)
         {
-            this.fileCabinetService = service;
             this.recordValidator = validator;
         }
 
@@ -46,7 +45,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
             try
             {
                 RecordData recordData = new RecordInputReader(this.recordValidator).GetRecordInput();
-                Console.WriteLine($"Record #{this.fileCabinetService.CreateRecord(recordData)} is created.");
+                Console.WriteLine($"Record #{this.FileCabinetService.CreateRecord(recordData)} is created.");
             }
             catch (Exception ex)
             {

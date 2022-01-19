@@ -204,6 +204,25 @@
             </summary>
             <param name="request"> Command request. </param>
         </member>
+        <member name="T:FileCabinetApp.CommandHandlers.ServiceCommandHandlerBase">
+            <summary>
+            Command handler base with file cabinet service.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.ServiceCommandHandlerBase.#ctor(FileCabinetApp.IFileCabinetService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.ServiceCommandHandlerBase"/> class.
+            </summary>
+            <param name="fileCabinetService"> File cabinet service. </param>
+        </member>
+        <member name="P:FileCabinetApp.CommandHandlers.ServiceCommandHandlerBase.FileCabinetService">
+            <summary>
+            Gets file cabinet service.
+            </summary>
+            <value>
+            file cabinet service.
+            </value>
+        </member>
         <member name="T:FileCabinetApp.Converters.InputConverter">
             <summary>
             Input parameters converter.
@@ -739,6 +758,12 @@
             <summary>
             Record input reader.
             </summary>
+        </member>
+        <member name="M:FileCabinetApp.Utils.Input.RecordInputReader.#ctor(FileCabinetApp.Validation.IRecordValidator)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Utils.Input.RecordInputReader"/> class.
+            </summary>
+            <param name="recordValidator"> Record validator. </param>
         </member>
         <member name="M:FileCabinetApp.Utils.Input.RecordInputReader.GetRecordInput">
             <summary>

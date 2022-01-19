@@ -9,17 +9,15 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
     /// <summary>
     /// Remove  command handler.
     /// </summary>
-    internal class RemoveCommandHandler : CommandHandlerBase
+    internal class RemoveCommandHandler : ServiceCommandHandlerBase
     {
-        private readonly IFileCabinetService fileCabinetService;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="RemoveCommandHandler"/> class.
         /// </summary>
         /// <param name="service"> File cabinet service. </param>
         public RemoveCommandHandler(IFileCabinetService service)
+            : base(service)
         {
-            this.fileCabinetService = service;
         }
 
         /// <inheritdoc/>
@@ -45,7 +43,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
 
             try
             {
-                this.fileCabinetService.RemoveRecord(id);
+                this.FileCabinetService.RemoveRecord(id);
                 Console.WriteLine($"Record #{id} is removed.");
             }
             catch (Exception ex)

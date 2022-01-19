@@ -11,17 +11,15 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
     /// <summary>
     /// Import command handler.
     /// </summary>
-    internal class ImportCommandHandler : CommandHandlerBase
+    internal class ImportCommandHandler : ServiceCommandHandlerBase
     {
-        private readonly IFileCabinetService fileCabinetService;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ImportCommandHandler"/> class.
         /// </summary>
         /// <param name="service"> File cabinet service. </param>
         public ImportCommandHandler(IFileCabinetService service)
+            : base(service)
         {
-            this.fileCabinetService = service;
         }
 
         /// <inheritdoc/>
@@ -76,7 +74,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
                     Console.WriteLine($"{format} is not correct format, available only xml and csv");
                 }
 
-                this.fileCabinetService.Restore(snapshot);
+                this.FileCabinetService.Restore(snapshot);
                 Console.WriteLine($"{snapshot.Records.Count} were imported from {filePath}.");
             }
         }

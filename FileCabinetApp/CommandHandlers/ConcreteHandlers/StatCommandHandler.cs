@@ -9,17 +9,15 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
      /// <summary>
      /// Stat command handler.
      /// </summary>
-    internal class StatCommandHandler : CommandHandlerBase
+    internal class StatCommandHandler : ServiceCommandHandlerBase
     {
-        private readonly IFileCabinetService fileCabinetService;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="StatCommandHandler"/> class.
         /// </summary>
         /// <param name="service"> File cabinet service. </param>
         public StatCommandHandler(IFileCabinetService service)
+            : base(service)
         {
-            this.fileCabinetService = service;
         }
 
         /// <inheritdoc/>
@@ -37,7 +35,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
 
         private void Stat(string parameters)
         {
-            var recordsCount = this.fileCabinetService.GetStat();
+            var recordsCount = this.FileCabinetService.GetStat();
             Console.WriteLine($"{recordsCount.Item1} record(s), {recordsCount.Item2} deleted record(s).");
         }
     }
