@@ -11,21 +11,34 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
     /// </summary>
     internal class ExitCommandHandler : CommandHandlerBase
     {
+        private Action<bool> exitApp;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ExitCommandHandler"/> class.
+        /// </summary>
+        /// <param name="exitApp"> Action to exit application. </param>
+        public ExitCommandHandler(Action<bool> exitApp)
+        {
+            this.exitApp = exitApp;
+        }
+
         /// <inheritdoc/>
         public override void Handle(AppCommandRequest request)
         {
             if (request.Command.Equals("exit", StringComparison.InvariantCultureIgnoreCase))
             {
-                Exit(request.Parameters);
+                this.Exit(request.Parameters);
             }
-
-            base.Handle(request);
+            else
+            {
+                base.Handle(request);
+            }
         }
 
-        private static void Exit(string parameters)
+        private void Exit(string parameters)
         {
             Console.WriteLine("Exiting an application...");
-            Program.IsRunning = false;
+            this.exitApp(false);
         }
     }
 }

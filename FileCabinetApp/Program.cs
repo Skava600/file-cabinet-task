@@ -16,12 +16,12 @@ namespace FileCabinetApp
     /// </summary>
     public static class Program
     {
-        public static bool IsRunning = true;
         private const string DeveloperName = "Vladislav Skovorodnik";
         private const string HintMessage = "Enter your command, or enter 'help' to get help.";
 
         private const string FileStorageName = "cabinet-records.db";
 
+        private static bool isRunning = true;
         private static IFileCabinetService fileCabinetService = new FileCabinetMemoryService(new DefaultValidator());
         private static IRecordValidator recordValidator = new DefaultValidator();
 
@@ -56,7 +56,7 @@ namespace FileCabinetApp
                 var parameters = inputs.Length > 1 ? inputs[parametersIndex] : string.Empty;
                 commandHandler.Handle(new AppCommandRequest(command, parameters));
             }
-            while (IsRunning);
+            while (isRunning);
         }
 
         private static ICommandHandler CreateCommandHandlers()
@@ -71,7 +71,9 @@ namespace FileCabinetApp
             var purgeCommandHandler = new PurgeCommandHandler(fileCabinetService);
             var importCommandHandler = new ImportCommandHandler(fileCabinetService);
             var exportCommandHandler = new ExportCommandHandler(fileCabinetService);
-            var exitCommandHandler = new ExitCommandHandler();
+
+            Action<bool> exitApp = x => isRunning = x;
+            var exitCommandHandler = new ExitCommandHandler(exitApp);
 
             helpCommandHandler.SetNext(createCommandHandler);
             createCommandHandler.SetNext(editCommandHandler);

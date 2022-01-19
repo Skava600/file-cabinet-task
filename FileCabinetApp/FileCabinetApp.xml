@@ -78,6 +78,12 @@
             Exit command handler.
             </summary>
         </member>
+        <member name="M:FileCabinetApp.CommandHandlers.ConcreteHandlers.ExitCommandHandler.#ctor(System.Action{System.Boolean})">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.ConcreteHandlers.ExitCommandHandler"/> class.
+            </summary>
+            <param name="exitApp"> Action to exit application. </param>
+        </member>
         <member name="M:FileCabinetApp.CommandHandlers.ConcreteHandlers.ExitCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
             <inheritdoc/>
         </member>
