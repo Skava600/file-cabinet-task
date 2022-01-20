@@ -56,7 +56,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
 
             try
             {
-                RecordData recordData = new RecordInputReader(this.recordValidator).GetRecordInput();
+                RecordData recordData = new RecordInputReader().GetRecordInput();
                 this.FileCabinetService.EditRecord(id, recordData);
                 Console.WriteLine($"Record #{id} is updated.");
             }

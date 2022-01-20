@@ -529,25 +529,6 @@
             </summary>
             <param name="args">The arguments.</param>
         </member>
-        <member name="T:FileCabinetApp.RecordPrinters.DefaultRecordPrinter">
-            <summary>
-            Default record printer.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.RecordPrinters.DefaultRecordPrinter.Print(System.Collections.Generic.IEnumerable{FileCabinetApp.Entities.FileCabinetRecord})">
-            <inheritdoc/>
-        </member>
-        <member name="T:FileCabinetApp.RecordPrinters.IRecordPrinter">
-            <summary>
-            Record printer interface.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.RecordPrinters.IRecordPrinter.Print(System.Collections.Generic.IEnumerable{FileCabinetApp.Entities.FileCabinetRecord})">
-            <summary>
-            Prints file cabinet records.
-            </summary>
-            <param name="records"> file cabinet record. </param>
-        </member>
         <member name="T:FileCabinetApp.Services.FileCabinetFilesystemService">
             <summary>
             Class to describe the file cabinet service.

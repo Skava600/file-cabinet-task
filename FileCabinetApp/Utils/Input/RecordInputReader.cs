@@ -9,16 +9,18 @@ namespace FileCabinetApp.Utils.Input
     /// </summary>
     public class RecordInputReader
     {
-        private readonly IRecordValidator recordValidator;
+        private const int MinNameLength = 2;
+        private const int MaxNameLength = 60;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RecordInputReader"/> class.
-        /// </summary>
-        /// <param name="recordValidator"> Record validator. </param>
-        public RecordInputReader(IRecordValidator recordValidator)
-        {
-            this.recordValidator = recordValidator;
-        }
+        private const short MinHeight = 0;
+        private const short MaxHeight = 300;
+
+        private const decimal MinSalary = 0;
+        private const decimal MaxSalary = decimal.MaxValue;
+
+        private static DateTime MinDate => new DateTime(1900, 1, 1);
+
+        private static DateTime MaxDate => DateTime.Now;
 
         /// <summary>
         /// Reads users record input.
@@ -26,18 +28,38 @@ namespace FileCabinetApp.Utils.Input
         /// <returns> Data for FileCabinetRecord. </returns>
         public RecordData GetRecordInput()
         {
+            RecordData record;
+
             Func<string, Tuple<bool, string, string>> stringConverter = InputConverter.StringConverter;
             Func<string, Tuple<bool, string, DateTime>> dateTimeConverter = InputConverter.DateTimeConverter;
             Func<string, Tuple<bool, string, char>> charConverter = InputConverter.CharConverter;
             Func<string, Tuple<bool, string, short>> shortConverter = InputConverter.ShortConverter;
             Func<string, Tuple<bool, string, decimal>> decimalConverter = InputConverter.DecimalConverter;
 
-            Func<string, Tuple<bool, string>> firstNameValidator = this.recordValidator.FirstNameValidator;
-            Func<string, Tuple<bool, string>> lastNameValidator = this.recordValidator.LastNameValidator;
-            Func<DateTime, Tuple<bool, string>> dateOfBirthValidator = this.recordValidator.DateOfBirthValidator;
-            Func<char, Tuple<bool, string>> sexValidator = this.recordValidator.SexValidator;
-            Func<short, Tuple<bool, string>> heightValidator = this.recordValidator.HeightValidator;
-            Func<decimal, Tuple<bool, string>> salaryValidator = this.recordValidator.SalaryValidator;
+            Func<string, Tuple<bool, string>> firstNameValidator =
+                name => name.Length < MinNameLength || name.Length > MaxNameLength ?
+                new Tuple<bool, string>(false, $"Length of first name must be between {MinNameLength} and {MaxNameLength}") :
+                new Tuple<bool, string>(true, nameof(record.FirstName));
+            Func<string, Tuple<bool, string>> lastNameValidator =
+                name => name.Length < MinNameLength || name.Length > MaxNameLength ?
+                new Tuple<bool, string>(false, $"Length of last name must be between {MinNameLength} and {MaxNameLength}") :
+                new Tuple<bool, string>(true, nameof(record.LastName));
+            Func<DateTime, Tuple<bool, string>> dateOfBirthValidator =
+                dateOfBirth => dateOfBirth < MinDate || dateOfBirth > MaxDate ?
+                new Tuple<bool, string>(false, $"Date of birth current must be between {MinDate.ToShortDateString} and {MaxDate.ToShortDateString}") :
+                new Tuple<bool, string>(true, nameof(record.DateOfBirth));
+            Func<char, Tuple<bool, string>> sexValidator =
+                sex => !char.ToUpper(sex).Equals('M') && !char.ToUpper(sex).Equals('F') ?
+                new Tuple<bool, string>(false, "sex is only M(male) and F(female)") :
+                new Tuple<bool, string>(true, nameof(record.Sex));
+            Func<short, Tuple<bool, string>> heightValidator =
+                height => height < MinHeight || height > MaxHeight ?
+                new Tuple<bool, string>(false, $"height must be a number between {MinHeight}  and {MaxHeight}") :
+                new Tuple<bool, string>(true, nameof(record.Height));
+            Func<decimal, Tuple<bool, string>> salaryValidator =
+                salary => salary < MinSalary || salary > MaxSalary ?
+                new Tuple<bool, string>(false, $"Salary should be between {MinSalary} and {MaxSalary}.") :
+                new Tuple<bool, string>(true, nameof(record.Salary));
 
             Console.Write("First name: ");
             var firstName = ReadInput(stringConverter, firstNameValidator);
@@ -57,7 +79,7 @@ namespace FileCabinetApp.Utils.Input
             Console.Write("Salary ($): ");
             var salary = ReadInput(decimalConverter, salaryValidator);
 
-            RecordData record = new RecordData(firstName, lastName, dateOfBirth, sex, height, salary);
+            record = new RecordData(firstName, lastName, dateOfBirth, sex, height, salary);
             return record;
         }
 

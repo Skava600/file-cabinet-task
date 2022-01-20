@@ -44,7 +44,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
         {
             try
             {
-                RecordData recordData = new RecordInputReader(this.recordValidator).GetRecordInput();
+                RecordData recordData = new RecordInputReader().GetRecordInput();
                 Console.WriteLine($"Record #{this.FileCabinetService.CreateRecord(recordData)} is created.");
             }
             catch (Exception ex)
