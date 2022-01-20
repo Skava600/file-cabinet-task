@@ -7,9 +7,14 @@ using FileCabinetApp.Models;
 
 namespace FileCabinetApp.Validation
 {
-    internal class DefaultSexValidator : IRecordValidator
+    internal class SexValidator : IRecordValidator
     {
-        private static readonly char[] AvailableSex = new char[] { 'M', 'F', 'N' };
+        private readonly char[] availableSex;
+
+        public SexValidator(char[] availableSex)
+        {
+            this.availableSex = availableSex;
+        }
 
         /// <summary>
         /// Validates sex in parameters data.
@@ -22,9 +27,9 @@ namespace FileCabinetApp.Validation
                 throw new ArgumentNullException(nameof(record));
             }
 
-            if (!Array.Exists(AvailableSex, sex => sex.Equals(char.ToUpperInvariant(sex))))
+            if (!Array.Exists(this.availableSex, sex => sex.Equals(char.ToUpperInvariant(sex))))
             {
-                throw new ArgumentException("sex is only M(male) and F(female) and None(N)");
+                throw new ArgumentException("Wrong sex.");
             }
         }
     }

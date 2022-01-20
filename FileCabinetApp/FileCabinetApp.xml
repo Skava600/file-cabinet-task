@@ -767,12 +767,6 @@
             Record input reader.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.Utils.Input.RecordInputReader.#ctor(FileCabinetApp.Validation.IRecordValidator)">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.Utils.Input.RecordInputReader"/> class.
-            </summary>
-            <param name="recordValidator"> Record validator. </param>
-        </member>
         <member name="M:FileCabinetApp.Utils.Input.RecordInputReader.GetRecordInput">
             <summary>
             Reads users record input.
@@ -855,48 +849,12 @@
         <member name="M:FileCabinetApp.Validation.CustomValidator.ValidateParameters(FileCabinetApp.Models.RecordData)">
             <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.Validation.CustomValidator.FirstNameValidator(System.String)">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.Validation.CustomValidator.LastNameValidator(System.String)">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.Validation.CustomValidator.DateOfBirthValidator(System.DateTime)">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.Validation.CustomValidator.SexValidator(System.Char)">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.Validation.CustomValidator.HeightValidator(System.Int16)">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.Validation.CustomValidator.SalaryValidator(System.Decimal)">
-            <inheritdoc/>
-        </member>
         <member name="T:FileCabinetApp.Validation.DefaultValidator">
             <summary>
             Class for dafault validation.
             </summary>
         </member>
         <member name="M:FileCabinetApp.Validation.DefaultValidator.ValidateParameters(FileCabinetApp.Models.RecordData)">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.Validation.DefaultValidator.FirstNameValidator(System.String)">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.Validation.DefaultValidator.LastNameValidator(System.String)">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.Validation.DefaultValidator.DateOfBirthValidator(System.DateTime)">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.Validation.DefaultValidator.SexValidator(System.Char)">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.Validation.DefaultValidator.HeightValidator(System.Int16)">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.Validation.DefaultValidator.SalaryValidator(System.Decimal)">
             <inheritdoc/>
         </member>
         <member name="T:FileCabinetApp.Validation.IRecordValidator">
@@ -910,47 +868,48 @@
             </summary>
             <param name="record">Record data.</param>
         </member>
-        <member name="M:FileCabinetApp.Validation.IRecordValidator.FirstNameValidator(System.String)">
+        <member name="M:FileCabinetApp.Validation.DateOfBirthValidator.ValidateParameters(FileCabinetApp.Models.RecordData)">
             <summary>
-            This method validates the first name.
+            Validates date of birth in parameters data.
             </summary>
-            <param name="firstName"> The first name. </param>
-            <returns>Validation result. </returns>
+            <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.Validation.IRecordValidator.LastNameValidator(System.String)">
+        <member name="M:FileCabinetApp.Validation.FirstNameValidator.ValidateParameters(FileCabinetApp.Models.RecordData)">
             <summary>
-            This method validates the last name.
+            Validates first name in parameters data.
             </summary>
-            <param name="lastName"> The last name. </param>
-            <returns>Validation result.</returns>
+            <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.Validation.IRecordValidator.DateOfBirthValidator(System.DateTime)">
+        <member name="M:FileCabinetApp.Validation.HeightValidator.ValidateParameters(FileCabinetApp.Models.RecordData)">
             <summary>
-            This method validates the date of birth.
+            Validates height in parameters data.
             </summary>
-            <param name="dateOfBirth"> The date of birth. </param>
-            <returns>Validation result.</returns>
+            <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.Validation.IRecordValidator.SexValidator(System.Char)">
+        <member name="M:FileCabinetApp.Validation.LastNameValidator.ValidateParameters(FileCabinetApp.Models.RecordData)">
             <summary>
-            This method validates sex.
+            Validates last name in parameters data.
             </summary>
-            <param name="sex"> The sex. </param>
-            <returns>Validation result.</returns>
+            <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.Validation.IRecordValidator.HeightValidator(System.Int16)">
+        <member name="M:FileCabinetApp.Validation.SalaryValidator.#ctor(System.Decimal,System.Decimal)">
             <summary>
-            This method validates the height.
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Validation.SalaryValidator"/> class.
             </summary>
-            <param name="height"> The height. </param>
-            <returns>Validation result.</returns>
+            <param name="minSalary"> Min. salary. </param>
+            <param name="maxSalary"> Max salary. </param>
         </member>
-        <member name="M:FileCabinetApp.Validation.IRecordValidator.SalaryValidator(System.Decimal)">
+        <member name="M:FileCabinetApp.Validation.SalaryValidator.ValidateParameters(FileCabinetApp.Models.RecordData)">
             <summary>
-            Whis method validates salary.
+            Validates salary in parameters data.
             </summary>
-            <param name="salary"> The salary. </param>
-            <returns>Validation result.</returns>
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Validation.SexValidator.ValidateParameters(FileCabinetApp.Models.RecordData)">
+            <summary>
+            Validates sex in parameters data.
+            </summary>
+            <inheritdoc/>
         </member>
     </members>
 </doc>

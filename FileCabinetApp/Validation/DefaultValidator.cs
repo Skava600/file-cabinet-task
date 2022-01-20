@@ -15,12 +15,12 @@ namespace FileCabinetApp.Validation
         /// <inheritdoc/>
         public void ValidateParameters(RecordData record)
         {
-            new CustomFirstNameValidator().ValidateParameters(record);
-            new CustomLastNameValidator().ValidateParameters(record);
-            new CustomDateOfBirthValidator().ValidateParameters(record);
-            new CustomSexValidator().ValidateParameters(record);
-            new CustomHeightValidator().ValidateParameters(record);
-            new CustomSalaryValidator().ValidateParameters(record);
+            new FirstNameValidator(3, 60).ValidateParameters(record);
+            new LastNameValidator(3, 60).ValidateParameters(record);
+            new DateOfBirthValidator(new DateTime(1950, 1, 1), DateTime.Now).ValidateParameters(record);
+            new SexValidator(new char[] { 'M', 'F' }).ValidateParameters(record);
+            new HeightValidator(0, 300).ValidateParameters(record);
+            new SalaryValidator(500, 50000).ValidateParameters(record);
         }
     }
 }

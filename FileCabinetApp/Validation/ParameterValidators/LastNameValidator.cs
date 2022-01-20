@@ -7,10 +7,16 @@ using FileCabinetApp.Models;
 
 namespace FileCabinetApp.Validation
 {
-    internal class CustomLastNameValidator : IRecordValidator
+    internal class LastNameValidator : IRecordValidator
     {
-        private const int MinNameLength = 3;
-        private const int MaxNameLength = 50;
+        private readonly int minNameLength;
+        private readonly int maxNameLength;
+
+        public LastNameValidator(int minLength, int maxLength)
+        {
+            this.minNameLength = minLength;
+            this.maxNameLength = maxLength;
+        }
 
         /// <summary>
         /// Validates last name in parameters data.
@@ -33,10 +39,10 @@ namespace FileCabinetApp.Validation
                 throw new ArgumentException("Last name consists of white spaces.");
             }
 
-            if (record.LastName.Length < MinNameLength ||
-               record.LastName.Length > MaxNameLength)
+            if (record.LastName.Length < this.minNameLength ||
+               record.LastName.Length > this.maxNameLength)
             {
-                throw new ArgumentException($"Length of last name must be between {MinNameLength} and {MaxNameLength}");
+                throw new ArgumentException($"Length of last name must be between {this.minNameLength} and {this.maxNameLength}");
             }
         }
     }

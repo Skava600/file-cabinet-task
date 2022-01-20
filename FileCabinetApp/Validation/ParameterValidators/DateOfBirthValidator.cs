@@ -7,10 +7,16 @@ using FileCabinetApp.Models;
 
 namespace FileCabinetApp.Validation
 {
-    internal class CustomDateOfBirthValidator : IRecordValidator
+    internal class DateOfBirthValidator : IRecordValidator
     {
-        private static readonly DateTime MinDate = new DateTime(1900, 1, 1);
-        private static readonly DateTime MaxDate = DateTime.Now;
+        private readonly DateTime minDate;
+        private readonly DateTime maxDate;
+
+        public DateOfBirthValidator(DateTime from, DateTime to)
+        {
+            this.minDate = from;
+            this.maxDate = to;
+        }
 
         /// <summary>
         /// Validates date of birth in parameters data.
@@ -23,9 +29,9 @@ namespace FileCabinetApp.Validation
                 throw new ArgumentNullException(nameof(record));
             }
 
-            if (record.DateOfBirth < MinDate || record.DateOfBirth > MaxDate)
+            if (record.DateOfBirth < this.minDate || record.DateOfBirth > this.maxDate)
             {
-                throw new ArgumentException($"Date of birth current must be between {MinDate.ToShortDateString} and {MaxDate.ToShortDateString}");
+                throw new ArgumentException($"Date of birth current must be between {this.minDate.ToShortDateString} and {this.maxDate.ToShortDateString}");
             }
         }
     }

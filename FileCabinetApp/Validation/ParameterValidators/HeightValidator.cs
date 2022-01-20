@@ -7,10 +7,16 @@ using FileCabinetApp.Models;
 
 namespace FileCabinetApp.Validation
 {
-    internal class CustomHeightValidator : IRecordValidator
+    internal class HeightValidator : IRecordValidator
     {
-        private const short MinHeight = 60;
-        private const short MaxHeight = 272;
+        private readonly short minHeight;
+        private readonly short maxHeight;
+
+        public HeightValidator(short minHeight, short maxHeight)
+        {
+            this.minHeight = minHeight;
+            this.maxHeight = maxHeight;
+        }
 
         /// <summary>
         /// Validates height in parameters data.
@@ -23,9 +29,9 @@ namespace FileCabinetApp.Validation
                 throw new ArgumentNullException(nameof(record));
             }
 
-            if (record.Height < MinHeight || record.Height > MaxHeight)
+            if (record.Height < this.minHeight || record.Height > this.maxHeight)
             {
-                throw new ArgumentException($"height must be a number between {MinHeight}  and {MaxHeight}");
+                throw new ArgumentException($"height must be a number between {this.minHeight}  and {this.maxHeight}");
             }
         }
     }
