@@ -841,16 +841,6 @@
             </summary>
             <param name="record"> file cabinet record. </param>
         </member>
-        <member name="T:FileCabinetApp.Validation.CustomValidator">
-            <summary>
-            Class for custom validation.
-            </summary>
-        </member>
-        <member name="T:FileCabinetApp.Validation.DefaultValidator">
-            <summary>
-            Class for dafault validation.
-            </summary>
-        </member>
         <member name="T:FileCabinetApp.Validation.IRecordValidator">
             <summary>
             This interface can validate parameters from RecordData.

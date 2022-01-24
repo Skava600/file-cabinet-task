@@ -22,8 +22,8 @@ namespace FileCabinetApp
         private const string FileStorageName = "cabinet-records.db";
 
         private static bool isRunning = true;
-        private static IFileCabinetService fileCabinetService = new FileCabinetMemoryService(new DefaultValidator());
-        private static IRecordValidator recordValidator = new DefaultValidator();
+        private static IFileCabinetService fileCabinetService = new FileCabinetMemoryService(new ValidatorBuilder().CreateDefault());
+        private static IRecordValidator recordValidator = new ValidatorBuilder().CreateDefault();
 
         /// <summary>
         /// Defines the entry point of the application.
@@ -119,8 +119,8 @@ namespace FileCabinetApp
 
             recordValidator = systemValidationBehaviour switch
             {
-                ValidationRule.Custom => new CustomValidator(),
-                _ => new DefaultValidator(),
+                ValidationRule.Custom => new ValidatorBuilder().CreateCustom(),
+                _ => new ValidatorBuilder().CreateDefault(),
             };
 
             fileCabinetService = memoryBehaviour switch
