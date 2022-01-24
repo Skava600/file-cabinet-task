@@ -846,16 +846,10 @@
             Class for custom validation.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.Validation.CustomValidator.ValidateParameters(FileCabinetApp.Models.RecordData)">
-            <inheritdoc/>
-        </member>
         <member name="T:FileCabinetApp.Validation.DefaultValidator">
             <summary>
             Class for dafault validation.
             </summary>
-        </member>
-        <member name="M:FileCabinetApp.Validation.DefaultValidator.ValidateParameters(FileCabinetApp.Models.RecordData)">
-            <inheritdoc/>
         </member>
         <member name="T:FileCabinetApp.Validation.IRecordValidator">
             <summary>

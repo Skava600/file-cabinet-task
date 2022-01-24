@@ -10,17 +10,19 @@ namespace FileCabinetApp.Validation
     /// <summary>
     /// Class for dafault validation.
     /// </summary>
-    public class DefaultValidator : IRecordValidator
+    public class DefaultValidator : CompositeValidator
     {
-        /// <inheritdoc/>
-        public void ValidateParameters(RecordData record)
+        public DefaultValidator()
+           : base(new IRecordValidator[]
+       {
+            new FirstNameValidator(3, 60),
+            new LastNameValidator(3, 60),
+            new DateOfBirthValidator(new DateTime(1950, 1, 1), DateTime.Now),
+            new SexValidator(new char[] { 'M', 'F' }),
+            new HeightValidator(0, 300),
+            new SalaryValidator(500, 50000),
+       })
         {
-            new FirstNameValidator(3, 60).ValidateParameters(record);
-            new LastNameValidator(3, 60).ValidateParameters(record);
-            new DateOfBirthValidator(new DateTime(1950, 1, 1), DateTime.Now).ValidateParameters(record);
-            new SexValidator(new char[] { 'M', 'F' }).ValidateParameters(record);
-            new HeightValidator(0, 300).ValidateParameters(record);
-            new SalaryValidator(500, 50000).ValidateParameters(record);
         }
     }
 }
