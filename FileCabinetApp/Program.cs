@@ -1,12 +1,8 @@
-﻿using System.Collections.ObjectModel;
-using System.Globalization;
+﻿using System.Globalization;
 using FileCabinetApp.CommandHandlers;
 using FileCabinetApp.CommandHandlers.ConcreteHandlers;
-using FileCabinetApp.Converters;
 using FileCabinetApp.Entities;
-using FileCabinetApp.Models;
 using FileCabinetApp.Services;
-using FileCabinetApp.Utils.Enums;
 using FileCabinetApp.Validation;
 
 namespace FileCabinetApp
@@ -21,9 +17,19 @@ namespace FileCabinetApp
 
         private const string FileStorageName = "cabinet-records.db";
 
+        private static readonly Dictionary<string, Action<string>> CommandParameters = new Dictionary<string, Action<string>>
+        {
+            ["--validation-rules"] = (string validationRules) => Program.validationRules = validationRules,
+            ["-v"] = (string validationRules) => Program.validationRules = validationRules,
+            ["--storage"] = (string storage) => Program.storage = storage,
+            ["-s"] = (string storage) => Program.storage = storage,
+        };
+
         private static bool isRunning = true;
         private static IFileCabinetService fileCabinetService = new FileCabinetMemoryService(new ValidatorBuilder().CreateDefault());
         private static IRecordValidator recordValidator = new ValidatorBuilder().CreateDefault();
+        private static string validationRules = "default";
+        private static string storage = "memory";
 
         /// <summary>
         /// Defines the entry point of the application.
@@ -31,12 +37,12 @@ namespace FileCabinetApp
         /// <param name="args">The arguments.</param>
         public static void Main(string[] args)
         {
-            var commandHandler = CreateCommandHandlers();
             Console.WriteLine($"File Cabinet Application, developed by {Program.DeveloperName}");
             Console.WriteLine(Program.HintMessage);
             Console.WriteLine();
 
             SetServiceBehaviour(args);
+            var commandHandler = CreateCommandHandlers();
 
             do
             {
@@ -91,46 +97,73 @@ namespace FileCabinetApp
 
         private static void SetServiceBehaviour(string[] args)
         {
-            args = string.Join(' ', args).Split(new char[] { ' ', '=' }, StringSplitOptions.RemoveEmptyEntries);
-
-            ValidationRule systemValidationBehaviour = ValidationRule.Default;
-
-            string memoryBehaviour = "default";
-            for (int i = 0; i + 1 < args.Length; i++)
+            string paramName;
+            string paramValue;
+            for (int i = 0; i < args.Length; i++)
             {
-                if (args[i].Equals("-v", StringComparison.InvariantCulture) ||
-                    args[i].Equals("--validation-rules", StringComparison.InvariantCulture))
+                if (args[i].StartsWith("--"))
                 {
-                    systemValidationBehaviour = args[i + 1].Equals("CUSTOM", StringComparison.InvariantCultureIgnoreCase) ?
-                            ValidationRule.Custom : ValidationRule.Default;
-                    i += 1;
+                    string[] param = args[i].Split('=', 2);
+                    const int paramIndex = 0;
+                    const int paramValueIndex = 1;
+                    if (param.Length < 2)
+                    {
+                        continue;
+                    }
+
+                    paramName = param[paramIndex];
+                    paramValue = param[paramValueIndex];
                 }
-                else if (args[i].Equals("-s", StringComparison.InvariantCulture) ||
-                        args[i].Equals("--storage", StringComparison.InvariantCulture))
+                else if (args[i].StartsWith('-') && i + 1 < args.Length)
                 {
-                    memoryBehaviour = args[i + 1].ToLower();
-                    i += 1;
+                    paramName = args[i];
+                    paramValue = args[i + 1];
+                    i++;
                 }
                 else
                 {
-                    break;
+                    continue;
+                }
+
+                Action<string>? setParameter;
+                if (CommandParameters.TryGetValue(paramName, out setParameter))
+                {
+                    setParameter(paramValue);
+                }
+                else
+                {
+                    Console.WriteLine($"error: unknown parameter '{paramName}'");
+                    return;
                 }
             }
 
-            recordValidator = systemValidationBehaviour switch
+            switch (Program.validationRules.ToLower())
             {
-                ValidationRule.Custom => new ValidatorBuilder().CreateCustom(),
-                _ => new ValidatorBuilder().CreateDefault(),
-            };
+                case "custom": recordValidator = new ValidatorBuilder().CreateCustom();
+                    break;
+                case "default": recordValidator = new ValidatorBuilder().CreateDefault();
+                    break;
+                default: recordValidator = new ValidatorBuilder().CreateDefault();
+                    Program.validationRules = "default";
+                    break;
+            }
 
-            fileCabinetService = memoryBehaviour switch
+            switch (Program.storage.ToLower())
             {
-                "file" => new FileCabinetFilesystemService(new FileStream(FileStorageName, FileMode.OpenOrCreate, FileAccess.ReadWrite), recordValidator),
-                _ => new FileCabinetMemoryService(recordValidator),
-            };
+                case "file":
+                    fileCabinetService = new FileCabinetFilesystemService(new FileStream(FileStorageName, FileMode.OpenOrCreate, FileAccess.ReadWrite), recordValidator);
+                    break;
+                case "memory":
+                    fileCabinetService = new FileCabinetMemoryService(recordValidator);
+                    break;
+                default:
+                    fileCabinetService = new FileCabinetMemoryService(recordValidator);
+                    Program.validationRules = "memory";
+                    break;
+            }
 
-            Console.WriteLine($"Using {systemValidationBehaviour} validation rules.");
-            Console.WriteLine($"Using {fileCabinetService.GetType().Name}.");
+            Console.WriteLine($"Using {Program.validationRules.ToLower()} validation rules.");
+            Console.WriteLine($"Using {Program.storage.ToLower()} storage.");
         }
 
         private static void DefaultRecordPrint(IEnumerable<FileCabinetRecord> records)

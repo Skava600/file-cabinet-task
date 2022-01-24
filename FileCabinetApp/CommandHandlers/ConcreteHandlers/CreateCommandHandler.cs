@@ -14,6 +14,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
     /// </summary>
     internal class CreateCommandHandler : ServiceCommandHandlerBase
     {
+        private static readonly string Command = "create";
         private readonly IRecordValidator recordValidator;
 
         /// <summary>
@@ -30,7 +31,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
         /// <inheritdoc/>
         public override void Handle(AppCommandRequest request)
         {
-            if (request.Command.Equals("create", StringComparison.InvariantCultureIgnoreCase))
+            if (request.Command.Equals(Command, StringComparison.InvariantCultureIgnoreCase))
             {
                 this.Create(request.Parameters);
             }

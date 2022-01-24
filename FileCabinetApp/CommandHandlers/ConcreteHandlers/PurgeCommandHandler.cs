@@ -11,6 +11,8 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
     /// </summary>
     internal class PurgeCommandHandler : ServiceCommandHandlerBase
     {
+        private static readonly string Command = "purge";
+
         /// <summary>
         /// Initializes a new instance of the <see cref="PurgeCommandHandler"/> class.
         /// </summary>
@@ -23,7 +25,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
         /// <inheritdoc/>
         public override void Handle(AppCommandRequest request)
         {
-            if (request.Command.Equals("purge", StringComparison.InvariantCultureIgnoreCase))
+            if (request.Command.Equals(Command, StringComparison.InvariantCultureIgnoreCase))
             {
                 this.Purge(request.Parameters);
             }

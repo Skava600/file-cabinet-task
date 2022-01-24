@@ -49,6 +49,8 @@ namespace FileCabinetApp.Services
         /// <inheritdoc/>
         public int CreateRecord(RecordData recordData)
         {
+            this.validator.ValidateParameters(recordData);
+
             var record = new FileCabinetRecord
             {
                 Id = this.GenerateId(),
@@ -71,13 +73,15 @@ namespace FileCabinetApp.Services
         {
             if (id < 0)
             {
-                throw new ArgumentOutOfRangeException("Id can't be less zero");
+                throw new ArgumentException("Id can't be less zero");
             }
 
             if (!this.IsRecordExists(id))
             {
-                throw new ArgumentOutOfRangeException($"#{id} record is not found");
+                throw new ArgumentException($"#{id} record is not found");
             }
+
+            this.validator.ValidateParameters(recordData);
 
             FileCabinetRecord record = new FileCabinetRecord();
             int recordIndex = 0;
@@ -359,23 +363,22 @@ namespace FileCabinetApp.Services
             foreach (var record in snapshot.Records)
             {
                 var recordData = new RecordData(record);
+
                 try
                 {
-                    this.validator.ValidateParameters(recordData);
+                    if (this.IsRecordExists(record.Id))
+                    {
+                        this.EditRecord(record.Id, recordData);
+                    }
+                    else
+                    {
+                        this.CreateRecord(recordData);
+                    }
                 }
                 catch (ArgumentException ex)
                 {
                     Console.WriteLine($"Record with id {record.Id} didn't complete validation with message: {ex.Message}");
                     continue;
-                }
-
-                if (this.IsRecordExists(record.Id))
-                {
-                    this.EditRecord(record.Id, recordData);
-                }
-                else
-                {
-                    this.CreateRecord(recordData);
                 }
             }
         }

@@ -11,6 +11,8 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
      /// </summary>
     internal class StatCommandHandler : ServiceCommandHandlerBase
     {
+        private static readonly string Command = "stat";
+
         /// <summary>
         /// Initializes a new instance of the <see cref="StatCommandHandler"/> class.
         /// </summary>
@@ -23,7 +25,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
         /// <inheritdoc/>
         public override void Handle(AppCommandRequest request)
         {
-            if (request.Command.Equals("stat", StringComparison.InvariantCultureIgnoreCase))
+            if (request.Command.Equals(Command, StringComparison.InvariantCultureIgnoreCase))
             {
                 this.Stat(request.Parameters);
             }

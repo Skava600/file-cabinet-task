@@ -747,21 +747,6 @@
             </summary>
             <param name="snapshot"> <see cref="T:FileCabinetApp.Services.FileCabinetServiceSnapshot"/>. </param>
         </member>
-        <member name="T:FileCabinetApp.Utils.Enums.ValidationRule">
-            <summary>
-            Represents validation rules for <see cref="T:FileCabinetApp.Entities.FileCabinetRecord"/>.
-            </summary>
-        </member>
-        <member name="F:FileCabinetApp.Utils.Enums.ValidationRule.Default">
-            <summary>
-            Default rules.
-            </summary>
-        </member>
-        <member name="F:FileCabinetApp.Utils.Enums.ValidationRule.Custom">
-            <summary>
-            Custom rules.
-            </summary>
-        </member>
         <member name="T:FileCabinetApp.Utils.Input.RecordInputReader">
             <summary>
             Record input reader.

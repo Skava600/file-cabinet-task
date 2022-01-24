@@ -11,6 +11,8 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
     /// </summary>
     internal class RemoveCommandHandler : ServiceCommandHandlerBase
     {
+        private static readonly string Command = "remove";
+
         /// <summary>
         /// Initializes a new instance of the <see cref="RemoveCommandHandler"/> class.
         /// </summary>
@@ -23,7 +25,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
         /// <inheritdoc/>
         public override void Handle(AppCommandRequest request)
         {
-            if (request.Command.Equals("remove", StringComparison.InvariantCultureIgnoreCase))
+            if (request.Command.Equals(Command, StringComparison.InvariantCultureIgnoreCase))
             {
                 this.Remove(request.Parameters);
             }

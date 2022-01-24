@@ -31,7 +31,7 @@ namespace FileCabinetApp.Validation
 
             if (record.Height < this.minHeight || record.Height > this.maxHeight)
             {
-                throw new ArgumentException($"height must be a number between {this.minHeight}  and {this.maxHeight}");
+                throw new ArgumentException($"Height must be a number between {this.minHeight}  and {this.maxHeight}");
             }
         }
     }

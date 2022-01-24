@@ -11,6 +11,10 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
     /// </summary>
     internal class ExportCommandHandler : ServiceCommandHandlerBase
     {
+        private const string CsvString = "csv";
+        private const string XmlString = "xml";
+        private const string Command = "export";
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ExportCommandHandler"/> class.
         /// </summary>
@@ -23,7 +27,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
         /// <inheritdoc/>
         public override void Handle(AppCommandRequest request)
         {
-            if (request.Command.Equals("export", StringComparison.InvariantCultureIgnoreCase))
+            if (request.Command.Equals(Command, StringComparison.InvariantCultureIgnoreCase))
             {
                 this.Export(request.Parameters);
             }
@@ -70,7 +74,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
 
             try
             {
-                if (format.Equals("csv", StringComparison.InvariantCultureIgnoreCase))
+                if (format.Equals(CsvString, StringComparison.InvariantCultureIgnoreCase))
                 {
                     using (StreamWriter sw = new StreamWriter(filePath))
                     {
@@ -78,7 +82,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
                         Console.WriteLine($"All records are exported to file {filePath}.");
                     }
                 }
-                else if (format.Equals("xml", StringComparison.InvariantCultureIgnoreCase))
+                else if (format.Equals(XmlString, StringComparison.InvariantCultureIgnoreCase))
                 {
                     using (StreamWriter sw = new StreamWriter(filePath))
                     {
@@ -88,12 +92,16 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
                 }
                 else
                 {
-                    Console.WriteLine($"{format} is not correct format, available only xml and csv");
+                    Console.WriteLine($"{format} is not correct format, available only {XmlString} and {CsvString}");
                 }
             }
             catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException)
             {
                 Console.WriteLine($"Export failed: can't open file {filePath}.");
+            }
+            catch (NotImplementedException)
+            {
+                Console.WriteLine($"This command not available for file storage behaviour.");
             }
         }
     }

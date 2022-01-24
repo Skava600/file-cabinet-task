@@ -14,6 +14,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
     /// </summary>
     internal class EditCommandHandler : ServiceCommandHandlerBase
     {
+        private static readonly string Command = "edit";
         private readonly IRecordValidator recordValidator;
 
         /// <summary>
@@ -30,7 +31,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
         /// <inheritdoc/>
         public override void Handle(AppCommandRequest request)
         {
-            if (request.Command.Equals("edit", StringComparison.InvariantCultureIgnoreCase))
+            if (request.Command.Equals(Command, StringComparison.InvariantCultureIgnoreCase))
             {
                 this.Edit(request.Parameters);
             }

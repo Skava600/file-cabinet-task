@@ -14,6 +14,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
         private const int CommandHelpIndex = 0;
         private const int DescriptionHelpIndex = 1;
         private const int ExplanationHelpIndex = 2;
+        private static readonly string Command = "help";
 
         private static string[][] helpMessages = new string[][]
         {
@@ -33,7 +34,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
         /// <inheritdoc/>
         public override void Handle(AppCommandRequest request)
         {
-            if (request.Command.Equals("help", StringComparison.InvariantCultureIgnoreCase))
+            if (request.Command.Equals(Command, StringComparison.InvariantCultureIgnoreCase))
             {
                 PrintHelp(request.Parameters);
             }

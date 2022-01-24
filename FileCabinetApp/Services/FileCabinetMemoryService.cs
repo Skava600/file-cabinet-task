@@ -41,6 +41,8 @@ namespace FileCabinetApp.Services
         /// <inheritdoc/>
         public int CreateRecord(RecordData recordData)
         {
+            this.validator.ValidateParameters(recordData);
+
             var record = new FileCabinetRecord
             {
                 Id = this.GenerateId(),
@@ -62,8 +64,15 @@ namespace FileCabinetApp.Services
         /// <inheritdoc/>
         public void EditRecord(int id, RecordData recordData)
         {
+            if (id < 0)
+            {
+                throw new ArgumentException("Id can't be less zero");
+            }
+
             FileCabinetRecord record = this.records.Find(rec => rec.Id == id)
-                ?? throw new ArgumentOutOfRangeException(nameof(id), $"#{id} record is not found");
+                ?? throw new ArgumentException($"#{id} record is not found");
+
+            this.validator.ValidateParameters(recordData);
 
             this.firstNameDictionary[record.FirstName !].Remove(record);
             this.lastNameDictionary[record.LastName!].Remove(record);
@@ -179,23 +188,22 @@ namespace FileCabinetApp.Services
             foreach (var record in snapshot.Records)
             {
                 var recordData = new RecordData(record);
+
                 try
                 {
-                    this.validator.ValidateParameters(recordData);
+                    if (this.IsRecordExists(record.Id))
+                    {
+                        this.EditRecord(record.Id, recordData);
+                    }
+                    else
+                    {
+                        this.CreateRecord(recordData);
+                    }
                 }
                 catch (ArgumentException ex)
                 {
                     Console.WriteLine($"Record with id {record.Id} didn't complete validation with message: {ex.Message}");
                     continue;
-                }
-
-                if (this.IsRecordExists(record.Id))
-                {
-                    this.EditRecord(record.Id, recordData);
-                }
-                else
-                {
-                    this.CreateRecord(recordData);
                 }
             }
         }

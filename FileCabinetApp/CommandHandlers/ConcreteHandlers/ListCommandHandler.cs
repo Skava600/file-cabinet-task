@@ -14,6 +14,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
     /// </summary>
     internal class ListCommandHandler : ServiceCommandHandlerBase
     {
+        private static readonly string Command = "list";
         private readonly Action<IEnumerable<FileCabinetRecord>> printer;
 
         /// <summary>
@@ -30,7 +31,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
         /// <inheritdoc/>
         public override void Handle(AppCommandRequest request)
         {
-            if (request.Command.Equals("list", StringComparison.InvariantCultureIgnoreCase))
+            if (request.Command.Equals(Command, StringComparison.InvariantCultureIgnoreCase))
             {
                 this.List(request.Parameters);
             }

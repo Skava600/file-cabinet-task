@@ -13,6 +13,10 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
     /// </summary>
     internal class ImportCommandHandler : ServiceCommandHandlerBase
     {
+        private const string CsvString = "csv";
+        private const string XmlString = "xml";
+        private const string Command = "import";
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ImportCommandHandler"/> class.
         /// </summary>
@@ -25,7 +29,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
         /// <inheritdoc/>
         public override void Handle(AppCommandRequest request)
         {
-            if (request.Command.Equals("import", StringComparison.InvariantCultureIgnoreCase))
+            if (request.Command.Equals(Command, StringComparison.InvariantCultureIgnoreCase))
             {
                 this.Import(request.Parameters);
             }
@@ -61,17 +65,17 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
             using (StreamReader reader = new StreamReader(filePath))
             {
                 var snapshot = new FileCabinetServiceSnapshot(Array.Empty<FileCabinetRecord>());
-                if (format.Equals("csv", StringComparison.InvariantCultureIgnoreCase))
+                if (format.Equals(CsvString, StringComparison.InvariantCultureIgnoreCase))
                 {
                     snapshot.LoadFromCsv(reader);
                 }
-                else if (format.Equals("xml", StringComparison.InvariantCultureIgnoreCase))
+                else if (format.Equals(XmlString, StringComparison.InvariantCultureIgnoreCase))
                 {
                     snapshot.LoadFromXml(reader);
                 }
                 else
                 {
-                    Console.WriteLine($"{format} is not correct format, available only xml and csv");
+                    Console.WriteLine($"{format} is not correct format, available only {CsvString} and {XmlString}");
                 }
 
                 this.FileCabinetService.Restore(snapshot);

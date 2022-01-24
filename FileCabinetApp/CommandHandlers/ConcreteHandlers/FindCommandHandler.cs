@@ -14,6 +14,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
     /// </summary>
     internal class FindCommandHandler : ServiceCommandHandlerBase
     {
+        private static readonly string Command = "find";
         private readonly Action<IEnumerable<FileCabinetRecord>> printer;
 
         /// <summary>
@@ -30,7 +31,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
         /// <inheritdoc/>
         public override void Handle(AppCommandRequest request)
         {
-            if (request.Command.Equals("find", StringComparison.InvariantCultureIgnoreCase))
+            if (request.Command.Equals(Command, StringComparison.InvariantCultureIgnoreCase))
             {
                 this.Find(request.Parameters);
             }

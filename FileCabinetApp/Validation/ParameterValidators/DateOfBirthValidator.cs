@@ -31,7 +31,7 @@ namespace FileCabinetApp.Validation
 
             if (record.DateOfBirth < this.minDate || record.DateOfBirth > this.maxDate)
             {
-                throw new ArgumentException($"Date of birth current must be between {this.minDate.ToShortDateString} and {this.maxDate.ToShortDateString}");
+                throw new ArgumentException($"Date of birth must be between {this.minDate.ToShortDateString} and {this.maxDate.ToShortDateString}");
             }
         }
     }

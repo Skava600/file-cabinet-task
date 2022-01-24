@@ -11,6 +11,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
     /// </summary>
     internal class ExitCommandHandler : CommandHandlerBase
     {
+        private static readonly string Command = "exit";
         private Action<bool> exitApp;
 
         /// <summary>
@@ -25,7 +26,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
         /// <inheritdoc/>
         public override void Handle(AppCommandRequest request)
         {
-            if (request.Command.Equals("exit", StringComparison.InvariantCultureIgnoreCase))
+            if (request.Command.Equals(Command, StringComparison.InvariantCultureIgnoreCase))
             {
                 this.Exit(request.Parameters);
             }
