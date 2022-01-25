@@ -23,6 +23,7 @@ namespace FileCabinetApp
             ["-v"] = (string validationRules) => Program.validationRules = validationRules,
             ["--storage"] = (string storage) => Program.storage = storage,
             ["-s"] = (string storage) => Program.storage = storage,
+            ["--use-stopwatch"] = (string str) => Program.isTimeWatch = true,
         };
 
         private static bool isRunning = true;
@@ -30,6 +31,7 @@ namespace FileCabinetApp
         private static IRecordValidator recordValidator = new ValidatorBuilder().CreateDefault();
         private static string validationRules = "default";
         private static string storage = "memory";
+        private static bool isTimeWatch = false;
 
         /// <summary>
         /// Defines the entry point of the application.
@@ -108,11 +110,14 @@ namespace FileCabinetApp
                     const int paramValueIndex = 1;
                     if (param.Length < 2)
                     {
-                        continue;
+                        paramName = param[paramIndex];
+                        paramValue = string.Empty;
                     }
-
-                    paramName = param[paramIndex];
-                    paramValue = param[paramValueIndex];
+                    else
+                    {
+                        paramName = param[paramIndex];
+                        paramValue = param[paramValueIndex];
+                    }
                 }
                 else if (args[i].StartsWith('-') && i + 1 < args.Length)
                 {
@@ -160,6 +165,12 @@ namespace FileCabinetApp
                     fileCabinetService = new FileCabinetMemoryService(recordValidator);
                     Program.validationRules = "memory";
                     break;
+            }
+
+            if (Program.isTimeWatch)
+            {
+                fileCabinetService = new ServiceMeter(fileCabinetService);
+                Console.WriteLine("Using time watcher for service.");
             }
 
             Console.WriteLine($"Using {Program.validationRules.ToLower()} validation rules.");
