@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Xml;
 using System.Xml.Serialization;
-using FileCabinetApp.Entities;
 using FileCabinetApp.Models;
-using FileCabinetApp.Services;
-using FileCabinetApp.Utils.Enums;
 using FileCabinetGenerator;
 
 /// <summary>
@@ -12,6 +9,9 @@ using FileCabinetGenerator;
 /// </summary>
 public static class Program
 {
+    private const string CsvString = "csv";
+    private const string XmlString = "xml";
+
     private static readonly Dictionary<string, Action<string>> CommandParameters = new Dictionary<string, Action<string>>
     {
         ["--output-type"] = (string outputType) => Program.outputType = outputType,
@@ -123,7 +123,7 @@ public static class Program
 
         try
         {
-            if (outputType!.Equals("csv", StringComparison.InvariantCultureIgnoreCase))
+            if (outputType!.Equals(CsvString, StringComparison.InvariantCultureIgnoreCase))
             {
                 using (StreamWriter sw = new StreamWriter(outputFileName!))
                 {
@@ -133,7 +133,7 @@ public static class Program
                     }
                 }
             }
-            else if (outputType.Equals("xml", StringComparison.InvariantCultureIgnoreCase))
+            else if (outputType.Equals(XmlString, StringComparison.InvariantCultureIgnoreCase))
             {
                 XmlWriterSettings settings = new XmlWriterSettings()
                 {
@@ -152,7 +152,7 @@ public static class Program
             }
             else
             {
-                throw new ArgumentException($"{outputType} is not correct format, available only xml and csv.");
+                throw new ArgumentException($"{outputType} is not correct format, available only {XmlString} and {CsvString}.");
             }
 
             Console.WriteLine($"{generatedRecords.Count} records were written to {outputFileName}.");
@@ -189,8 +189,8 @@ public static class Program
             throw new ArgumentException("error: start id not set.");
         }
 
-        if (!outputType.Equals("csv", StringComparison.InvariantCultureIgnoreCase) &&
-            !outputType.Equals("xml", StringComparison.InvariantCultureIgnoreCase))
+        if (!outputType.Equals(CsvString, StringComparison.InvariantCultureIgnoreCase) &&
+            !outputType.Equals(XmlString, StringComparison.InvariantCultureIgnoreCase))
         {
             throw new ArgumentException($"error: Invalid format type mode '{outputType}'.");
         }
@@ -210,7 +210,7 @@ public static class Program
         const int minStartId = 1;
         if (!int.TryParse(startId, out int id) || id < minStartId)
         {
-            throw new ArgumentException($"error: Invaild start id. Should be integer equal or more thasn 1.");
+            throw new ArgumentException($"error: Invaild start id. Should be integer equal or more than 1.");
         }
     }
 }
