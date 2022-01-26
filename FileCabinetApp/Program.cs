@@ -23,7 +23,8 @@ namespace FileCabinetApp
             ["-v"] = (string validationRules) => Program.validationRules = validationRules,
             ["--storage"] = (string storage) => Program.storage = storage,
             ["-s"] = (string storage) => Program.storage = storage,
-            ["--use-stopwatch"] = (string str) => Program.isTimeWatch = true,
+            ["--use-stopwatch"] = (string str) => Program.isUsingTimewatch = true,
+            ["--use-logger"] = (string str) => Program.isUsingLogger = true,
         };
 
         private static bool isRunning = true;
@@ -31,7 +32,8 @@ namespace FileCabinetApp
         private static IRecordValidator recordValidator = new ValidatorBuilder().CreateDefault();
         private static string validationRules = "default";
         private static string storage = "memory";
-        private static bool isTimeWatch = false;
+        private static bool isUsingTimewatch = false;
+        private static bool isUsingLogger = false;
 
         /// <summary>
         /// Defines the entry point of the application.
@@ -167,7 +169,13 @@ namespace FileCabinetApp
                     break;
             }
 
-            if (Program.isTimeWatch)
+            if (Program.isUsingLogger)
+            {
+                fileCabinetService = new ServiceLogger(fileCabinetService);
+                Console.WriteLine("Using service logger.");
+            }
+
+            if (Program.isUsingTimewatch)
             {
                 fileCabinetService = new ServiceMeter(fileCabinetService);
                 Console.WriteLine("Using time watcher for service.");
