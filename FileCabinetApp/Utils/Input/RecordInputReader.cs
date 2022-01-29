@@ -18,6 +18,17 @@ namespace FileCabinetApp.Utils.Input
         private const decimal MinSalary = 0;
         private const decimal MaxSalary = decimal.MaxValue;
 
+        private string validationRules;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RecordInputReader"/> class.
+        /// </summary>
+        /// <param name="validationRules"> validation rules: default or custom. </param>
+        public RecordInputReader(string validationRules)
+        {
+            this.validationRules = validationRules;
+        }
+
         private static DateTime MinDate => new DateTime(1900, 1, 1);
 
         private static DateTime MaxDate => DateTime.Now;
