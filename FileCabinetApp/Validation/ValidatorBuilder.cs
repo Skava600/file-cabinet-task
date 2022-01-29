@@ -3,35 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FileCabinetApp.Utils.Config;
 
 namespace FileCabinetApp.Validation
 {
     public class ValidatorBuilder
     {
+        private const string DefaultValidationString = "default";
+        private const string CustomValidationString = "custom";
         private List<IRecordValidator> validators = new List<IRecordValidator>();
 
         public IRecordValidator CreateDefault()
         {
-            return new ValidatorBuilder()
-                .ValidateFirstName(3, 60)
-                .ValidateLastName(3, 60)
-                .ValidateDateOfBirth(new DateTime(1950, 1, 1), DateTime.Now)
-                .ValidateSex(new char[] { 'M', 'F' })
-                .ValidateHeight(0, 300)
-                .ValidateSalary(500, 50000)
-                .Create();
+            return new ValidationConfigReader(DefaultValidationString).ReadConfig();
         }
 
         public IRecordValidator CreateCustom()
         {
-            return new ValidatorBuilder()
-               .ValidateFirstName(2, 50)
-               .ValidateLastName(2, 50)
-               .ValidateDateOfBirth(new DateTime(1900, 1, 1), DateTime.Now)
-               .ValidateSex(new char[] { 'M', 'F', 'N' })
-               .ValidateHeight(50, 272)
-               .ValidateSalary(0, decimal.MaxValue)
-               .Create();
+            return new ValidationConfigReader(CustomValidationString).ReadConfig();
         }
 
         public ValidatorBuilder ValidateFirstName(int min, int max)

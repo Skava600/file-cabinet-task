@@ -68,6 +68,7 @@ namespace FileCabinetApp.Services
                     $"Message - {ex.Message}");
                 throw;
             }
+
             this.Log($"{nameof(this.EditRecord)}() returned successfuly");
         }
 
@@ -180,6 +181,7 @@ namespace FileCabinetApp.Services
                     $"Message - {ex.Message}");
                 throw;
             }
+
             this.Log($"{nameof(this.RemoveRecord)}() returned successfuly");
         }
 
@@ -200,12 +202,6 @@ namespace FileCabinetApp.Services
             this.Log($"{nameof(this.Restore)}() returned successfuly");
         }
 
-        private void Log(string message)
-        {
-            this.writer.WriteLine($"{DateTime.Now } - {message}.");
-            this.writer.Flush();
-        }
-
         public void Dispose()
         {
             this.Dispose(disposing: true);
@@ -221,8 +217,14 @@ namespace FileCabinetApp.Services
                     this.writer.Dispose();
                 }
 
-                disposedValue = true;
+                this.disposedValue = true;
             }
+        }
+
+        private void Log(string message)
+        {
+            this.writer.WriteLine($"{DateTime.Now} - {message}.");
+            this.writer.Flush();
         }
     }
 }

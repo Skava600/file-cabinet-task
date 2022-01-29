@@ -110,7 +110,6 @@ namespace FileCabinetApp.Services
 
         public void Purge()
         {
-
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
             this.fileCabinetService.Purge();

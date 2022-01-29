@@ -15,17 +15,17 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
     internal class EditCommandHandler : ServiceCommandHandlerBase
     {
         private static readonly string Command = "edit";
-        private readonly IRecordValidator recordValidator;
+        private readonly string validationRule;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EditCommandHandler"/> class.
         /// </summary>
         /// <param name="service"> File cabinet service. </param>
-        /// <param name="validator"> Record validator. </param>
-        public EditCommandHandler(IFileCabinetService service, IRecordValidator validator)
+        /// <param name="validationRule"> Validation rule. </param>
+        public EditCommandHandler(IFileCabinetService service, string validationRule)
             : base(service)
         {
-            this.recordValidator = validator;
+            this.validationRule = validationRule;
         }
 
         /// <inheritdoc/>
@@ -57,7 +57,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
 
             try
             {
-                RecordData recordData = new RecordInputReader().GetRecordInput();
+                RecordData recordData = new RecordInputReader(this.validationRule).GetRecordInput();
                 this.FileCabinetService.EditRecord(id, recordData);
                 Console.WriteLine($"Record #{id} is updated.");
             }

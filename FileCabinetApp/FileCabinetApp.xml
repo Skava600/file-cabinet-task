@@ -48,12 +48,12 @@
             Create command handler.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.CommandHandlers.ConcreteHandlers.CreateCommandHandler.#ctor(FileCabinetApp.IFileCabinetService,FileCabinetApp.Validation.IRecordValidator)">
+        <member name="M:FileCabinetApp.CommandHandlers.ConcreteHandlers.CreateCommandHandler.#ctor(FileCabinetApp.IFileCabinetService,System.String)">
             <summary>
             Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.ConcreteHandlers.CreateCommandHandler"/> class.
             </summary>
             <param name="service"> File cabinet service. </param>
-            <param name="validator"> Record validator. </param>
+            <param name="validationRule"> validation rule. </param>
         </member>
         <member name="M:FileCabinetApp.CommandHandlers.ConcreteHandlers.CreateCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
             <inheritdoc/>
@@ -63,12 +63,12 @@
             Edit command handler.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.CommandHandlers.ConcreteHandlers.EditCommandHandler.#ctor(FileCabinetApp.IFileCabinetService,FileCabinetApp.Validation.IRecordValidator)">
+        <member name="M:FileCabinetApp.CommandHandlers.ConcreteHandlers.EditCommandHandler.#ctor(FileCabinetApp.IFileCabinetService,System.String)">
             <summary>
             Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.ConcreteHandlers.EditCommandHandler"/> class.
             </summary>
             <param name="service"> File cabinet service. </param>
-            <param name="validator"> Record validator. </param>
+            <param name="validationRule"> Validation rule. </param>
         </member>
         <member name="M:FileCabinetApp.CommandHandlers.ConcreteHandlers.EditCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
             <inheritdoc/>
@@ -751,6 +751,12 @@
             <summary>
             Record input reader.
             </summary>
+        </member>
+        <member name="M:FileCabinetApp.Utils.Input.RecordInputReader.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Utils.Input.RecordInputReader"/> class.
+            </summary>
+            <param name="validationRules"> validation rules: default or custom. </param>
         </member>
         <member name="M:FileCabinetApp.Utils.Input.RecordInputReader.GetRecordInput">
             <summary>

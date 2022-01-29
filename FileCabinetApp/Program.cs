@@ -4,6 +4,7 @@ using FileCabinetApp.CommandHandlers.ConcreteHandlers;
 using FileCabinetApp.Entities;
 using FileCabinetApp.Services;
 using FileCabinetApp.Validation;
+using Microsoft.Extensions.Configuration;
 
 namespace FileCabinetApp
 {
@@ -19,17 +20,17 @@ namespace FileCabinetApp
 
         private static readonly Dictionary<string, Action<string>> CommandParameters = new Dictionary<string, Action<string>>
         {
-            ["--validation-rules"] = (string validationRules) => Program.validationRules = validationRules,
-            ["-v"] = (string validationRules) => Program.validationRules = validationRules,
-            ["--storage"] = (string storage) => Program.storage = storage,
-            ["-s"] = (string storage) => Program.storage = storage,
+            ["--validation-rules"] = (string validationRules) => Program.validationRules = validationRules.ToLower(),
+            ["-v"] = (string validationRules) => Program.validationRules = validationRules.ToLower(),
+            ["--storage"] = (string storage) => Program.storage = storage.ToLower(),
+            ["-s"] = (string storage) => Program.storage = storage.ToLower(),
             ["--use-stopwatch"] = (string str) => Program.isUsingTimewatch = true,
             ["--use-logger"] = (string str) => Program.isUsingLogger = true,
         };
 
         private static bool isRunning = true;
-        private static IFileCabinetService fileCabinetService = new FileCabinetMemoryService(new ValidatorBuilder().CreateDefault());
         private static IRecordValidator recordValidator = new ValidatorBuilder().CreateDefault();
+        private static IFileCabinetService fileCabinetService = new FileCabinetMemoryService(recordValidator);
         private static string validationRules = "default";
         private static string storage = "memory";
         private static bool isUsingTimewatch = false;
@@ -72,8 +73,8 @@ namespace FileCabinetApp
         private static ICommandHandler CreateCommandHandlers()
         {
             var helpCommandHandler = new HelpCommandHandler();
-            var createCommandHandler = new CreateCommandHandler(fileCabinetService, recordValidator);
-            var editCommandHandler = new EditCommandHandler(fileCabinetService, recordValidator);
+            var createCommandHandler = new CreateCommandHandler(fileCabinetService, Program.validationRules);
+            var editCommandHandler = new EditCommandHandler(fileCabinetService, Program.validationRules);
             var statCommandHandler = new StatCommandHandler(fileCabinetService);
             var listCommandHandler = new ListCommandHandler(fileCabinetService, DefaultRecordPrint);
             var findCommandHandler = new FindCommandHandler(fileCabinetService, DefaultRecordPrint);
@@ -144,7 +145,7 @@ namespace FileCabinetApp
                 }
             }
 
-            switch (Program.validationRules.ToLower())
+            switch (Program.validationRules)
             {
                 case "custom": recordValidator = new ValidatorBuilder().CreateCustom();
                     break;
@@ -155,7 +156,7 @@ namespace FileCabinetApp
                     break;
             }
 
-            switch (Program.storage.ToLower())
+            switch (Program.storage)
             {
                 case "file":
                     fileCabinetService = new FileCabinetFilesystemService(new FileStream(FileStorageName, FileMode.OpenOrCreate, FileAccess.ReadWrite), recordValidator);
@@ -169,16 +170,16 @@ namespace FileCabinetApp
                     break;
             }
 
-            if (Program.isUsingLogger)
-            {
-                fileCabinetService = new ServiceLogger(fileCabinetService);
-                Console.WriteLine("Using service logger.");
-            }
-
             if (Program.isUsingTimewatch)
             {
                 fileCabinetService = new ServiceMeter(fileCabinetService);
                 Console.WriteLine("Using time watcher for service.");
+            }
+
+            if (Program.isUsingLogger)
+            {
+                fileCabinetService = new ServiceLogger(fileCabinetService);
+                Console.WriteLine("Using service logger.");
             }
 
             Console.WriteLine($"Using {Program.validationRules.ToLower()} validation rules.");
