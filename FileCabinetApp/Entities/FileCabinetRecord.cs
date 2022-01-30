@@ -21,7 +21,7 @@ namespace FileCabinetApp.Entities
         /// <value>
         /// The first name.
         /// </value>
-        public string? FirstName { get; set; }
+        public string FirstName { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the last name.
@@ -29,7 +29,7 @@ namespace FileCabinetApp.Entities
         /// <value>
         /// The last name.
         /// </value>
-        public string? LastName { get; set; }
+        public string LastName { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the date of birth.

@@ -19,7 +19,7 @@ namespace FileCabinetApp.Models
         /// first name of a record.
         /// </value>
         [XmlAttribute("first")]
-        public string? FirstName { get; set; }
+        public string FirstName { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets last name of a record.
@@ -28,6 +28,6 @@ namespace FileCabinetApp.Models
         /// last name of a record.
         /// </value>
         [XmlAttribute("last")]
-        public string? LastName { get; set; }
+        public string LastName { get; set; } = string.Empty;
     }
 }
