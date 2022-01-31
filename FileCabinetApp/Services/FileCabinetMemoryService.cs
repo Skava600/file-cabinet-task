@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using FileCabinetApp.Entities;
 using FileCabinetApp.Models;
+using FileCabinetApp.Utils.Iterators;
 using FileCabinetApp.Validation;
 
 namespace FileCabinetApp.Services
@@ -35,7 +36,7 @@ namespace FileCabinetApp.Services
         public FileCabinetMemoryService(IRecordValidator validator)
         {
             this.validator = validator;
-            this.lastId = this.records.Count > 0 ? this.GetRecords().Max(rec => rec.Id) : 0;
+            this.lastId = this.records.Count > 0 ? this.records.Max(rec => rec.Id) : 0;
         }
 
         /// <inheritdoc/>
@@ -56,7 +57,7 @@ namespace FileCabinetApp.Services
 
             this.records.Add(record);
 
-            this.AddRecordToDictionaries(record.FirstName, record.LastName, record.DateOfBirth, record);
+            this.AddRecordToDictionaries(record);
 
             return record.Id;
         }
@@ -74,8 +75,8 @@ namespace FileCabinetApp.Services
 
             this.validator.ValidateParameters(recordData);
 
-            this.firstNameDictionary[record.FirstName !].Remove(record);
-            this.lastNameDictionary[record.LastName!].Remove(record);
+            this.firstNameDictionary[record.FirstName].Remove(record);
+            this.lastNameDictionary[record.LastName].Remove(record);
             this.dateOfBirthDictionary[record.DateOfBirth].Remove(record);
 
             record.FirstName = recordData.FirstName;
@@ -85,7 +86,7 @@ namespace FileCabinetApp.Services
             record.Height = recordData.Height;
             record.Salary = recordData.Salary;
 
-            this.AddRecordToDictionaries(recordData.FirstName, recordData.LastName, recordData.DateOfBirth, record);
+            this.AddRecordToDictionaries(record);
         }
 
         /// <inheritdoc/>
@@ -106,9 +107,9 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
-        public ReadOnlyCollection<FileCabinetRecord> GetRecords()
+        public IEnumerable<FileCabinetRecord> GetRecords()
         {
-            return new ReadOnlyCollection<FileCabinetRecord>(this.records);
+            return this.records;
         }
 
         /// <inheritdoc/>
@@ -124,7 +125,7 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
-        public ReadOnlyCollection<FileCabinetRecord> FindByFirstName(string firstname)
+        public IEnumerable<FileCabinetRecord> FindByFirstName(string firstname)
         {
             try
             {
@@ -137,7 +138,7 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
-        public ReadOnlyCollection<FileCabinetRecord> FindByLastName(string lastName)
+        public IEnumerable<FileCabinetRecord> FindByLastName(string lastName)
         {
             try
             {
@@ -150,7 +151,7 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
-        public ReadOnlyCollection<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth)
+        public IEnumerable<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth)
         {
             try
             {
@@ -160,10 +161,6 @@ namespace FileCabinetApp.Services
             catch (KeyNotFoundException)
             {
                 throw new ArgumentException($"Records with {dateOfBirth} date of birth not exist.");
-            }
-            catch (ArgumentNullException)
-            {
-                throw new ArgumentException($"Date of birth can't be null.");
             }
             catch (FormatException)
             {
@@ -208,26 +205,26 @@ namespace FileCabinetApp.Services
             }
         }
 
-        private void AddRecordToDictionaries(string firstName, string lastName, DateTime dateOfBirth, FileCabinetRecord record)
+        private void AddRecordToDictionaries(FileCabinetRecord record)
         {
-            if (!this.firstNameDictionary.ContainsKey(firstName))
+            if (!this.firstNameDictionary.ContainsKey(record.FirstName))
             {
-                this.firstNameDictionary.Add(firstName, new List<FileCabinetRecord>());
+                this.firstNameDictionary.Add(record.FirstName, new List<FileCabinetRecord>());
             }
 
-            if (!this.lastNameDictionary.ContainsKey(lastName))
+            if (!this.lastNameDictionary.ContainsKey(record.LastName))
             {
-                this.lastNameDictionary.Add(lastName, new List<FileCabinetRecord>());
+                this.lastNameDictionary.Add(record.LastName, new List<FileCabinetRecord>());
             }
 
-            if (!this.dateOfBirthDictionary.ContainsKey(dateOfBirth))
+            if (!this.dateOfBirthDictionary.ContainsKey(record.DateOfBirth))
             {
-                this.dateOfBirthDictionary.Add(dateOfBirth, new List<FileCabinetRecord>());
+                this.dateOfBirthDictionary.Add(record.DateOfBirth, new List<FileCabinetRecord>());
             }
 
-            this.firstNameDictionary[firstName].Add(record);
-            this.lastNameDictionary[lastName].Add(record);
-            this.dateOfBirthDictionary[dateOfBirth].Add(record);
+            this.firstNameDictionary[record.FirstName].Add(record);
+            this.lastNameDictionary[record.LastName].Add(record);
+            this.dateOfBirthDictionary[record.DateOfBirth].Add(record);
         }
 
         private int GenerateId()

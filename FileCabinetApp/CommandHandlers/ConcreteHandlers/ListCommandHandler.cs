@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FileCabinetApp.Entities;
+using FileCabinetApp.Utils.Iterators;
 
 namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
 {
@@ -43,9 +44,9 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
 
         private void List(string parameters)
         {
-            ReadOnlyCollection<FileCabinetRecord> records = this.FileCabinetService.GetRecords();
+            IEnumerable<FileCabinetRecord> iterator = this.FileCabinetService.GetRecords();
 
-            this.printer(records);
+            this.printer(iterator);
         }
     }
 }

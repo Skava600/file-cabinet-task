@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using FileCabinetApp.Entities;
 using FileCabinetApp.Models;
+using FileCabinetApp.Utils.Iterators;
 
 namespace FileCabinetApp.Services
 {
@@ -33,49 +34,49 @@ namespace FileCabinetApp.Services
         {
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
-            this.fileCabinetService.CreateRecord(recordData);
+            this.fileCabinetService.EditRecord(id, recordData);
             stopWatch.Stop();
             Console.WriteLine($"Edit method execution duration is {stopWatch.ElapsedTicks} ticks.");
         }
 
-        public ReadOnlyCollection<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth)
+        public IEnumerable<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth)
         {
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
-            var records = this.fileCabinetService.FindByDateOfBirth(dateOfBirth);
+            var iterator = this.fileCabinetService.FindByDateOfBirth(dateOfBirth);
             stopWatch.Stop();
             Console.WriteLine($"FindByDateOfBirth method execution duration is {stopWatch.ElapsedTicks} ticks.");
-            return records;
+            return iterator;
         }
 
-        public ReadOnlyCollection<FileCabinetRecord> FindByFirstName(string firstname)
+        public IEnumerable<FileCabinetRecord> FindByFirstName(string firstname)
         {
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
-            var records = this.fileCabinetService.FindByFirstName(firstname);
+            var iterator = this.fileCabinetService.FindByFirstName(firstname);
             stopWatch.Stop();
             Console.WriteLine($"FindByFirstName method execution duration is {stopWatch.ElapsedTicks} ticks.");
-            return records;
+            return iterator;
         }
 
-        public ReadOnlyCollection<FileCabinetRecord> FindByLastName(string lastname)
+        public IEnumerable<FileCabinetRecord> FindByLastName(string lastname)
         {
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
-            var records = this.fileCabinetService.FindByLastName(lastname);
+            var iterator = this.fileCabinetService.FindByLastName(lastname);
             stopWatch.Stop();
             Console.WriteLine($"FindByLastName method execution duration is {stopWatch.ElapsedTicks} ticks.");
-            return records;
+            return iterator;
         }
 
-        public ReadOnlyCollection<FileCabinetRecord> GetRecords()
+        public IEnumerable<FileCabinetRecord> GetRecords()
         {
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
-            var records = this.fileCabinetService.GetRecords();
+            var iterator = this.fileCabinetService.GetRecords();
             stopWatch.Stop();
             Console.WriteLine($"GetRecords method execution duration is {stopWatch.ElapsedTicks} ticks.");
-            return records;
+            return iterator;
         }
 
         public Tuple<int, int> GetStat()

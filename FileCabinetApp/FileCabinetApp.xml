@@ -764,6 +764,19 @@
             </summary>
             <returns> Data for FileCabinetRecord. </returns>
         </member>
+        <member name="M:FileCabinetApp.Utils.Iterators.RecordCollection.#ctor(System.IO.FileStream,System.Collections.Generic.IEnumerable{System.Int64})">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Utils.Iterators.RecordCollection"/> class.
+            </summary>
+            <param name="fileStream"> File stream. </param>
+            <param name="offsets"> Offsets of records in filestream. </param>
+        </member>
+        <member name="M:FileCabinetApp.Utils.Iterators.RecordCollection.GetEnumerator">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Utils.Iterators.RecordCollection.System#Collections#IEnumerable#GetEnumerator">
+            <inheritdoc/>
+        </member>
         <member name="T:FileCabinetApp.Utils.Readers.FileCabinetRecordCsvReader">
             <summary>
             Class for reading records from stream reader in csv format.

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FileCabinetApp.Entities;
+using FileCabinetApp.Utils.Iterators;
 
 namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
 {
@@ -43,7 +44,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
 
         private void Find(string parameters)
         {
-            ReadOnlyCollection<FileCabinetRecord> foundRecords;
+            IEnumerable<FileCabinetRecord> records;
             try
             {
                 string[] inputs = parameters.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
@@ -62,15 +63,15 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
 
                 if (propertyName.Equals(nameof(FileCabinetRecord.FirstName), StringComparison.InvariantCultureIgnoreCase))
                 {
-                    foundRecords = this.FileCabinetService.FindByFirstName(propertyValue);
+                    records = this.FileCabinetService.FindByFirstName(propertyValue);
                 }
                 else if (propertyName.Equals(nameof(FileCabinetRecord.LastName), StringComparison.InvariantCultureIgnoreCase))
                 {
-                    foundRecords = this.FileCabinetService.FindByLastName(propertyValue);
+                    records = this.FileCabinetService.FindByLastName(propertyValue);
                 }
                 else if (propertyName.Equals(nameof(FileCabinetRecord.DateOfBirth), StringComparison.InvariantCultureIgnoreCase))
                 {
-                    foundRecords = this.FileCabinetService.FindByDateOfBirth(propertyValue);
+                    records = this.FileCabinetService.FindByDateOfBirth(propertyValue);
                 }
                 else
                 {
@@ -90,7 +91,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
                 return;
             }
 
-            this.printer(foundRecords);
+            this.printer(records);
         }
     }
 }
