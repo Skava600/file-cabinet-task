@@ -106,7 +106,7 @@
             Find command handler.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.CommandHandlers.ConcreteHandlers.FindCommandHandler.#ctor(FileCabinetApp.IFileCabinetService,System.Action{FileCabinetApp.Utils.Iterators.IRecordIterator})">
+        <member name="M:FileCabinetApp.CommandHandlers.ConcreteHandlers.FindCommandHandler.#ctor(FileCabinetApp.IFileCabinetService,System.Action{System.Collections.Generic.IEnumerable{FileCabinetApp.Entities.FileCabinetRecord}})">
             <summary>
             Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.ConcreteHandlers.FindCommandHandler"/> class.
             </summary>
@@ -143,7 +143,7 @@
             List command handler.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.CommandHandlers.ConcreteHandlers.ListCommandHandler.#ctor(FileCabinetApp.IFileCabinetService,System.Action{FileCabinetApp.Utils.Iterators.IRecordIterator})">
+        <member name="M:FileCabinetApp.CommandHandlers.ConcreteHandlers.ListCommandHandler.#ctor(FileCabinetApp.IFileCabinetService,System.Action{System.Collections.Generic.IEnumerable{FileCabinetApp.Entities.FileCabinetRecord}})">
             <summary>
             Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.ConcreteHandlers.ListCommandHandler"/> class.
             </summary>
@@ -763,6 +763,41 @@
             Reads users record input.
             </summary>
             <returns> Data for FileCabinetRecord. </returns>
+        </member>
+        <member name="M:FileCabinetApp.Utils.Iterators.FilesystemIterator.#ctor(System.IO.BinaryReader,System.Collections.Generic.List{System.Int64})">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Utils.Iterators.FilesystemIterator"/> class.
+            </summary>
+            <param name="reader">reader.</param>
+            <param name="offsets"> Offsets of the records in filestream. </param>
+        </member>
+        <member name="P:FileCabinetApp.Utils.Iterators.FilesystemIterator.Current">
+            <inheritdoc/>
+        </member>
+        <member name="P:FileCabinetApp.Utils.Iterators.FilesystemIterator.System#Collections#IEnumerator#Current">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Utils.Iterators.FilesystemIterator.MoveNext">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Utils.Iterators.FilesystemIterator.Reset">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Utils.Iterators.FilesystemIterator.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Utils.Iterators.RecordCollection.#ctor(System.IO.FileStream,System.Collections.Generic.IEnumerable{System.Int64})">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Utils.Iterators.RecordCollection"/> class.
+            </summary>
+            <param name="fileStream"> File stream</param>
+            <param name="offsets"> Offsets of records in filestream</param>
+        </member>
+        <member name="M:FileCabinetApp.Utils.Iterators.RecordCollection.GetEnumerator">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Utils.Iterators.RecordCollection.System#Collections#IEnumerable#GetEnumerator">
+            <inheritdoc/>
         </member>
         <member name="T:FileCabinetApp.Utils.Readers.FileCabinetRecordCsvReader">
             <summary>

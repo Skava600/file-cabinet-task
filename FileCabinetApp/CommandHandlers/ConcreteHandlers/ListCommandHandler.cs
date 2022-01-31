@@ -16,14 +16,14 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
     internal class ListCommandHandler : ServiceCommandHandlerBase
     {
         private static readonly string Command = "list";
-        private readonly Action<IRecordIterator> printer;
+        private readonly Action<IEnumerable<FileCabinetRecord>> printer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ListCommandHandler"/> class.
         /// </summary>
         /// <param name="service"> File cabinet service. </param>
         /// <param name="printer"> Record printer. </param>
-        public ListCommandHandler(IFileCabinetService service, Action<IRecordIterator> printer)
+        public ListCommandHandler(IFileCabinetService service, Action<IEnumerable<FileCabinetRecord>> printer)
             : base(service)
         {
             this.printer = printer;
@@ -44,7 +44,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
 
         private void List(string parameters)
         {
-            IRecordIterator iterator = this.FileCabinetService.GetRecords();
+            IEnumerable<FileCabinetRecord> iterator = this.FileCabinetService.GetRecords();
 
             this.printer(iterator);
         }

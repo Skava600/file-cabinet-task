@@ -107,9 +107,9 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
-        public IRecordIterator GetRecords()
+        public IEnumerable<FileCabinetRecord> GetRecords()
         {
-            return new MemoryIterator(this.records);
+            return this.records;
         }
 
         /// <inheritdoc/>
@@ -125,11 +125,11 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
-        public IRecordIterator FindByFirstName(string firstname)
+        public IEnumerable<FileCabinetRecord> FindByFirstName(string firstname)
         {
             try
             {
-                return new MemoryIterator(this.firstNameDictionary[firstname]);
+                return this.firstNameDictionary[firstname].AsReadOnly();
             }
             catch (KeyNotFoundException)
             {
@@ -138,11 +138,11 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
-        public IRecordIterator FindByLastName(string lastName)
+        public IEnumerable<FileCabinetRecord> FindByLastName(string lastName)
         {
             try
             {
-                return new MemoryIterator(this.lastNameDictionary[lastName]);
+                return this.lastNameDictionary[lastName].AsReadOnly();
             }
             catch (KeyNotFoundException)
             {
@@ -151,12 +151,12 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
-        public IRecordIterator FindByDateOfBirth(string dateOfBirth)
+        public IEnumerable<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth)
         {
             try
             {
                 DateTime dob = DateTime.Parse(dateOfBirth, CultureInfo.InvariantCulture);
-                return new MemoryIterator(this.dateOfBirthDictionary[dob]);
+                return this.dateOfBirthDictionary[dob].AsReadOnly();
             }
             catch (KeyNotFoundException)
             {

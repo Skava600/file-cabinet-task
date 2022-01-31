@@ -39,7 +39,7 @@ namespace FileCabinetApp.Services
             Console.WriteLine($"Edit method execution duration is {stopWatch.ElapsedTicks} ticks.");
         }
 
-        public IRecordIterator FindByDateOfBirth(string dateOfBirth)
+        public IEnumerable<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth)
         {
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
@@ -49,7 +49,7 @@ namespace FileCabinetApp.Services
             return iterator;
         }
 
-        public IRecordIterator FindByFirstName(string firstname)
+        public IEnumerable<FileCabinetRecord> FindByFirstName(string firstname)
         {
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
@@ -59,7 +59,7 @@ namespace FileCabinetApp.Services
             return iterator;
         }
 
-        public IRecordIterator FindByLastName(string lastname)
+        public IEnumerable<FileCabinetRecord> FindByLastName(string lastname)
         {
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
@@ -69,7 +69,7 @@ namespace FileCabinetApp.Services
             return iterator;
         }
 
-        public IRecordIterator GetRecords()
+        public IEnumerable<FileCabinetRecord> GetRecords()
         {
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();

@@ -73,10 +73,10 @@ namespace FileCabinetApp.Services
             this.Log($"{nameof(this.EditRecord)}() returned successfuly");
         }
 
-        public IRecordIterator FindByDateOfBirth(string dateOfBirth)
+        public IEnumerable<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth)
         {
             this.Log($"Calling {nameof(this.FindByDateOfBirth)}() with DateOfBirth = '{dateOfBirth}'");
-            IRecordIterator iterator;
+            IEnumerable<FileCabinetRecord> iterator;
             try
             {
                 iterator = this.fileCabinetService.FindByDateOfBirth(dateOfBirth);
@@ -92,10 +92,10 @@ namespace FileCabinetApp.Services
             return iterator;
         }
 
-        public IRecordIterator FindByFirstName(string firstname)
+        public IEnumerable<FileCabinetRecord> FindByFirstName(string firstname)
         {
             this.Log($"Calling {nameof(this.FindByFirstName)}() with firstname = '{firstname}'");
-            IRecordIterator iterator;
+            IEnumerable<FileCabinetRecord> iterator;
             try
             {
                 iterator = this.fileCabinetService.FindByFirstName(firstname);
@@ -111,10 +111,10 @@ namespace FileCabinetApp.Services
             return iterator;
         }
 
-        public IRecordIterator FindByLastName(string lastname)
+        public IEnumerable<FileCabinetRecord> FindByLastName(string lastname)
         {
             this.Log($"Calling {nameof(this.FindByLastName)}() with lastname = '{lastname}'");
-            IRecordIterator iterator;
+            IEnumerable<FileCabinetRecord> iterator;
             try
             {
                 iterator = this.fileCabinetService.FindByLastName(lastname);
@@ -130,7 +130,7 @@ namespace FileCabinetApp.Services
             return iterator;
         }
 
-        public IRecordIterator GetRecords()
+        public IEnumerable<FileCabinetRecord> GetRecords()
         {
             this.Log($"Calling {nameof(this.GetRecords)}()");
             var iterator = this.fileCabinetService.GetRecords();

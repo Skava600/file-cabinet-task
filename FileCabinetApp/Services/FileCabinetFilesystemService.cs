@@ -47,12 +47,11 @@ namespace FileCabinetApp.Services
         {
             this.fileStream = fileStream;
             this.validator = validator;
-            var iterator = this.GetRecords();
+            var records = this.GetRecords();
 
             int maxId = 0;
-            while (iterator.HasMore())
+            foreach (var record in records)
             {
-                var record = iterator.GetNext();
                 if (maxId < record.Id)
                 {
                     maxId = record.Id;
@@ -159,9 +158,6 @@ namespace FileCabinetApp.Services
                     recordIndex++;
                 }
             }
-
-            this.fileStream.Seek(0, SeekOrigin.End);
-
         }
 
         /// <inheritdoc/>
@@ -193,14 +189,13 @@ namespace FileCabinetApp.Services
             this.lastNameDictionary.Clear();
             this.dateOfBirthDictionary.Clear();
 
-            var iterator = this.GetRecords();
+            var records = this.GetRecords();
 
             this.fileStream.Seek(0, SeekOrigin.Begin);
 
             int maxId = 0;
-            while (iterator.HasMore())
+            foreach (var record in records)
             {
-                var record = iterator.GetNext();
                 if (maxId < record.Id)
                 {
                     maxId = record.Id;
@@ -215,15 +210,15 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
-        public IRecordIterator FindByFirstName(string firstname)
+        public IEnumerable<FileCabinetRecord> FindByFirstName(string firstname)
         {
-            IRecordIterator iterator;
+            IEnumerable<FileCabinetRecord> records;
             using (var binaryReader = new BinaryReader(this.fileStream, Encoding.Unicode, true))
             {
                 try
                 {
                     var recordsOffsets = this.firstNameDictionary[firstname];
-                    iterator = new FilesystemIterator(this.fileStream, recordsOffsets);
+                    records = new RecordCollection(this.fileStream, recordsOffsets);
                 }
                 catch (KeyNotFoundException)
                 {
@@ -231,20 +226,20 @@ namespace FileCabinetApp.Services
                 }
             }
 
-            return iterator;
+            return records;
         }
 
         /// <inheritdoc/>
-        public IRecordIterator FindByLastName(string lastname)
+        public IEnumerable<FileCabinetRecord> FindByLastName(string lastname)
         {
-            IRecordIterator iterator;
+            IEnumerable<FileCabinetRecord> records;
 
             using (var binaryReader = new BinaryReader(this.fileStream, Encoding.Unicode, true))
             {
                 try
                 {
                     var recordsOffsets = this.lastNameDictionary[lastname];
-                    iterator = new FilesystemIterator(this.fileStream, recordsOffsets);
+                    records = new RecordCollection(this.fileStream, recordsOffsets);
                 }
                 catch (KeyNotFoundException)
                 {
@@ -252,11 +247,11 @@ namespace FileCabinetApp.Services
                 }
             }
 
-            return iterator;
+            return records;
         }
 
         /// <inheritdoc/>
-        public IRecordIterator FindByDateOfBirth(string dateOfBirth)
+        public IEnumerable<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth)
         {
             DateTime dob;
             try
@@ -268,14 +263,14 @@ namespace FileCabinetApp.Services
                 throw new ArgumentException($"{dateOfBirth} is invalid date format.");
             }
 
-            IRecordIterator iterator;
+            IEnumerable<FileCabinetRecord> records;
 
             using (var binaryReader = new BinaryReader(this.fileStream, Encoding.Unicode, true))
             {
                 try
                 {
                     var recordsOffsets = this.dateOfBirthDictionary[dob];
-                    iterator = new FilesystemIterator(this.fileStream, recordsOffsets);
+                    records = new RecordCollection(this.fileStream, recordsOffsets);
                 }
                 catch (KeyNotFoundException)
                 {
@@ -283,11 +278,11 @@ namespace FileCabinetApp.Services
                 }
             }
 
-            return iterator;
+            return records;
         }
 
         /// <inheritdoc/>
-        public IRecordIterator GetRecords()
+        public IEnumerable<FileCabinetRecord> GetRecords()
         {
             this.fileStream.Seek(0, SeekOrigin.Begin);
             List<long> offsets = new List<long>();
@@ -306,20 +301,13 @@ namespace FileCabinetApp.Services
                 }
             }
 
-            return new FilesystemIterator(this.fileStream, offsets);
+            return new RecordCollection(this.fileStream, offsets);
         }
 
         /// <inheritdoc/>
         public Tuple<int, int> GetStat()
         {
-            var iterator = this.GetRecords();
-            int numberOfRecords = 0;
-            while (iterator.HasMore())
-            {
-                iterator.GetNext();
-                numberOfRecords++;
-            }
-
+            int numberOfRecords = this.GetRecords().Count();
             int numberOfDeletedRecords = (int)(this.fileStream.Length / RecordSize) - numberOfRecords;
             return new Tuple<int, int>(numberOfRecords, numberOfDeletedRecords);
         }

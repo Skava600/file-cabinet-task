@@ -45,7 +45,7 @@ namespace FileCabinetApp
         /// This method for getting all records.
         /// </summary>
         /// <returns>Read only collection of registered <see cref="FileCabinetRecord"/>.</returns>
-        IRecordIterator GetRecords();
+        IEnumerable<FileCabinetRecord> GetRecords();
 
         /// <summary>
         /// This method checks if the record with given id exists.
@@ -71,21 +71,21 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="firstname"> First Name of record. </param>
         /// <returns> All records with specified first name. </returns>
-        IRecordIterator FindByFirstName(string firstname);
+        IEnumerable<FileCabinetRecord> FindByFirstName(string firstname);
 
         /// <summary>
         /// Finds the specified records by lastname.
         /// </summary>
         /// <param name="lastname"> Last Name of record. </param>
         /// <returns> All records with specified last name. </returns>
-        IRecordIterator FindByLastName(string lastname);
+        IEnumerable<FileCabinetRecord> FindByLastName(string lastname);
 
         /// <summary>
         /// Finds the specified records by date of birth.
         /// </summary>
         /// <param name="dateOfBirth"> Date of birth of record. </param>
         /// <returns> All records with specified date of birth. </returns>
-        IRecordIterator FindByDateOfBirth(string dateOfBirth);
+        IEnumerable<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth);
 
         /// <summary>
         /// Restores records from snapshot.

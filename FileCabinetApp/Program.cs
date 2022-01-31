@@ -187,11 +187,10 @@ namespace FileCabinetApp
             Console.WriteLine($"Using {Program.storage.ToLower()} storage.");
         }
 
-        private static void DefaultRecordPrint(IRecordIterator iterator)
+        private static void DefaultRecordPrint(IEnumerable<FileCabinetRecord> records)
         {
-            while (iterator.HasMore())
+            foreach (var record in records)
             {
-                var record = iterator.GetNext();
                 string date = record.DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture);
                 Console.WriteLine($"#{record.Id}, " +
                     $"{record.FirstName}, " +
