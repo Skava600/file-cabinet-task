@@ -57,7 +57,7 @@ namespace FileCabinetApp.Services
                     maxId = record.Id;
                 }
 
-                long offset = this.GetIndexOf(record.Id) * RecordSize;
+                long offset = this.fileStream.Position - RecordSize;
                 this.AddRecordToDictionaries(record, offset);
             }
 
@@ -127,17 +127,19 @@ namespace FileCabinetApp.Services
             int recordIndex = 0;
             using (BinaryReader binaryReader = new BinaryReader(this.fileStream, Encoding.Unicode, true))
             {
-                binaryReader.BaseStream.Seek(2, SeekOrigin.Begin);
+                binaryReader.BaseStream.Seek(1, SeekOrigin.Begin);
                 while (binaryReader.PeekChar() > -1)
                 {
+                    byte isDeleted = binaryReader.ReadByte();
                     int currentId = binaryReader.ReadInt32();
-                    if (currentId == id)
+                    if (currentId == id && isDeleted == 0)
                     {
+                        this.fileStream.Seek(-(sizeof(int) + (sizeof(byte) * 2)), SeekOrigin.Current);
                         var oldRecord = ReadRecordFromStream(binaryReader);
 
                         var editedRecord = new FileCabinetRecord()
                         {
-                            Id = currentId,
+                            Id = oldRecord.Id,
                             FirstName = recordData.FirstName,
                             LastName = recordData.LastName,
                             DateOfBirth = recordData.DateOfBirth,
@@ -154,7 +156,7 @@ namespace FileCabinetApp.Services
                         break;
                     }
 
-                    this.fileStream.Seek(RecordSize - sizeof(int), SeekOrigin.Current);
+                    this.fileStream.Seek(RecordSize - sizeof(int) - sizeof(byte), SeekOrigin.Current);
                     recordIndex++;
                 }
             }
@@ -194,6 +196,7 @@ namespace FileCabinetApp.Services
             this.fileStream.Seek(0, SeekOrigin.Begin);
 
             int maxId = 0;
+            int index = 0;
             foreach (var record in records)
             {
                 if (maxId < record.Id)
@@ -201,7 +204,9 @@ namespace FileCabinetApp.Services
                     maxId = record.Id;
                 }
 
+                this.fileStream.Seek(index++ * RecordSize, SeekOrigin.Begin);
                 this.AddRecordToDictionaries(record, this.fileStream.Position);
+
                 this.WriteRecordToStream(record);
             }
 

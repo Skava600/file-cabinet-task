@@ -34,7 +34,7 @@ namespace FileCabinetApp.Services
         {
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
-            this.fileCabinetService.CreateRecord(recordData);
+            this.fileCabinetService.EditRecord(id, recordData);
             stopWatch.Stop();
             Console.WriteLine($"Edit method execution duration is {stopWatch.ElapsedTicks} ticks.");
         }

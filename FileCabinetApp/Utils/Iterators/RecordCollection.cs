@@ -5,31 +5,34 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FileCabinetApp.Entities;
+using FileCabinetApp.Services;
 
 namespace FileCabinetApp.Utils.Iterators
 {
     internal class RecordCollection : IEnumerable<FileCabinetRecord>
     {
         private readonly List<long> offsets;
-        private readonly FileStream fileStream;
+        private readonly BinaryReader binaryReader;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RecordCollection"/> class.
         /// </summary>
-        /// <param name="fileStream"> File stream</param>
-        /// <param name="offsets"> Offsets of records in filestream</param>
+        /// <param name="fileStream"> File stream. </param>
+        /// <param name="offsets"> Offsets of records in filestream. </param>
         public RecordCollection(FileStream fileStream, IEnumerable<long> offsets)
         {
-            this.fileStream = fileStream;
+            this.binaryReader = new BinaryReader(fileStream, Encoding.Unicode, true);
             this.offsets = new List<long>(offsets);
         }
 
         /// <inheritdoc/>
         public IEnumerator<FileCabinetRecord> GetEnumerator()
         {
-            return new FilesystemIterator(
-                new BinaryReader(this.fileStream, Encoding.Unicode, true),
-                this.offsets);
+            foreach (var offset in this.offsets)
+            {
+                this.binaryReader.BaseStream.Seek(offset, SeekOrigin.Begin);
+                yield return FileCabinetFilesystemService.ReadRecordFromStream(this.binaryReader);
+            }
         }
 
         /// <inheritdoc/>
