@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FileCabinetApp.Entities;
+using FileCabinetApp.Utils.Iterators;
 
 namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
 {
@@ -15,14 +16,14 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
     internal class FindCommandHandler : ServiceCommandHandlerBase
     {
         private static readonly string Command = "find";
-        private readonly Action<IEnumerable<FileCabinetRecord>> printer;
+        private readonly Action<IRecordIterator> printer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FindCommandHandler"/> class.
         /// </summary>
         /// <param name="service"> File cabinet service. </param>
         /// <param name="printer"> Record printer. </param>
-        public FindCommandHandler(IFileCabinetService service, Action<IEnumerable<FileCabinetRecord>> printer)
+        public FindCommandHandler(IFileCabinetService service, Action<IRecordIterator> printer)
             : base(service)
         {
             this.printer = printer;
@@ -43,7 +44,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
 
         private void Find(string parameters)
         {
-            ReadOnlyCollection<FileCabinetRecord> foundRecords;
+            IRecordIterator iterator;
             try
             {
                 string[] inputs = parameters.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
@@ -62,15 +63,15 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
 
                 if (propertyName.Equals(nameof(FileCabinetRecord.FirstName), StringComparison.InvariantCultureIgnoreCase))
                 {
-                    foundRecords = this.FileCabinetService.FindByFirstName(propertyValue);
+                    iterator = this.FileCabinetService.FindByFirstName(propertyValue);
                 }
                 else if (propertyName.Equals(nameof(FileCabinetRecord.LastName), StringComparison.InvariantCultureIgnoreCase))
                 {
-                    foundRecords = this.FileCabinetService.FindByLastName(propertyValue);
+                    iterator = this.FileCabinetService.FindByLastName(propertyValue);
                 }
                 else if (propertyName.Equals(nameof(FileCabinetRecord.DateOfBirth), StringComparison.InvariantCultureIgnoreCase))
                 {
-                    foundRecords = this.FileCabinetService.FindByDateOfBirth(propertyValue);
+                    iterator = this.FileCabinetService.FindByDateOfBirth(propertyValue);
                 }
                 else
                 {
@@ -90,7 +91,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
                 return;
             }
 
-            this.printer(foundRecords);
+            this.printer(iterator);
         }
     }
 }

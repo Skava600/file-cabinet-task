@@ -106,7 +106,7 @@
             Find command handler.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.CommandHandlers.ConcreteHandlers.FindCommandHandler.#ctor(FileCabinetApp.IFileCabinetService,System.Action{System.Collections.Generic.IEnumerable{FileCabinetApp.Entities.FileCabinetRecord}})">
+        <member name="M:FileCabinetApp.CommandHandlers.ConcreteHandlers.FindCommandHandler.#ctor(FileCabinetApp.IFileCabinetService,System.Action{FileCabinetApp.Utils.Iterators.IRecordIterator})">
             <summary>
             Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.ConcreteHandlers.FindCommandHandler"/> class.
             </summary>
@@ -143,7 +143,7 @@
             List command handler.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.CommandHandlers.ConcreteHandlers.ListCommandHandler.#ctor(FileCabinetApp.IFileCabinetService,System.Action{System.Collections.Generic.IEnumerable{FileCabinetApp.Entities.FileCabinetRecord}})">
+        <member name="M:FileCabinetApp.CommandHandlers.ConcreteHandlers.ListCommandHandler.#ctor(FileCabinetApp.IFileCabinetService,System.Action{FileCabinetApp.Utils.Iterators.IRecordIterator})">
             <summary>
             Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.ConcreteHandlers.ListCommandHandler"/> class.
             </summary>

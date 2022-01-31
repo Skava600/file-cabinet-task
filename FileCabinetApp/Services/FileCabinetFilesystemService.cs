@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using FileCabinetApp.Entities;
 using FileCabinetApp.Models;
+using FileCabinetApp.Utils.Iterators;
 using FileCabinetApp.Validation;
 
 namespace FileCabinetApp.Services
@@ -46,14 +47,43 @@ namespace FileCabinetApp.Services
         {
             this.fileStream = fileStream;
             this.validator = validator;
-            this.lastId = this.GetStat().Item1 > 0 ? this.GetRecords().Max(rec => rec.Id) : 0;
+            var iterator = this.GetRecords();
 
-            var records = this.GetRecords();
-            foreach (var record in records)
+            int maxId = 0;
+            while (iterator.HasMore())
             {
+                var record = iterator.GetNext();
+                if (maxId < record.Id)
+                {
+                    maxId = record.Id;
+                }
+
                 long offset = this.GetIndexOf(record.Id) * RecordSize;
                 this.AddRecordToDictionaries(record, offset);
             }
+
+            this.lastId = maxId;
+        }
+
+        public static FileCabinetRecord ReadRecordFromStream(BinaryReader binaryReader)
+        {
+            binaryReader.ReadByte();
+            byte b = binaryReader.ReadByte();
+            if (b == 1)
+            {
+                throw new ArgumentException("This record is deleted.");
+            }
+
+            return new FileCabinetRecord
+            {
+                Id = binaryReader.ReadInt32(),
+                FirstName = Encoding.Unicode.GetString(binaryReader.ReadBytes(NameFieldSize)).Trim(),
+                LastName = Encoding.Unicode.GetString(binaryReader.ReadBytes(NameFieldSize)).Trim(),
+                DateOfBirth = new DateTime(binaryReader.ReadInt32(), binaryReader.ReadInt32(), binaryReader.ReadInt32()),
+                Sex = binaryReader.ReadChar(),
+                Height = binaryReader.ReadInt16(),
+                Salary = binaryReader.ReadDecimal(),
+            };
         }
 
         /// <inheritdoc/>
@@ -104,7 +134,7 @@ namespace FileCabinetApp.Services
                     int currentId = binaryReader.ReadInt32();
                     if (currentId == id)
                     {
-                        var oldRecord = this.ReadRecordFromStream(binaryReader);
+                        var oldRecord = ReadRecordFromStream(binaryReader);
 
                         var editedRecord = new FileCabinetRecord()
                         {
@@ -145,7 +175,7 @@ namespace FileCabinetApp.Services
 
             long recordOffset = RecordSize * recordIndex;
             this.fileStream.Seek(recordOffset, SeekOrigin.Begin);
-            var record = this.ReadRecordFromStream(new BinaryReader(this.fileStream, Encoding.Unicode, true));
+            var record = ReadRecordFromStream(new BinaryReader(this.fileStream, Encoding.Unicode, true));
             this.RemoveRecordFromDictionaries(record, recordOffset);
 
             long isDeletedBytePosition = recordOffset + sizeof(byte);
@@ -159,38 +189,41 @@ namespace FileCabinetApp.Services
         /// <inheritdoc/>
         public void Purge()
         {
-            var records = this.GetRecords();
+            this.firstNameDictionary.Clear();
+            this.lastNameDictionary.Clear();
+            this.dateOfBirthDictionary.Clear();
+
+            var iterator = this.GetRecords();
 
             this.fileStream.Seek(0, SeekOrigin.Begin);
-            foreach (var record in records)
+
+            int maxId = 0;
+            while (iterator.HasMore())
             {
+                var record = iterator.GetNext();
+                if (maxId < record.Id)
+                {
+                    maxId = record.Id;
+                }
+
+                this.AddRecordToDictionaries(record, this.fileStream.Position);
                 this.WriteRecordToStream(record);
             }
 
             this.fileStream.SetLength(this.fileStream.Position);
-            this.lastId = records.Max(rec => rec.Id);
-            foreach (var record in records)
-            {
-                long offset = this.GetIndexOf(record.Id) * RecordSize;
-                this.AddRecordToDictionaries(record, offset);
-            }
+            this.lastId = maxId;
         }
 
         /// <inheritdoc/>
-        public ReadOnlyCollection<FileCabinetRecord> FindByFirstName(string firstname)
+        public IRecordIterator FindByFirstName(string firstname)
         {
-            List<FileCabinetRecord> records = new List<FileCabinetRecord>();
-
+            IRecordIterator iterator;
             using (var binaryReader = new BinaryReader(this.fileStream, Encoding.Unicode, true))
             {
                 try
                 {
                     var recordsOffsets = this.firstNameDictionary[firstname];
-                    foreach (var offset in recordsOffsets)
-                    {
-                        this.fileStream.Seek(offset, SeekOrigin.Begin);
-                        records.Add(this.ReadRecordFromStream(binaryReader));
-                    }
+                    iterator = new FilesystemIterator(this.fileStream, recordsOffsets);
                 }
                 catch (KeyNotFoundException)
                 {
@@ -198,29 +231,20 @@ namespace FileCabinetApp.Services
                 }
             }
 
-            if (records.Count == 0)
-            {
-                throw new ArgumentException($"Records with {firstname} first name not exist.");
-            }
-
-            return new ReadOnlyCollection<FileCabinetRecord>(records);
+            return iterator;
         }
 
         /// <inheritdoc/>
-        public ReadOnlyCollection<FileCabinetRecord> FindByLastName(string lastname)
+        public IRecordIterator FindByLastName(string lastname)
         {
-            List<FileCabinetRecord> records = new List<FileCabinetRecord>();
+            IRecordIterator iterator;
 
             using (var binaryReader = new BinaryReader(this.fileStream, Encoding.Unicode, true))
             {
                 try
                 {
                     var recordsOffsets = this.lastNameDictionary[lastname];
-                    foreach (var offset in recordsOffsets)
-                    {
-                        this.fileStream.Seek(offset, SeekOrigin.Begin);
-                        records.Append(this.ReadRecordFromStream(binaryReader));
-                    }
+                    iterator = new FilesystemIterator(this.fileStream, recordsOffsets);
                 }
                 catch (KeyNotFoundException)
                 {
@@ -228,16 +252,11 @@ namespace FileCabinetApp.Services
                 }
             }
 
-            if (records.Count == 0)
-            {
-                throw new ArgumentException($"Records with {lastname} first name not exist.");
-            }
-
-            return new ReadOnlyCollection<FileCabinetRecord>(records);
+            return iterator;
         }
 
         /// <inheritdoc/>
-        public ReadOnlyCollection<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth)
+        public IRecordIterator FindByDateOfBirth(string dateOfBirth)
         {
             DateTime dob;
             try
@@ -249,18 +268,14 @@ namespace FileCabinetApp.Services
                 throw new ArgumentException($"{dateOfBirth} is invalid date format.");
             }
 
-            List<FileCabinetRecord> records = new List<FileCabinetRecord>();
+            IRecordIterator iterator;
 
             using (var binaryReader = new BinaryReader(this.fileStream, Encoding.Unicode, true))
             {
                 try
                 {
                     var recordsOffsets = this.dateOfBirthDictionary[dob];
-                    foreach (var offset in recordsOffsets)
-                    {
-                        this.fileStream.Seek(offset, SeekOrigin.Begin);
-                        records.Append(this.ReadRecordFromStream(binaryReader));
-                    }
+                    iterator = new FilesystemIterator(this.fileStream, recordsOffsets);
                 }
                 catch (KeyNotFoundException)
                 {
@@ -268,42 +283,43 @@ namespace FileCabinetApp.Services
                 }
             }
 
-            if (records.Count == 0)
-            {
-                throw new ArgumentException($"Records with {dateOfBirth} first name not exist.");
-            }
-
-            return new ReadOnlyCollection<FileCabinetRecord>(records);
+            return iterator;
         }
 
         /// <inheritdoc/>
-        public ReadOnlyCollection<FileCabinetRecord> GetRecords()
+        public IRecordIterator GetRecords()
         {
-            this.fileStream.Position = 0;
-            List<FileCabinetRecord> records = new List<FileCabinetRecord>();
-
+            this.fileStream.Seek(0, SeekOrigin.Begin);
+            List<long> offsets = new List<long>();
             using (BinaryReader binaryReader = new BinaryReader(this.fileStream, Encoding.Unicode, true))
             {
                 while (binaryReader.PeekChar() > -1)
                 {
-                    try
+                    binaryReader.ReadByte();
+                    byte isDeleted = binaryReader.ReadByte();
+                    if (isDeleted == 0)
                     {
-                        records.Add(this.ReadRecordFromStream(binaryReader));
+                        offsets.Add(this.fileStream.Position - (sizeof(byte) * 2));
                     }
-                    catch (ArgumentException)
-                    {
-                        binaryReader.ReadBytes(RecordSize - sizeof(short));
-                    }
+
+                    binaryReader.ReadBytes(RecordSize - (sizeof(byte) * 2));
                 }
             }
 
-            return new ReadOnlyCollection<FileCabinetRecord>(records);
+            return new FilesystemIterator(this.fileStream, offsets);
         }
 
         /// <inheritdoc/>
         public Tuple<int, int> GetStat()
         {
-            int numberOfRecords = this.GetRecords().Count;
+            var iterator = this.GetRecords();
+            int numberOfRecords = 0;
+            while (iterator.HasMore())
+            {
+                iterator.GetNext();
+                numberOfRecords++;
+            }
+
             int numberOfDeletedRecords = (int)(this.fileStream.Length / RecordSize) - numberOfRecords;
             return new Tuple<int, int>(numberOfRecords, numberOfDeletedRecords);
         }
@@ -382,27 +398,6 @@ namespace FileCabinetApp.Services
                 binaryWriter.Write(record.Height);
                 binaryWriter.Write(record.Salary);
             }
-        }
-
-        private FileCabinetRecord ReadRecordFromStream(BinaryReader binaryReader)
-        {
-            binaryReader.ReadByte();
-            byte b = binaryReader.ReadByte();
-            if (b == 1)
-            {
-                throw new ArgumentException("This record is deleted.");
-            }
-
-            return new FileCabinetRecord
-            {
-                Id = binaryReader.ReadInt32(),
-                FirstName = Encoding.Unicode.GetString(binaryReader.ReadBytes(NameFieldSize)).Trim(),
-                LastName = Encoding.Unicode.GetString(binaryReader.ReadBytes(NameFieldSize)).Trim(),
-                DateOfBirth = new DateTime(binaryReader.ReadInt32(), binaryReader.ReadInt32(), binaryReader.ReadInt32()),
-                Sex = binaryReader.ReadChar(),
-                Height = binaryReader.ReadInt16(),
-                Salary = binaryReader.ReadDecimal(),
-            };
         }
 
         private int GenerateId()

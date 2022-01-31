@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using FileCabinetApp.Entities;
 using FileCabinetApp.Models;
+using FileCabinetApp.Utils.Iterators;
 using FileCabinetApp.Validation;
 
 namespace FileCabinetApp.Services
@@ -35,7 +36,7 @@ namespace FileCabinetApp.Services
         public FileCabinetMemoryService(IRecordValidator validator)
         {
             this.validator = validator;
-            this.lastId = this.records.Count > 0 ? this.GetRecords().Max(rec => rec.Id) : 0;
+            this.lastId = this.records.Count > 0 ? this.records.Max(rec => rec.Id) : 0;
         }
 
         /// <inheritdoc/>
@@ -106,9 +107,9 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
-        public ReadOnlyCollection<FileCabinetRecord> GetRecords()
+        public IRecordIterator GetRecords()
         {
-            return new ReadOnlyCollection<FileCabinetRecord>(this.records);
+            return new MemoryIterator(this.records);
         }
 
         /// <inheritdoc/>
@@ -124,11 +125,11 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
-        public ReadOnlyCollection<FileCabinetRecord> FindByFirstName(string firstname)
+        public IRecordIterator FindByFirstName(string firstname)
         {
             try
             {
-                return this.firstNameDictionary[firstname].AsReadOnly();
+                return new MemoryIterator(this.firstNameDictionary[firstname]);
             }
             catch (KeyNotFoundException)
             {
@@ -137,11 +138,11 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
-        public ReadOnlyCollection<FileCabinetRecord> FindByLastName(string lastName)
+        public IRecordIterator FindByLastName(string lastName)
         {
             try
             {
-                return this.lastNameDictionary[lastName].AsReadOnly();
+                return new MemoryIterator(this.lastNameDictionary[lastName]);
             }
             catch (KeyNotFoundException)
             {
@@ -150,12 +151,12 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
-        public ReadOnlyCollection<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth)
+        public IRecordIterator FindByDateOfBirth(string dateOfBirth)
         {
             try
             {
                 DateTime dob = DateTime.Parse(dateOfBirth, CultureInfo.InvariantCulture);
-                return this.dateOfBirthDictionary[dob].AsReadOnly();
+                return new MemoryIterator(this.dateOfBirthDictionary[dob]);
             }
             catch (KeyNotFoundException)
             {

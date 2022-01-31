@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using FileCabinetApp.Entities;
 using FileCabinetApp.Models;
 using FileCabinetApp.Services;
+using FileCabinetApp.Utils.Iterators;
 
 namespace FileCabinetApp
 {
@@ -44,7 +45,7 @@ namespace FileCabinetApp
         /// This method for getting all records.
         /// </summary>
         /// <returns>Read only collection of registered <see cref="FileCabinetRecord"/>.</returns>
-        ReadOnlyCollection<FileCabinetRecord> GetRecords();
+        IRecordIterator GetRecords();
 
         /// <summary>
         /// This method checks if the record with given id exists.
@@ -70,21 +71,21 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="firstname"> First Name of record. </param>
         /// <returns> All records with specified first name. </returns>
-        ReadOnlyCollection<FileCabinetRecord> FindByFirstName(string firstname);
+        IRecordIterator FindByFirstName(string firstname);
 
         /// <summary>
         /// Finds the specified records by lastname.
         /// </summary>
         /// <param name="lastname"> Last Name of record. </param>
         /// <returns> All records with specified last name. </returns>
-        ReadOnlyCollection<FileCabinetRecord> FindByLastName(string lastname);
+        IRecordIterator FindByLastName(string lastname);
 
         /// <summary>
         /// Finds the specified records by date of birth.
         /// </summary>
         /// <param name="dateOfBirth"> Date of birth of record. </param>
         /// <returns> All records with specified date of birth. </returns>
-        ReadOnlyCollection<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth);
+        IRecordIterator FindByDateOfBirth(string dateOfBirth);
 
         /// <summary>
         /// Restores records from snapshot.

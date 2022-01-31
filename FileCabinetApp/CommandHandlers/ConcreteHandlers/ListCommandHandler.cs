@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FileCabinetApp.Entities;
+using FileCabinetApp.Utils.Iterators;
 
 namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
 {
@@ -15,14 +16,14 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
     internal class ListCommandHandler : ServiceCommandHandlerBase
     {
         private static readonly string Command = "list";
-        private readonly Action<IEnumerable<FileCabinetRecord>> printer;
+        private readonly Action<IRecordIterator> printer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ListCommandHandler"/> class.
         /// </summary>
         /// <param name="service"> File cabinet service. </param>
         /// <param name="printer"> Record printer. </param>
-        public ListCommandHandler(IFileCabinetService service, Action<IEnumerable<FileCabinetRecord>> printer)
+        public ListCommandHandler(IFileCabinetService service, Action<IRecordIterator> printer)
             : base(service)
         {
             this.printer = printer;
@@ -43,9 +44,9 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
 
         private void List(string parameters)
         {
-            ReadOnlyCollection<FileCabinetRecord> records = this.FileCabinetService.GetRecords();
+            IRecordIterator iterator = this.FileCabinetService.GetRecords();
 
-            this.printer(records);
+            this.printer(iterator);
         }
     }
 }

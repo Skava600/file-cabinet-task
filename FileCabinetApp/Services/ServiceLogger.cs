@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using FileCabinetApp.Entities;
 using FileCabinetApp.Models;
+using FileCabinetApp.Utils.Iterators;
 
 namespace FileCabinetApp.Services
 {
@@ -72,13 +73,13 @@ namespace FileCabinetApp.Services
             this.Log($"{nameof(this.EditRecord)}() returned successfuly");
         }
 
-        public ReadOnlyCollection<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth)
+        public IRecordIterator FindByDateOfBirth(string dateOfBirth)
         {
             this.Log($"Calling {nameof(this.FindByDateOfBirth)}() with DateOfBirth = '{dateOfBirth}'");
-            ReadOnlyCollection<FileCabinetRecord> records;
+            IRecordIterator iterator;
             try
             {
-                records = this.fileCabinetService.FindByDateOfBirth(dateOfBirth);
+                iterator = this.fileCabinetService.FindByDateOfBirth(dateOfBirth);
             }
             catch (Exception ex)
             {
@@ -87,17 +88,17 @@ namespace FileCabinetApp.Services
                 throw;
             }
 
-            this.Log($"{nameof(this.FindByDateOfBirth)}() returned collections of {records.Count} record(s)");
-            return records;
+            this.Log($"{nameof(this.FindByDateOfBirth)}() returned successsfuly.");
+            return iterator;
         }
 
-        public ReadOnlyCollection<FileCabinetRecord> FindByFirstName(string firstname)
+        public IRecordIterator FindByFirstName(string firstname)
         {
             this.Log($"Calling {nameof(this.FindByFirstName)}() with firstname = '{firstname}'");
-            ReadOnlyCollection<FileCabinetRecord> records;
+            IRecordIterator iterator;
             try
             {
-                records = this.fileCabinetService.FindByFirstName(firstname);
+                iterator = this.fileCabinetService.FindByFirstName(firstname);
             }
             catch (Exception ex)
             {
@@ -106,17 +107,17 @@ namespace FileCabinetApp.Services
                 throw;
             }
 
-            this.Log($"{nameof(this.FindByFirstName)}() returned collections of {records.Count} record(s)");
-            return records;
+            this.Log($"{nameof(this.FindByFirstName)}() returned successfully.");
+            return iterator;
         }
 
-        public ReadOnlyCollection<FileCabinetRecord> FindByLastName(string lastname)
+        public IRecordIterator FindByLastName(string lastname)
         {
             this.Log($"Calling {nameof(this.FindByLastName)}() with lastname = '{lastname}'");
-            ReadOnlyCollection<FileCabinetRecord> records;
+            IRecordIterator iterator;
             try
             {
-                records = this.fileCabinetService.FindByLastName(lastname);
+                iterator = this.fileCabinetService.FindByLastName(lastname);
             }
             catch (Exception ex)
             {
@@ -125,16 +126,16 @@ namespace FileCabinetApp.Services
                 throw;
             }
 
-            this.Log($"{nameof(this.FindByLastName)}() returned collections of {records.Count} record(s)");
-            return records;
+            this.Log($"{nameof(this.FindByLastName)}() returned successfully.");
+            return iterator;
         }
 
-        public ReadOnlyCollection<FileCabinetRecord> GetRecords()
+        public IRecordIterator GetRecords()
         {
             this.Log($"Calling {nameof(this.GetRecords)}()");
-            var records = this.fileCabinetService.GetRecords();
-            this.Log($"{nameof(this.GetRecords)}() returned collections of {records.Count} record(s)");
-            return records;
+            var iterator = this.fileCabinetService.GetRecords();
+            this.Log($"{nameof(this.GetRecords)}() returned successfully.");
+            return iterator;
         }
 
         public Tuple<int, int> GetStat()

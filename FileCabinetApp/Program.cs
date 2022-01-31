@@ -3,6 +3,7 @@ using FileCabinetApp.CommandHandlers;
 using FileCabinetApp.CommandHandlers.ConcreteHandlers;
 using FileCabinetApp.Entities;
 using FileCabinetApp.Services;
+using FileCabinetApp.Utils.Iterators;
 using FileCabinetApp.Validation;
 using Microsoft.Extensions.Configuration;
 
@@ -186,10 +187,11 @@ namespace FileCabinetApp
             Console.WriteLine($"Using {Program.storage.ToLower()} storage.");
         }
 
-        private static void DefaultRecordPrint(IEnumerable<FileCabinetRecord> records)
+        private static void DefaultRecordPrint(IRecordIterator iterator)
         {
-            foreach (var record in records)
+            while (iterator.HasMore())
             {
+                var record = iterator.GetNext();
                 string date = record.DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture);
                 Console.WriteLine($"#{record.Id}, " +
                     $"{record.FirstName}, " +
