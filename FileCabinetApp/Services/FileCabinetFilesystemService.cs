@@ -86,10 +86,46 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
+        public void CreateRecordWithId(int id, RecordData recordData)
+        {
+            if (id < 1)
+            {
+                throw new ArgumentException($"Id can't be less than one.");
+            }
+
+            if (this.IsRecordExists(id))
+            {
+                throw new ArgumentException($"Record with id {id} is already existing.");
+            }
+
+            this.validator.ValidateParameters(recordData);
+
+            if (id > this.lastId)
+            {
+                this.lastId = id;
+            }
+
+            var record = new FileCabinetRecord
+            {
+                Id = id,
+                FirstName = recordData.FirstName,
+                LastName = recordData.LastName,
+                DateOfBirth = recordData.DateOfBirth,
+                Sex = char.ToUpper(recordData.Sex),
+                Height = recordData.Height,
+                Salary = recordData.Salary,
+            };
+
+            this.fileStream.Seek(0, SeekOrigin.End);
+
+            this.AddRecordToDictionaries(record, this.fileStream.Position);
+            this.WriteRecordToStream(record);
+        }
+
+        /// <inheritdoc/>
         public int CreateRecord(RecordData recordData)
         {
             this.validator.ValidateParameters(recordData);
-
             var record = new FileCabinetRecord
             {
                 Id = this.GenerateId(),
@@ -112,17 +148,27 @@ namespace FileCabinetApp.Services
         /// <inheritdoc/>
         public void EditRecord(int id, RecordData recordData)
         {
-            if (id < 0)
+            if (id < 1)
             {
-                throw new ArgumentException("Id can't be less zero");
+                throw new ArgumentException("Id can't be less one.");
             }
 
             if (!this.IsRecordExists(id))
             {
-                throw new ArgumentException($"#{id} record is not found");
+                throw new ArgumentException($"#{id} record is not found.");
             }
 
             this.validator.ValidateParameters(recordData);
+            var editedRecord = new FileCabinetRecord()
+            {
+                Id = id,
+                FirstName = recordData.FirstName,
+                LastName = recordData.LastName,
+                DateOfBirth = recordData.DateOfBirth,
+                Sex = recordData.Sex,
+                Height = recordData.Height,
+                Salary = recordData.Salary,
+            };
 
             int recordIndex = 0;
             using (BinaryReader binaryReader = new BinaryReader(this.fileStream, Encoding.Unicode, true))
@@ -136,17 +182,6 @@ namespace FileCabinetApp.Services
                     {
                         this.fileStream.Seek(-(sizeof(int) + (sizeof(byte) * 2)), SeekOrigin.Current);
                         var oldRecord = ReadRecordFromStream(binaryReader);
-
-                        var editedRecord = new FileCabinetRecord()
-                        {
-                            Id = oldRecord.Id,
-                            FirstName = recordData.FirstName,
-                            LastName = recordData.LastName,
-                            DateOfBirth = recordData.DateOfBirth,
-                            Sex = recordData.Sex,
-                            Height = recordData.Height,
-                            Salary = recordData.Salary,
-                        };
 
                         this.fileStream.Seek(RecordSize * recordIndex, SeekOrigin.Begin);
                         this.RemoveRecordFromDictionaries(oldRecord, this.fileStream.Position);

@@ -30,6 +30,15 @@ namespace FileCabinetApp.Services
             return id;
         }
 
+        public void CreateRecordWithId(int id, RecordData recordData)
+        {
+            Stopwatch stopWatch = new Stopwatch();
+            stopWatch.Start();
+            this.fileCabinetService.CreateRecordWithId(id, recordData);
+            stopWatch.Stop();
+            Console.WriteLine($"Insert method execution duration is {stopWatch.ElapsedTicks} ticks.");
+        }
+
         public void EditRecord(int id, RecordData recordData)
         {
             Stopwatch stopWatch = new Stopwatch();

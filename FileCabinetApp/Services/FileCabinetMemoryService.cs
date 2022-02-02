@@ -40,10 +40,45 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
+        public void CreateRecordWithId(int id, RecordData recordData)
+        {
+            if (id < 1)
+            {
+                throw new ArgumentException($"Id can't be less than one.");
+            }
+
+            if (this.IsRecordExists(id))
+            {
+                throw new ArgumentException($"Record with id {id} is already existing.");
+            }
+
+            this.validator.ValidateParameters(recordData);
+
+            if (id > this.lastId)
+            {
+                this.lastId = id;
+            }
+
+            var record = new FileCabinetRecord
+            {
+                Id = id,
+                FirstName = recordData.FirstName,
+                LastName = recordData.LastName,
+                DateOfBirth = recordData.DateOfBirth,
+                Sex = char.ToUpper(recordData.Sex),
+                Height = recordData.Height,
+                Salary = recordData.Salary,
+            };
+
+            this.records.Add(record);
+
+            this.AddRecordToDictionaries(record);
+        }
+
+        /// <inheritdoc/>
         public int CreateRecord(RecordData recordData)
         {
             this.validator.ValidateParameters(recordData);
-
             var record = new FileCabinetRecord
             {
                 Id = this.GenerateId(),
@@ -70,10 +105,10 @@ namespace FileCabinetApp.Services
                 throw new ArgumentException("Id can't be less zero");
             }
 
+            this.validator.ValidateParameters(recordData);
+
             FileCabinetRecord record = this.records.Find(rec => rec.Id == id)
                 ?? throw new ArgumentException($"#{id} record is not found");
-
-            this.validator.ValidateParameters(recordData);
 
             this.firstNameDictionary[record.FirstName].Remove(record);
             this.lastNameDictionary[record.LastName].Remove(record);

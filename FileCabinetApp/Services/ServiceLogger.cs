@@ -26,6 +26,28 @@ namespace FileCabinetApp.Services
             this.writer = new StreamWriter(File.Create(LoggerFile));
         }
 
+        public void CreateRecordWithId(int id, RecordData recordData)
+        {
+            this.Log($"Calling {nameof(this.CreateRecordWithId)}() with Id = '{id}', FirstName = '{recordData.FirstName}'," +
+                $"LastName = '{recordData.LastName}', " +
+                $"DateOfBirth = {recordData.DateOfBirth}, " +
+                $"Sex = '{recordData.Sex}', " +
+                $"Height = '{recordData.Height}', " +
+                $"Salary = '{recordData.Salary}'");
+            try
+            {
+                this.fileCabinetService.CreateRecordWithId(id, recordData);
+            }
+            catch (Exception ex)
+            {
+                this.Log($"{nameof(this.fileCabinetService.CreateRecord)}() finished with exception: " +
+                    $"Message - {ex.Message}");
+                throw;
+            }
+
+            this.Log($"{nameof(this.CreateRecordWithId)}() returned '{id}'");
+        }
+
         public int CreateRecord(RecordData recordData)
         {
             this.Log($"Calling {nameof(this.CreateRecord)}() with FirstName = '{recordData.FirstName}'," +

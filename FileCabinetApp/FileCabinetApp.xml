@@ -541,6 +541,9 @@
             <param name="fileStream"> Provides a stream for a service. </param>
             <param name="validator"> Validator for a service. </param>
         </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetFilesystemService.CreateRecordWithId(System.Int32,FileCabinetApp.Models.RecordData)">
+            <inheritdoc/>
+        </member>
         <member name="M:FileCabinetApp.Services.FileCabinetFilesystemService.CreateRecord(FileCabinetApp.Models.RecordData)">
             <inheritdoc/>
         </member>
@@ -587,6 +590,9 @@
             Initializes a new instance of the <see cref="T:FileCabinetApp.Services.FileCabinetMemoryService"/> class.
             </summary>
             <param name="validator"><see cref="T:FileCabinetApp.Validation.IRecordValidator"/>.</param>
+        </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.CreateRecordWithId(System.Int32,FileCabinetApp.Models.RecordData)">
+            <inheritdoc/>
         </member>
         <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.CreateRecord(FileCabinetApp.Models.RecordData)">
             <inheritdoc/>
@@ -669,6 +675,13 @@
             <summary>
             Interface to describe the file cabinet service.
             </summary>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.CreateRecordWithId(System.Int32,FileCabinetApp.Models.RecordData)">
+            <summary>
+            This method creates new FileCabinetRecord with given id and parameers.
+            </summary>
+            <param name="id"> id of a ne record. </param>
+            <param name="recordData"> data of a record. </param>
         </member>
         <member name="M:FileCabinetApp.IFileCabinetService.CreateRecord(FileCabinetApp.Models.RecordData)">
             <summary>

@@ -17,6 +17,13 @@ namespace FileCabinetApp
     public interface IFileCabinetService
     {
         /// <summary>
+        /// This method creates new FileCabinetRecord with given id and parameers.
+        /// </summary>
+        /// <param name="id"> id of a ne record. </param>
+        /// <param name="recordData"> data of a record. </param>
+        void CreateRecordWithId(int id, RecordData recordData);
+
+        /// <summary>
         /// This method creates new FileCabinetRecord with given <see cref="RecordData"/> class params.
         /// </summary>
         /// <param name="recordData"><see cref="RecordData"/> with params for FileCabinetRecord.</param>
