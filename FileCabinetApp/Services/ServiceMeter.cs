@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using FileCabinetApp.Entities;
@@ -20,6 +21,7 @@ namespace FileCabinetApp.Services
             this.fileCabinetService = fileCabinetService;
         }
 
+        /// <inheritdoc/>
         public int CreateRecord(RecordData recordData)
         {
             Stopwatch stopWatch = new Stopwatch();
@@ -30,6 +32,7 @@ namespace FileCabinetApp.Services
             return id;
         }
 
+        /// <inheritdoc/>
         public void CreateRecordWithId(int id, RecordData recordData)
         {
             Stopwatch stopWatch = new Stopwatch();
@@ -39,6 +42,18 @@ namespace FileCabinetApp.Services
             Console.WriteLine($"Insert method execution duration is {stopWatch.ElapsedTicks} ticks.");
         }
 
+        /// <inheritdoc/>
+        public IEnumerable<int> DeleteRecord(PropertyInfo propertyInfo, string propertyValue)
+        {
+            Stopwatch stopWatch = new Stopwatch();
+            stopWatch.Start();
+            var deletedRecordIds = this.fileCabinetService.DeleteRecord(propertyInfo, propertyValue);
+            stopWatch.Stop();
+            Console.WriteLine($"DeleteRecord method execution duration is {stopWatch.ElapsedTicks} ticks.");
+            return deletedRecordIds;
+        }
+
+        /// <inheritdoc/>
         public void EditRecord(int id, RecordData recordData)
         {
             Stopwatch stopWatch = new Stopwatch();
@@ -48,6 +63,7 @@ namespace FileCabinetApp.Services
             Console.WriteLine($"Edit method execution duration is {stopWatch.ElapsedTicks} ticks.");
         }
 
+        /// <inheritdoc/>
         public IEnumerable<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth)
         {
             Stopwatch stopWatch = new Stopwatch();
@@ -58,6 +74,7 @@ namespace FileCabinetApp.Services
             return iterator;
         }
 
+        /// <inheritdoc/>
         public IEnumerable<FileCabinetRecord> FindByFirstName(string firstname)
         {
             Stopwatch stopWatch = new Stopwatch();
@@ -68,6 +85,7 @@ namespace FileCabinetApp.Services
             return iterator;
         }
 
+        /// <inheritdoc/>
         public IEnumerable<FileCabinetRecord> FindByLastName(string lastname)
         {
             Stopwatch stopWatch = new Stopwatch();
@@ -78,6 +96,7 @@ namespace FileCabinetApp.Services
             return iterator;
         }
 
+        /// <inheritdoc/>
         public IEnumerable<FileCabinetRecord> GetRecords()
         {
             Stopwatch stopWatch = new Stopwatch();
@@ -88,6 +107,7 @@ namespace FileCabinetApp.Services
             return iterator;
         }
 
+        /// <inheritdoc/>
         public Tuple<int, int> GetStat()
         {
             Stopwatch stopWatch = new Stopwatch();
@@ -98,6 +118,7 @@ namespace FileCabinetApp.Services
             return stat;
         }
 
+        /// <inheritdoc/>
         public bool IsRecordExists(int id)
         {
             Stopwatch stopWatch = new Stopwatch();
@@ -108,6 +129,7 @@ namespace FileCabinetApp.Services
             return isExist;
         }
 
+        /// <inheritdoc/>
         public FileCabinetServiceSnapshot MakeSnapshot()
         {
             Stopwatch stopWatch = new Stopwatch();
@@ -118,6 +140,7 @@ namespace FileCabinetApp.Services
             return snapshot;
         }
 
+        /// <inheritdoc/>
         public void Purge()
         {
             Stopwatch stopWatch = new Stopwatch();
@@ -127,6 +150,7 @@ namespace FileCabinetApp.Services
             Console.WriteLine($"Purge method execution duration is {stopWatch.ElapsedTicks} ticks.");
         }
 
+        /// <inheritdoc/>
         public void RemoveRecord(int id)
         {
             Stopwatch stopWatch = new Stopwatch();
@@ -136,6 +160,7 @@ namespace FileCabinetApp.Services
             Console.WriteLine($"RemoveRecord method execution duration is {stopWatch.ElapsedTicks} ticks.");
         }
 
+        /// <inheritdoc/>
         public void Restore(FileCabinetServiceSnapshot snapshot)
         {
             Stopwatch stopWatch = new Stopwatch();

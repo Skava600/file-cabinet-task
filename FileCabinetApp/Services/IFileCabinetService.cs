@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using FileCabinetApp.Entities;
@@ -42,6 +43,14 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="id"> Id of removing record. </param>
         void RemoveRecord(int id);
+
+        /// <summary>
+        /// This method deletes all records with specified property value.
+        /// </summary>
+        /// <param name="propertyInfo"> Property info. </param>
+        /// <param name="propertyValue"> Property value. </param>
+        /// <returns> IDs of deleted records. </returns>
+        IEnumerable<int> DeleteRecord(PropertyInfo propertyInfo, string propertyValue);
 
         /// <summary>
         /// This method defragmentate data file from deleted records.

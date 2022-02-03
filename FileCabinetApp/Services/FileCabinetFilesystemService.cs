@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using FileCabinetApp.Entities;
@@ -35,6 +37,9 @@ namespace FileCabinetApp.Services
         private readonly Dictionary<string, List<long>> firstNameDictionary = new Dictionary<string, List<long>>(StringComparer.InvariantCultureIgnoreCase);
         private readonly Dictionary<string,  List<long>> lastNameDictionary = new Dictionary<string, List<long>>(StringComparer.InvariantCultureIgnoreCase);
         private readonly Dictionary<DateTime, List<long>> dateOfBirthDictionary = new Dictionary<DateTime, List<long>>();
+        private readonly Dictionary<char, List<long>> sexDictionary = new Dictionary<char, List<long>>();
+        private readonly Dictionary<short, List<long>> heightDictionary = new Dictionary<short, List<long>>();
+        private readonly Dictionary<decimal, List<long>> salaryDictionary = new Dictionary<decimal, List<long>>();
 
         private int lastId;
 
@@ -70,7 +75,7 @@ namespace FileCabinetApp.Services
             byte b = binaryReader.ReadByte();
             if (b == 1)
             {
-                throw new ArgumentException("This record is deleted.");
+                throw new ArgumentException("This record is deleted");
             }
 
             return new FileCabinetRecord
@@ -90,12 +95,12 @@ namespace FileCabinetApp.Services
         {
             if (id < 1)
             {
-                throw new ArgumentException($"Id can't be less than one.");
+                throw new ArgumentException($"Id can't be less than one");
             }
 
             if (this.IsRecordExists(id))
             {
-                throw new ArgumentException($"Record with id {id} is already existing.");
+                throw new ArgumentException($"Record with id {id} is already existing");
             }
 
             this.validator.ValidateParameters(recordData);
@@ -150,12 +155,12 @@ namespace FileCabinetApp.Services
         {
             if (id < 1)
             {
-                throw new ArgumentException("Id can't be less one.");
+                throw new ArgumentException("Id can't be less one");
             }
 
             if (!this.IsRecordExists(id))
             {
-                throw new ArgumentException($"#{id} record is not found.");
+                throw new ArgumentException($"#{id} record is not found");
             }
 
             this.validator.ValidateParameters(recordData);
@@ -203,7 +208,7 @@ namespace FileCabinetApp.Services
             int recordIndex = this.GetIndexOf(id);
             if (recordIndex == -1)
             {
-                throw new ArgumentException($"#{id} record is not found.");
+                throw new ArgumentException($"#{id} record is not found");
             }
 
             long recordOffset = RecordSize * recordIndex;
@@ -217,6 +222,45 @@ namespace FileCabinetApp.Services
             this.fileStream.WriteByte(1);
 
             this.fileStream.Seek(0, SeekOrigin.End);
+        }
+
+        /// <inheritdoc/>
+        public IEnumerable<int> DeleteRecord(PropertyInfo propertyInfo, string propertyValue)
+        {
+            var converter = TypeDescriptor.GetConverter(propertyInfo.PropertyType);
+            var value = converter.ConvertFromString(propertyValue);
+            if (value == null)
+            {
+                throw new ArgumentException($"Wrong property value: {propertyValue}");
+            }
+
+            IEnumerable<FileCabinetRecord> records;
+            switch (propertyInfo.Name)
+            {
+                case nameof(FileCabinetRecord.Id):
+                    this.RemoveRecord((int)value);
+                    return new int[] { (int)value };
+                case nameof(FileCabinetRecord.FirstName):
+                    records = this.FindByFirstName((string)value);
+                    break;
+                case nameof(FileCabinetRecord.LastName):
+                    records = this.FindByLastName((string)value);
+                    break;
+                case nameof(FileCabinetRecord.DateOfBirth):
+                    records = this.FindByDateOfBirth(propertyValue);
+                    break;
+                default:
+                    throw new ArgumentException("This property not supported yet in file storage");
+            }
+
+            List<int> deletedRecordsIds = new List<int>();
+            foreach (var record in records)
+            {
+                this.RemoveRecord(record.Id);
+                deletedRecordsIds.Add(record.Id);
+            }
+
+            return deletedRecordsIds;
         }
 
         /// <inheritdoc/>
@@ -262,7 +306,7 @@ namespace FileCabinetApp.Services
                 }
                 catch (KeyNotFoundException)
                 {
-                    throw new ArgumentException($"Records with {firstname} first name not exist.");
+                    throw new ArgumentException($"Records with {firstname} first name not exist");
                 }
             }
 
@@ -314,7 +358,7 @@ namespace FileCabinetApp.Services
                 }
                 catch (KeyNotFoundException)
                 {
-                    throw new ArgumentException($"Records with {dateOfBirth} date of birth not exist.");
+                    throw new ArgumentException($"Records with {dateOfBirth} date of birth not exist");
                 }
             }
 
@@ -441,7 +485,7 @@ namespace FileCabinetApp.Services
                 }
             }
 
-            throw new ArgumentException("All ids are occupied.");
+            throw new ArgumentException("All ids are occupied");
         }
 
         private int GetIndexOf(int id)
@@ -486,31 +530,60 @@ namespace FileCabinetApp.Services
                 this.dateOfBirthDictionary.Add(record.DateOfBirth, new List<long>());
             }
 
+            if (!this.sexDictionary.ContainsKey(record.Sex))
+            {
+                this.sexDictionary.Add(record.Sex, new List<long>());
+            }
+
+            if (!this.heightDictionary.ContainsKey(record.Height))
+            {
+                this.heightDictionary.Add(record.Height, new List<long>());
+            }
+
+            if (!this.salaryDictionary.ContainsKey(record.Salary))
+            {
+                this.salaryDictionary.Add(record.Salary, new List<long>());
+            }
+
             this.firstNameDictionary[record.FirstName].Add(offset);
             this.lastNameDictionary[record.LastName].Add(offset);
             this.dateOfBirthDictionary[record.DateOfBirth].Add(offset);
+            this.sexDictionary[record.Sex].Add(offset);
+            this.heightDictionary[record.Height].Add(offset);
+            this.salaryDictionary[record.Salary].Add(offset);
         }
 
         private void RemoveRecordFromDictionaries(FileCabinetRecord record, long offset)
         {
-            if (!this.firstNameDictionary.ContainsKey(record.FirstName))
+            if (this.firstNameDictionary.ContainsKey(record.FirstName))
             {
-                return;
+                this.firstNameDictionary[record.FirstName].Remove(offset);
             }
 
-            if (!this.lastNameDictionary.ContainsKey(record.LastName))
+            if (this.lastNameDictionary.ContainsKey(record.LastName))
             {
-                return;
+                this.lastNameDictionary[record.LastName].Remove(offset);
             }
 
-            if (!this.dateOfBirthDictionary.ContainsKey(record.DateOfBirth))
+            if (this.dateOfBirthDictionary.ContainsKey(record.DateOfBirth))
             {
-                return;
+                this.dateOfBirthDictionary[record.DateOfBirth].Remove(offset);
             }
 
-            this.firstNameDictionary[record.FirstName].Remove(offset);
-            this.lastNameDictionary[record.LastName].Remove(offset);
-            this.dateOfBirthDictionary[record.DateOfBirth].Remove(offset);
+            if (this.sexDictionary.ContainsKey(record.Sex))
+            {
+                this.sexDictionary[record.Sex].Remove(offset);
+            }
+
+            if (this.heightDictionary.ContainsKey(record.Height))
+            {
+                this.heightDictionary[record.Height].Remove(offset);
+            }
+
+            if (this.salaryDictionary.ContainsKey(record.Salary))
+            {
+                this.salaryDictionary[record.Salary].Remove(offset);
+            }
         }
     }
 }
