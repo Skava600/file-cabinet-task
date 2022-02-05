@@ -41,7 +41,7 @@ namespace FileCabinetApp.CommandHandlers
             Console.WriteLine($"There is no '{command}' command.");
             Console.WriteLine();
 
-            var commands = new string[] { "create", "delete", "find", "insert", "remove", "purge", "edit", "exit", "export", "import", "help", "list", "stat", "update" };
+            var commands = new string[] { "create", "delete", "find", "insert", "purge", "exit", "export", "import", "help", "list", "stat", "update" };
             List<string> similarCommands = new List<string>();
 
             foreach (var commandLine in commands)
