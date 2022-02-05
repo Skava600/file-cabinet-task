@@ -83,25 +83,12 @@ namespace FileCabinetApp
         FileCabinetServiceSnapshot MakeSnapshot();
 
         /// <summary>
-        /// Finds the specified records by firstname.
+        /// This method finds the specified records with property and value.
         /// </summary>
-        /// <param name="firstname"> First Name of record. </param>
-        /// <returns> All records with specified first name. </returns>
-        IEnumerable<FileCabinetRecord> FindByFirstName(string firstname);
-
-        /// <summary>
-        /// Finds the specified records by lastname.
-        /// </summary>
-        /// <param name="lastname"> Last Name of record. </param>
-        /// <returns> All records with specified last name. </returns>
-        IEnumerable<FileCabinetRecord> FindByLastName(string lastname);
-
-        /// <summary>
-        /// Finds the specified records by date of birth.
-        /// </summary>
-        /// <param name="dateOfBirth"> Date of birth of record. </param>
-        /// <returns> All records with specified date of birth. </returns>
-        IEnumerable<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth);
+        /// <param name="propertyInfo"> Property info. </param>
+        /// <param name="propertyValue"> Vakue of the property. </param>
+        /// <returns> Found records. </returns>
+        IEnumerable<FileCabinetRecord> FindByProperty(PropertyInfo propertyInfo, string propertyValue);
 
         /// <summary>
         /// Restores records from snapshot.

@@ -161,34 +161,10 @@ namespace FileCabinetApp.Services
             }
 
             IEnumerable<FileCabinetRecord> records;
-            switch (propertyInfo.Name)
-            {
-                case nameof(FileCabinetRecord.Id):
-                    this.RemoveRecord((int)value);
-                    return new int[] { (int)value };
-                case nameof(FileCabinetRecord.FirstName):
-                    records = this.FindByFirstName((string)value);
-                    break;
-                case nameof(FileCabinetRecord.LastName):
-                    records = this.FindByLastName((string)value);
-                    break;
-                case nameof(FileCabinetRecord.DateOfBirth):
-                    records = this.FindByDateOfBirth(propertyValue);
-                    break;
-                case nameof(FileCabinetRecord.Sex):
-                    records = this.records.FindAll(record => record.Sex.Equals(char.ToUpper((char)value)));
-                    break;
-                case nameof(FileCabinetRecord.Height):
-                    records = this.records.FindAll(record => record.Height == (short)value);
-                    break;
-                case nameof(FileCabinetRecord.Salary):
-                    records = this.records.FindAll(record => record.Salary == (decimal)value);
-                    break;
-                default:
-                    throw new ArgumentException("This property not supported yet.");
-            }
 
-            List<int> deletedRecordsIds= new List<int>();
+            records = this.FindByProperty(propertyInfo, propertyValue);
+
+            List<int> deletedRecordsIds = new List<int>();
             foreach (var record in records)
             {
                 this.records.Remove(record);
@@ -224,47 +200,53 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
-        public IEnumerable<FileCabinetRecord> FindByFirstName(string firstname)
+        public IEnumerable<FileCabinetRecord> FindByProperty(PropertyInfo propertyInfo, string propertyValue)
         {
+            IEnumerable<FileCabinetRecord> records;
             try
             {
-                return this.firstNameDictionary[firstname].AsReadOnly();
+                switch (propertyInfo.Name)
+                {
+                    case nameof(FileCabinetRecord.Id):
+                        int id = int.Parse(propertyValue);
+                        records = this.records.Where(rec => rec.Id == id);
+                        break;
+                    case nameof(FileCabinetRecord.FirstName):
+                        records = this.firstNameDictionary[propertyValue];
+                        break;
+                    case nameof(FileCabinetRecord.LastName):
+                        records = this.lastNameDictionary[propertyValue];
+                        break;
+                    case nameof(FileCabinetRecord.DateOfBirth):
+                        var dob = DateTime.Parse(propertyValue, CultureInfo.InvariantCulture);
+                        records = this.dateOfBirthDictionary[dob];
+                        break;
+                    case nameof(FileCabinetRecord.Sex):
+                        var sex = char.ToUpper(char.Parse(propertyValue));
+                        records = this.sexDictionary[sex];
+                        break;
+                    case nameof(FileCabinetRecord.Height):
+                        var height = short.Parse(propertyValue);
+                        records = this.heightDictionary[height];
+                        break;
+                    case nameof(FileCabinetRecord.Salary):
+                        var salary = decimal.Parse(propertyValue);
+                        records = this.salaryDictionary[salary];
+                        break;
+                    default:
+                        throw new ArgumentException($"There is no such property as : {propertyInfo.Name} or it is not supported");
+                }
             }
             catch (KeyNotFoundException)
             {
-                throw new ArgumentException($"Records with {firstname} first name not exist.");
-            }
-        }
-
-        /// <inheritdoc/>
-        public IEnumerable<FileCabinetRecord> FindByLastName(string lastName)
-        {
-            try
-            {
-                return this.lastNameDictionary[lastName].AsReadOnly();
-            }
-            catch (KeyNotFoundException)
-            {
-                throw new ArgumentException($"Records with {lastName} last name not exist.");
-            }
-        }
-
-        /// <inheritdoc/>
-        public IEnumerable<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth)
-        {
-            try
-            {
-                DateTime dob = DateTime.Parse(dateOfBirth, CultureInfo.InvariantCulture);
-                return this.dateOfBirthDictionary[dob].AsReadOnly();
-            }
-            catch (KeyNotFoundException)
-            {
-                throw new ArgumentException($"Records with {dateOfBirth} date of birth not exist.");
+                throw new ArgumentException($"Records with {propertyValue} {propertyInfo.Name} not exist");
             }
             catch (FormatException)
             {
-                throw new ArgumentException($"{dateOfBirth} is invalid date format.");
+                throw new ArgumentException($"{propertyValue} is invalid {propertyInfo.PropertyType} format");
             }
+
+            return records;
         }
 
         /// <inheritdoc/>

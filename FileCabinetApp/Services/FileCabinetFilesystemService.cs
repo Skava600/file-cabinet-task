@@ -235,23 +235,8 @@ namespace FileCabinetApp.Services
             }
 
             IEnumerable<FileCabinetRecord> records;
-            switch (propertyInfo.Name)
-            {
-                case nameof(FileCabinetRecord.Id):
-                    this.RemoveRecord((int)value);
-                    return new int[] { (int)value };
-                case nameof(FileCabinetRecord.FirstName):
-                    records = this.FindByFirstName((string)value);
-                    break;
-                case nameof(FileCabinetRecord.LastName):
-                    records = this.FindByLastName((string)value);
-                    break;
-                case nameof(FileCabinetRecord.DateOfBirth):
-                    records = this.FindByDateOfBirth(propertyValue);
-                    break;
-                default:
-                    throw new ArgumentException("This property not supported yet in file storage");
-            }
+
+            records = this.FindByProperty(propertyInfo, propertyValue);
 
             List<int> deletedRecordsIds = new List<int>();
             foreach (var record in records)
@@ -294,72 +279,60 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
-        public IEnumerable<FileCabinetRecord> FindByFirstName(string firstname)
+        public IEnumerable<FileCabinetRecord> FindByProperty(PropertyInfo propertyInfo, string propertyValue)
         {
             IEnumerable<FileCabinetRecord> records;
-            using (var binaryReader = new BinaryReader(this.fileStream, Encoding.Unicode, true))
-            {
-                try
-                {
-                    var recordsOffsets = this.firstNameDictionary[firstname];
-                    records = new RecordCollection(this.fileStream, recordsOffsets);
-                }
-                catch (KeyNotFoundException)
-                {
-                    throw new ArgumentException($"Records with {firstname} first name not exist");
-                }
-            }
-
-            return records;
-        }
-
-        /// <inheritdoc/>
-        public IEnumerable<FileCabinetRecord> FindByLastName(string lastname)
-        {
-            IEnumerable<FileCabinetRecord> records;
-
-            using (var binaryReader = new BinaryReader(this.fileStream, Encoding.Unicode, true))
-            {
-                try
-                {
-                    var recordsOffsets = this.lastNameDictionary[lastname];
-                    records = new RecordCollection(this.fileStream, recordsOffsets);
-                }
-                catch (KeyNotFoundException)
-                {
-                    throw new ArgumentException($"Records with {lastname} last name not exist.");
-                }
-            }
-
-            return records;
-        }
-
-        /// <inheritdoc/>
-        public IEnumerable<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth)
-        {
-            DateTime dob;
+            List<long> recordsOffsets;
             try
             {
-                dob = DateTime.Parse(dateOfBirth, CultureInfo.InvariantCulture);
+                switch (propertyInfo.Name)
+                {
+                    case nameof(FileCabinetRecord.Id):
+                        var id = int.Parse(propertyValue);
+                        int index = this.GetIndexOf(id);
+                        if (index == -1)
+                        {
+                            throw new ArgumentException($"#{id} record is not found");
+                        }
+
+                        long offset = index * RecordSize;
+                        recordsOffsets = new List<long>() { offset };
+                        break;
+                    case nameof(FileCabinetRecord.FirstName):
+                        recordsOffsets = this.firstNameDictionary[propertyValue];
+                        break;
+                    case nameof(FileCabinetRecord.LastName):
+                        recordsOffsets = this.lastNameDictionary[propertyValue];
+                        break;
+                    case nameof(FileCabinetRecord.DateOfBirth):
+                        var dob = DateTime.Parse(propertyValue, CultureInfo.InvariantCulture);
+                        recordsOffsets = this.dateOfBirthDictionary[dob];
+                        break;
+                    case nameof(FileCabinetRecord.Sex):
+                        var sex = char.ToUpper(char.Parse(propertyValue));
+                        recordsOffsets = this.sexDictionary[sex];
+                        break;
+                    case nameof(FileCabinetRecord.Height):
+                        var height = short.Parse(propertyValue);
+                        recordsOffsets = this.heightDictionary[height];
+                        break;
+                    case nameof(FileCabinetRecord.Salary):
+                        var salary = decimal.Parse(propertyValue);
+                        recordsOffsets = this.salaryDictionary[salary];
+                        break;
+                    default:
+                        throw new ArgumentException($"There is no such property as : {propertyInfo.Name} or it is not supported");
+                }
+
+                records = new RecordCollection(this.fileStream, recordsOffsets);
+            }
+            catch (KeyNotFoundException)
+            {
+                throw new ArgumentException($"Records with {propertyValue} {propertyInfo.Name} not exist");
             }
             catch (FormatException)
             {
-                throw new ArgumentException($"{dateOfBirth} is invalid date format.");
-            }
-
-            IEnumerable<FileCabinetRecord> records;
-
-            using (var binaryReader = new BinaryReader(this.fileStream, Encoding.Unicode, true))
-            {
-                try
-                {
-                    var recordsOffsets = this.dateOfBirthDictionary[dob];
-                    records = new RecordCollection(this.fileStream, recordsOffsets);
-                }
-                catch (KeyNotFoundException)
-                {
-                    throw new ArgumentException($"Records with {dateOfBirth} date of birth not exist");
-                }
+                throw new ArgumentException($"{propertyValue} is invalid {propertyInfo.PropertyType} format");
             }
 
             return records;

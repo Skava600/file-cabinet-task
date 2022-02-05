@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using FileCabinetApp.Entities;
@@ -51,43 +52,28 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
                 if (inputs.Length < 2)
                 {
                     Console.WriteLine($"The '{parameters}' isn't valid command parameters. " +
-                        $"Should be name of property and value through white space.");
+                        $"Should be name of property and value through white space");
                     return;
                 }
 
                 const int nameIndex = 0;
                 string propertyName = inputs[nameIndex];
+                PropertyInfo[] fileCabinetRecordProperties = typeof(FileCabinetRecord).GetProperties();
+                var propertyInfo = fileCabinetRecordProperties.FirstOrDefault(prop => prop.Name.Equals(propertyName.Trim(), StringComparison.InvariantCultureIgnoreCase));
+
+                if (propertyInfo == null)
+                {
+                    throw new ArgumentException($"There is no such property as {propertyName}");
+                }
 
                 const int valueIndex = 1;
                 string propertyValue = inputs[valueIndex].Trim('"');
 
-                if (propertyName.Equals(nameof(FileCabinetRecord.FirstName), StringComparison.InvariantCultureIgnoreCase))
-                {
-                    records = this.FileCabinetService.FindByFirstName(propertyValue);
-                }
-                else if (propertyName.Equals(nameof(FileCabinetRecord.LastName), StringComparison.InvariantCultureIgnoreCase))
-                {
-                    records = this.FileCabinetService.FindByLastName(propertyValue);
-                }
-                else if (propertyName.Equals(nameof(FileCabinetRecord.DateOfBirth), StringComparison.InvariantCultureIgnoreCase))
-                {
-                    records = this.FileCabinetService.FindByDateOfBirth(propertyValue);
-                }
-                else
-                {
-                    throw new InvalidOperationException($"The {propertyName} isn't valid command searching property. Only " +
-                        $"'{nameof(FileCabinetRecord.FirstName)}', '{nameof(FileCabinetRecord.LastName)}' and " +
-                        $"'{nameof(FileCabinetRecord.DateOfBirth)}' allowed.");
-                }
+                records = this.FileCabinetService.FindByProperty(propertyInfo, propertyValue);
             }
             catch (ArgumentException ex)
             {
-                Console.WriteLine(ex.Message);
-                return;
-            }
-            catch (InvalidOperationException ex)
-            {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine($"Find command failed: {ex.Message}.");
                 return;
             }
 

@@ -85,6 +85,7 @@ namespace FileCabinetApp
             var exportCommandHandler = new ExportCommandHandler(fileCabinetService);
             var insertCommandHandler = new InsertCommandHandler(fileCabinetService);
             var deleteCommandHandler = new DeleteCommandHandler(fileCabinetService);
+            var updateCommandHandler = new UpdateCommandHandler(fileCabinetService);
 
             Action<bool> exitApp = x => isRunning = x;
             var exitCommandHandler = new ExitCommandHandler(exitApp);
@@ -101,6 +102,7 @@ namespace FileCabinetApp
             exportCommandHandler.SetNext(exitCommandHandler);
             exitCommandHandler.SetNext(insertCommandHandler);
             insertCommandHandler.SetNext(deleteCommandHandler);
+            deleteCommandHandler.SetNext(updateCommandHandler);
 
             return helpCommandHandler;
         }

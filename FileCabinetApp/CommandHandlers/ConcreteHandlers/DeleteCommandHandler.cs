@@ -64,7 +64,6 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
                 }
 
                 Console.WriteLine("} are deleted.");
-
             }
             catch (Exception ex)
             {

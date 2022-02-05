@@ -559,13 +559,7 @@
         <member name="M:FileCabinetApp.Services.FileCabinetFilesystemService.Purge">
             <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetFilesystemService.FindByFirstName(System.String)">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetFilesystemService.FindByLastName(System.String)">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetFilesystemService.FindByDateOfBirth(System.String)">
+        <member name="M:FileCabinetApp.Services.FileCabinetFilesystemService.FindByProperty(System.Reflection.PropertyInfo,System.String)">
             <inheritdoc/>
         </member>
         <member name="M:FileCabinetApp.Services.FileCabinetFilesystemService.GetRecords">
@@ -621,13 +615,7 @@
         <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.GetStat">
             <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.FindByFirstName(System.String)">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.FindByLastName(System.String)">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.FindByDateOfBirth(System.String)">
+        <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.FindByProperty(System.Reflection.PropertyInfo,System.String)">
             <inheritdoc/>
         </member>
         <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.MakeSnapshot">
@@ -686,13 +674,7 @@
         <member name="M:FileCabinetApp.Services.ServiceLogger.EditRecord(System.Int32,FileCabinetApp.Models.RecordData)">
             <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.Services.ServiceLogger.FindByDateOfBirth(System.String)">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.Services.ServiceLogger.FindByFirstName(System.String)">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.Services.ServiceLogger.FindByLastName(System.String)">
+        <member name="M:FileCabinetApp.Services.ServiceLogger.FindByProperty(System.Reflection.PropertyInfo,System.String)">
             <inheritdoc/>
         </member>
         <member name="M:FileCabinetApp.Services.ServiceLogger.GetRecords">
@@ -734,13 +716,7 @@
         <member name="M:FileCabinetApp.Services.ServiceMeter.EditRecord(System.Int32,FileCabinetApp.Models.RecordData)">
             <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.Services.ServiceMeter.FindByDateOfBirth(System.String)">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.Services.ServiceMeter.FindByFirstName(System.String)">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.Services.ServiceMeter.FindByLastName(System.String)">
+        <member name="M:FileCabinetApp.Services.ServiceMeter.FindByProperty(System.Reflection.PropertyInfo,System.String)">
             <inheritdoc/>
         </member>
         <member name="M:FileCabinetApp.Services.ServiceMeter.GetRecords">
@@ -834,26 +810,13 @@
             </summary>
             <returns> <see cref="T:FileCabinetApp.Services.FileCabinetServiceSnapshot"/>.</returns>
         </member>
-        <member name="M:FileCabinetApp.IFileCabinetService.FindByFirstName(System.String)">
+        <member name="M:FileCabinetApp.IFileCabinetService.FindByProperty(System.Reflection.PropertyInfo,System.String)">
             <summary>
-            Finds the specified records by firstname.
+            This method finds the specified records with property and value.
             </summary>
-            <param name="firstname"> First Name of record. </param>
-            <returns> All records with specified first name. </returns>
-        </member>
-        <member name="M:FileCabinetApp.IFileCabinetService.FindByLastName(System.String)">
-            <summary>
-            Finds the specified records by lastname.
-            </summary>
-            <param name="lastname"> Last Name of record. </param>
-            <returns> All records with specified last name. </returns>
-        </member>
-        <member name="M:FileCabinetApp.IFileCabinetService.FindByDateOfBirth(System.String)">
-            <summary>
-            Finds the specified records by date of birth.
-            </summary>
-            <param name="dateOfBirth"> Date of birth of record. </param>
-            <returns> All records with specified date of birth. </returns>
+            <param name="propertyInfo"> Property info. </param>
+            <param name="propertyValue"> Vakue of the property. </param>
+            <returns> Found records. </returns>
         </member>
         <member name="M:FileCabinetApp.IFileCabinetService.Restore(FileCabinetApp.Services.FileCabinetServiceSnapshot)">
             <summary>

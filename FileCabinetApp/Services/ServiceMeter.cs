@@ -64,35 +64,13 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
-        public IEnumerable<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth)
+        public IEnumerable<FileCabinetRecord> FindByProperty(PropertyInfo propertyInfo, string propertyValue)
         {
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
-            var iterator = this.fileCabinetService.FindByDateOfBirth(dateOfBirth);
+            var iterator = this.fileCabinetService.FindByProperty(propertyInfo, propertyValue);
             stopWatch.Stop();
-            Console.WriteLine($"FindByDateOfBirth method execution duration is {stopWatch.ElapsedTicks} ticks.");
-            return iterator;
-        }
-
-        /// <inheritdoc/>
-        public IEnumerable<FileCabinetRecord> FindByFirstName(string firstname)
-        {
-            Stopwatch stopWatch = new Stopwatch();
-            stopWatch.Start();
-            var iterator = this.fileCabinetService.FindByFirstName(firstname);
-            stopWatch.Stop();
-            Console.WriteLine($"FindByFirstName method execution duration is {stopWatch.ElapsedTicks} ticks.");
-            return iterator;
-        }
-
-        /// <inheritdoc/>
-        public IEnumerable<FileCabinetRecord> FindByLastName(string lastname)
-        {
-            Stopwatch stopWatch = new Stopwatch();
-            stopWatch.Start();
-            var iterator = this.fileCabinetService.FindByLastName(lastname);
-            stopWatch.Stop();
-            Console.WriteLine($"FindByLastName method execution duration is {stopWatch.ElapsedTicks} ticks.");
+            Console.WriteLine($"FindByProperty method execution duration is {stopWatch.ElapsedTicks} ticks.");
             return iterator;
         }
 
