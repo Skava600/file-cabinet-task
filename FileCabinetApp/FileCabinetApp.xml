@@ -195,6 +195,15 @@
         <member name="M:FileCabinetApp.CommandHandlers.ConcreteHandlers.StatCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
             <inheritdoc/>
         </member>
+        <member name="M:FileCabinetApp.CommandHandlers.ConcreteHandlers.UpdateCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.ConcreteHandlers.UpdateCommandHandler"/> class.
+            </summary>
+            <param name="fileCabinetService"> File cabinet service. </param>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.ConcreteHandlers.UpdateCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <inheritdoc/>
+        </member>
         <member name="T:FileCabinetApp.CommandHandlers.ICommandHandler">
             <summary>
             Command Handler interface.

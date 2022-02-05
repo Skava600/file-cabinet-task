@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FileCabinetApp.Utils.CommandHelper;
 
 namespace FileCabinetApp.CommandHandlers
 {
@@ -39,6 +40,32 @@ namespace FileCabinetApp.CommandHandlers
         {
             Console.WriteLine($"There is no '{command}' command.");
             Console.WriteLine();
+
+            var commands = new string[] { "create", "delete", "find", "insert", "remove", "purge", "edit", "exit", "export", "import", "help", "list", "stat", "update" };
+            List<string> similarCommands = new List<string>();
+
+            foreach (var commandLine in commands)
+            {
+                double distance = LevenshteinDistance.Calculate(command, commandLine);
+                double similarityMeasure = 1.0 - (distance / Math.Max(command.Length, commandLine.Length));
+                if (similarityMeasure >= 0.5)
+                {
+                    similarCommands.Add(commandLine);
+                }
+            }
+
+            if (similarCommands.Count == 1)
+            {
+                Console.WriteLine($"The most similar commands is {similarCommands[0]}");
+            }
+            else
+            {
+                Console.WriteLine($"The most similar commands are");
+                foreach (var commandLine in similarCommands)
+                {
+                    Console.WriteLine($"\t\t{commandLine}");
+                }
+            }
         }
     }
 }
