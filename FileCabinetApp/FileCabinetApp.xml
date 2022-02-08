@@ -195,6 +195,15 @@
         <member name="M:FileCabinetApp.CommandHandlers.ConcreteHandlers.StatCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
             <inheritdoc/>
         </member>
+        <member name="M:FileCabinetApp.CommandHandlers.ConcreteHandlers.UpdateCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.ConcreteHandlers.UpdateCommandHandler"/> class.
+            </summary>
+            <param name="fileCabinetService"> File cabinet service. </param>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.ConcreteHandlers.UpdateCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <inheritdoc/>
+        </member>
         <member name="T:FileCabinetApp.CommandHandlers.ICommandHandler">
             <summary>
             Command Handler interface.
@@ -541,6 +550,9 @@
             <param name="fileStream"> Provides a stream for a service. </param>
             <param name="validator"> Validator for a service. </param>
         </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetFilesystemService.CreateRecordWithId(System.Int32,FileCabinetApp.Models.RecordData)">
+            <inheritdoc/>
+        </member>
         <member name="M:FileCabinetApp.Services.FileCabinetFilesystemService.CreateRecord(FileCabinetApp.Models.RecordData)">
             <inheritdoc/>
         </member>
@@ -550,16 +562,13 @@
         <member name="M:FileCabinetApp.Services.FileCabinetFilesystemService.RemoveRecord(System.Int32)">
             <inheritdoc/>
         </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetFilesystemService.DeleteRecord(System.Reflection.PropertyInfo,System.String)">
+            <inheritdoc/>
+        </member>
         <member name="M:FileCabinetApp.Services.FileCabinetFilesystemService.Purge">
             <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetFilesystemService.FindByFirstName(System.String)">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetFilesystemService.FindByLastName(System.String)">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetFilesystemService.FindByDateOfBirth(System.String)">
+        <member name="M:FileCabinetApp.Services.FileCabinetFilesystemService.FindByProperty(System.Reflection.PropertyInfo,System.String)">
             <inheritdoc/>
         </member>
         <member name="M:FileCabinetApp.Services.FileCabinetFilesystemService.GetRecords">
@@ -588,6 +597,9 @@
             </summary>
             <param name="validator"><see cref="T:FileCabinetApp.Validation.IRecordValidator"/>.</param>
         </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.CreateRecordWithId(System.Int32,FileCabinetApp.Models.RecordData)">
+            <inheritdoc/>
+        </member>
         <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.CreateRecord(FileCabinetApp.Models.RecordData)">
             <inheritdoc/>
         </member>
@@ -595,6 +607,9 @@
             <inheritdoc/>
         </member>
         <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.RemoveRecord(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.DeleteRecord(System.Reflection.PropertyInfo,System.String)">
             <inheritdoc/>
         </member>
         <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.Purge">
@@ -609,13 +624,7 @@
         <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.GetStat">
             <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.FindByFirstName(System.String)">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.FindByLastName(System.String)">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.FindByDateOfBirth(System.String)">
+        <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.FindByProperty(System.Reflection.PropertyInfo,System.String)">
             <inheritdoc/>
         </member>
         <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.MakeSnapshot">
@@ -665,10 +674,92 @@
             </summary>
             <param name="streamReader"> Stream Reader. </param>
         </member>
+        <member name="M:FileCabinetApp.Services.ServiceLogger.CreateRecordWithId(System.Int32,FileCabinetApp.Models.RecordData)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Services.ServiceLogger.CreateRecord(FileCabinetApp.Models.RecordData)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Services.ServiceLogger.EditRecord(System.Int32,FileCabinetApp.Models.RecordData)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Services.ServiceLogger.FindByProperty(System.Reflection.PropertyInfo,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Services.ServiceLogger.GetRecords">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Services.ServiceLogger.GetStat">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Services.ServiceLogger.IsRecordExists(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Services.ServiceLogger.MakeSnapshot">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Services.ServiceLogger.Purge">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Services.ServiceLogger.RemoveRecord(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Services.ServiceLogger.DeleteRecord(System.Reflection.PropertyInfo,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Services.ServiceLogger.Restore(FileCabinetApp.Services.FileCabinetServiceSnapshot)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Services.ServiceLogger.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Services.ServiceMeter.CreateRecord(FileCabinetApp.Models.RecordData)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Services.ServiceMeter.CreateRecordWithId(System.Int32,FileCabinetApp.Models.RecordData)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Services.ServiceMeter.DeleteRecord(System.Reflection.PropertyInfo,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Services.ServiceMeter.EditRecord(System.Int32,FileCabinetApp.Models.RecordData)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Services.ServiceMeter.FindByProperty(System.Reflection.PropertyInfo,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Services.ServiceMeter.GetRecords">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Services.ServiceMeter.GetStat">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Services.ServiceMeter.IsRecordExists(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Services.ServiceMeter.MakeSnapshot">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Services.ServiceMeter.Purge">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Services.ServiceMeter.RemoveRecord(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Services.ServiceMeter.Restore(FileCabinetApp.Services.FileCabinetServiceSnapshot)">
+            <inheritdoc/>
+        </member>
         <member name="T:FileCabinetApp.IFileCabinetService">
             <summary>
             Interface to describe the file cabinet service.
             </summary>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.CreateRecordWithId(System.Int32,FileCabinetApp.Models.RecordData)">
+            <summary>
+            This method creates new FileCabinetRecord with given id and parameers.
+            </summary>
+            <param name="id"> id of a ne record. </param>
+            <param name="recordData"> data of a record. </param>
         </member>
         <member name="M:FileCabinetApp.IFileCabinetService.CreateRecord(FileCabinetApp.Models.RecordData)">
             <summary>
@@ -689,6 +780,14 @@
             This method removes FileCabinetRecord from service with given id.
             </summary>
             <param name="id"> Id of removing record. </param>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.DeleteRecord(System.Reflection.PropertyInfo,System.String)">
+            <summary>
+            This method deletes all records with specified property value.
+            </summary>
+            <param name="propertyInfo"> Property info. </param>
+            <param name="propertyValue"> Property value. </param>
+            <returns> IDs of deleted records. </returns>
         </member>
         <member name="M:FileCabinetApp.IFileCabinetService.Purge">
             <summary>
@@ -720,26 +819,13 @@
             </summary>
             <returns> <see cref="T:FileCabinetApp.Services.FileCabinetServiceSnapshot"/>.</returns>
         </member>
-        <member name="M:FileCabinetApp.IFileCabinetService.FindByFirstName(System.String)">
+        <member name="M:FileCabinetApp.IFileCabinetService.FindByProperty(System.Reflection.PropertyInfo,System.String)">
             <summary>
-            Finds the specified records by firstname.
+            This method finds the specified records with property and value.
             </summary>
-            <param name="firstname"> First Name of record. </param>
-            <returns> All records with specified first name. </returns>
-        </member>
-        <member name="M:FileCabinetApp.IFileCabinetService.FindByLastName(System.String)">
-            <summary>
-            Finds the specified records by lastname.
-            </summary>
-            <param name="lastname"> Last Name of record. </param>
-            <returns> All records with specified last name. </returns>
-        </member>
-        <member name="M:FileCabinetApp.IFileCabinetService.FindByDateOfBirth(System.String)">
-            <summary>
-            Finds the specified records by date of birth.
-            </summary>
-            <param name="dateOfBirth"> Date of birth of record. </param>
-            <returns> All records with specified date of birth. </returns>
+            <param name="propertyInfo"> Property info. </param>
+            <param name="propertyValue"> Vakue of the property. </param>
+            <returns> Found records. </returns>
         </member>
         <member name="M:FileCabinetApp.IFileCabinetService.Restore(FileCabinetApp.Services.FileCabinetServiceSnapshot)">
             <summary>

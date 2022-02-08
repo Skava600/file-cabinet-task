@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using FileCabinetApp.Entities;
@@ -26,6 +27,30 @@ namespace FileCabinetApp.Services
             this.writer = new StreamWriter(File.Create(LoggerFile));
         }
 
+        /// <inheritdoc/>
+        public void CreateRecordWithId(int id, RecordData recordData)
+        {
+            this.Log($"Calling {nameof(this.CreateRecordWithId)}() with Id = '{id}', FirstName = '{recordData.FirstName}'," +
+                $"LastName = '{recordData.LastName}', " +
+                $"DateOfBirth = {recordData.DateOfBirth}, " +
+                $"Sex = '{recordData.Sex}', " +
+                $"Height = '{recordData.Height}', " +
+                $"Salary = '{recordData.Salary}'");
+            try
+            {
+                this.fileCabinetService.CreateRecordWithId(id, recordData);
+            }
+            catch (Exception ex)
+            {
+                this.Log($"{nameof(this.fileCabinetService.CreateRecord)}() finished with exception: " +
+                    $"Message - {ex.Message}");
+                throw;
+            }
+
+            this.Log($"{nameof(this.CreateRecordWithId)}() returned '{id}'");
+        }
+
+        /// <inheritdoc/>
         public int CreateRecord(RecordData recordData)
         {
             this.Log($"Calling {nameof(this.CreateRecord)}() with FirstName = '{recordData.FirstName}'," +
@@ -50,6 +75,7 @@ namespace FileCabinetApp.Services
             return id;
         }
 
+        /// <inheritdoc/>
         public void EditRecord(int id, RecordData recordData)
         {
             this.Log($"Calling {nameof(this.EditRecord)}() with FirstName = {recordData.FirstName}," +
@@ -73,63 +99,27 @@ namespace FileCabinetApp.Services
             this.Log($"{nameof(this.EditRecord)}() returned successfuly");
         }
 
-        public IEnumerable<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth)
+        /// <inheritdoc/>
+        public IEnumerable<FileCabinetRecord> FindByProperty(PropertyInfo propertyInfo, string propertyValue)
         {
-            this.Log($"Calling {nameof(this.FindByDateOfBirth)}() with DateOfBirth = '{dateOfBirth}'");
+            this.Log($"Calling {nameof(this.FindByProperty)}() with {propertyInfo.Name} = '{propertyValue}'");
             IEnumerable<FileCabinetRecord> iterator;
             try
             {
-                iterator = this.fileCabinetService.FindByDateOfBirth(dateOfBirth);
+                iterator = this.fileCabinetService.FindByProperty(propertyInfo, propertyValue);
             }
             catch (Exception ex)
             {
-                this.Log($"{nameof(this.fileCabinetService.FindByDateOfBirth)}() finished with exception: " +
+                this.Log($"{nameof(this.fileCabinetService.FindByProperty)}() finished with exception: " +
                     $"Message - {ex.Message}");
                 throw;
             }
 
-            this.Log($"{nameof(this.FindByDateOfBirth)}() returned successsfuly.");
+            this.Log($"{nameof(this.FindByProperty)}() returned successsfuly.");
             return iterator;
         }
 
-        public IEnumerable<FileCabinetRecord> FindByFirstName(string firstname)
-        {
-            this.Log($"Calling {nameof(this.FindByFirstName)}() with firstname = '{firstname}'");
-            IEnumerable<FileCabinetRecord> iterator;
-            try
-            {
-                iterator = this.fileCabinetService.FindByFirstName(firstname);
-            }
-            catch (Exception ex)
-            {
-                this.Log($"{nameof(this.fileCabinetService.FindByFirstName)}() finished with exception: " +
-                    $"Message - {ex.Message}");
-                throw;
-            }
-
-            this.Log($"{nameof(this.FindByFirstName)}() returned successfully.");
-            return iterator;
-        }
-
-        public IEnumerable<FileCabinetRecord> FindByLastName(string lastname)
-        {
-            this.Log($"Calling {nameof(this.FindByLastName)}() with lastname = '{lastname}'");
-            IEnumerable<FileCabinetRecord> iterator;
-            try
-            {
-                iterator = this.fileCabinetService.FindByLastName(lastname);
-            }
-            catch (Exception ex)
-            {
-                this.Log($"{nameof(this.fileCabinetService.FindByLastName)}() finished with exception: " +
-                    $"Message - {ex.Message}");
-                throw;
-            }
-
-            this.Log($"{nameof(this.FindByLastName)}() returned successfully.");
-            return iterator;
-        }
-
+        /// <inheritdoc/>
         public IEnumerable<FileCabinetRecord> GetRecords()
         {
             this.Log($"Calling {nameof(this.GetRecords)}()");
@@ -138,6 +128,7 @@ namespace FileCabinetApp.Services
             return iterator;
         }
 
+        /// <inheritdoc/>
         public Tuple<int, int> GetStat()
         {
             this.Log($"Calling {nameof(this.GetStat)}()");
@@ -146,6 +137,7 @@ namespace FileCabinetApp.Services
             return stat;
         }
 
+        /// <inheritdoc/>
         public bool IsRecordExists(int id)
         {
             this.Log($"Calling {nameof(this.IsRecordExists)}() with id = '{id}'");
@@ -154,6 +146,7 @@ namespace FileCabinetApp.Services
             return isExists;
         }
 
+        /// <inheritdoc/>
         public FileCabinetServiceSnapshot MakeSnapshot()
         {
             this.Log($"Calling {nameof(this.MakeSnapshot)}()");
@@ -162,6 +155,7 @@ namespace FileCabinetApp.Services
             return snapshot;
         }
 
+        /// <inheritdoc/>
         public void Purge()
         {
             this.Log($"Calling {nameof(this.Purge)}()");
@@ -169,6 +163,7 @@ namespace FileCabinetApp.Services
             this.Log($"{nameof(this.Purge)}() returned successfuly");
         }
 
+        /// <inheritdoc/>
         public void RemoveRecord(int id)
         {
             this.Log($"Calling {nameof(this.RemoveRecord)}() with id = '{id}'");
@@ -186,6 +181,27 @@ namespace FileCabinetApp.Services
             this.Log($"{nameof(this.RemoveRecord)}() returned successfuly");
         }
 
+        /// <inheritdoc/>
+        public IEnumerable<int> DeleteRecord(PropertyInfo propertyInfo, string propertyValue)
+        {
+            IEnumerable<int> deletedRecordsIds;
+            this.Log($"Calling {nameof(this.DeleteRecord)}() with {propertyInfo.Name} = {propertyValue}");
+            try
+            {
+                deletedRecordsIds = this.fileCabinetService.DeleteRecord(propertyInfo, propertyValue);
+            }
+            catch (Exception ex)
+            {
+                this.Log($"{nameof(this.fileCabinetService.DeleteRecord)}() finished with exception: " +
+                    $"Message - {ex.Message}");
+                throw;
+            }
+
+            this.Log($"{nameof(this.DeleteRecord)}() returned successfuly");
+            return deletedRecordsIds;
+        }
+
+        /// <inheritdoc/>
         public void Restore(FileCabinetServiceSnapshot snapshot)
         {
             this.Log($"Calling {nameof(this.Restore)}() with {snapshot.Records.Count} records");
@@ -203,6 +219,7 @@ namespace FileCabinetApp.Services
             this.Log($"{nameof(this.Restore)}() returned successfuly");
         }
 
+        /// <inheritdoc/>
         public void Dispose()
         {
             this.Dispose(disposing: true);

@@ -27,9 +27,9 @@ namespace FileCabinetApp.Validation
                 throw new ArgumentNullException(nameof(record));
             }
 
-            if (!Array.Exists(this.availableSex, sex => sex.Equals(char.ToUpperInvariant(sex))))
+            if (!Array.Exists(this.availableSex, sex => sex.Equals(char.ToUpperInvariant(record.Sex))))
             {
-                throw new ArgumentException("Wrong sex.");
+                throw new ArgumentException("Wrong sex");
             }
         }
     }

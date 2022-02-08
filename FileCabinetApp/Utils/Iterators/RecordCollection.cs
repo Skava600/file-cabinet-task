@@ -9,10 +9,11 @@ using FileCabinetApp.Services;
 
 namespace FileCabinetApp.Utils.Iterators
 {
-    internal class RecordCollection : IEnumerable<FileCabinetRecord>
+    internal class RecordCollection : IEnumerable<FileCabinetRecord>, IDisposable
     {
         private readonly List<long> offsets;
         private readonly BinaryReader binaryReader;
+        private bool disposedValue;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RecordCollection"/> class.
@@ -39,6 +40,25 @@ namespace FileCabinetApp.Utils.Iterators
         IEnumerator IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();
+        }
+
+        public void Dispose()
+        {
+            this.Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this.disposedValue)
+            {
+                if (disposing)
+                {
+                    this.binaryReader.Dispose();
+                }
+
+                this.disposedValue = true;
+            }
         }
     }
 }

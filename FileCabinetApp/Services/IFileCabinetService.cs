@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using FileCabinetApp.Entities;
@@ -16,6 +17,13 @@ namespace FileCabinetApp
     /// </summary>
     public interface IFileCabinetService
     {
+        /// <summary>
+        /// This method creates new FileCabinetRecord with given id and parameers.
+        /// </summary>
+        /// <param name="id"> id of a ne record. </param>
+        /// <param name="recordData"> data of a record. </param>
+        void CreateRecordWithId(int id, RecordData recordData);
+
         /// <summary>
         /// This method creates new FileCabinetRecord with given <see cref="RecordData"/> class params.
         /// </summary>
@@ -35,6 +43,14 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="id"> Id of removing record. </param>
         void RemoveRecord(int id);
+
+        /// <summary>
+        /// This method deletes all records with specified property value.
+        /// </summary>
+        /// <param name="propertyInfo"> Property info. </param>
+        /// <param name="propertyValue"> Property value. </param>
+        /// <returns> IDs of deleted records. </returns>
+        IEnumerable<int> DeleteRecord(PropertyInfo propertyInfo, string propertyValue);
 
         /// <summary>
         /// This method defragmentate data file from deleted records.
@@ -67,25 +83,12 @@ namespace FileCabinetApp
         FileCabinetServiceSnapshot MakeSnapshot();
 
         /// <summary>
-        /// Finds the specified records by firstname.
+        /// This method finds the specified records with property and value.
         /// </summary>
-        /// <param name="firstname"> First Name of record. </param>
-        /// <returns> All records with specified first name. </returns>
-        IEnumerable<FileCabinetRecord> FindByFirstName(string firstname);
-
-        /// <summary>
-        /// Finds the specified records by lastname.
-        /// </summary>
-        /// <param name="lastname"> Last Name of record. </param>
-        /// <returns> All records with specified last name. </returns>
-        IEnumerable<FileCabinetRecord> FindByLastName(string lastname);
-
-        /// <summary>
-        /// Finds the specified records by date of birth.
-        /// </summary>
-        /// <param name="dateOfBirth"> Date of birth of record. </param>
-        /// <returns> All records with specified date of birth. </returns>
-        IEnumerable<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth);
+        /// <param name="propertyInfo"> Property info. </param>
+        /// <param name="propertyValue"> Vakue of the property. </param>
+        /// <returns> Found records. </returns>
+        IEnumerable<FileCabinetRecord> FindByProperty(PropertyInfo propertyInfo, string propertyValue);
 
         /// <summary>
         /// Restores records from snapshot.
