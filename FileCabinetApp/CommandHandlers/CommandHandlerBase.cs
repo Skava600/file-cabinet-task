@@ -41,7 +41,7 @@ namespace FileCabinetApp.CommandHandlers
             Console.WriteLine($"There is no '{command}' command.");
             Console.WriteLine();
 
-            var commands = new string[] { "create", "delete", "find", "insert", "purge", "exit", "export", "import", "help", "list", "stat", "update" };
+            var commands = new string[] { "create", "delete", "select", "insert", "purge", "exit", "export", "import", "help", "stat", "update" };
             List<string> similarCommands = new List<string>();
 
             foreach (var commandLine in commands)
@@ -58,7 +58,7 @@ namespace FileCabinetApp.CommandHandlers
             {
                 Console.WriteLine($"The most similar commands is {similarCommands[0]}");
             }
-            else
+            else if (similarCommands.Count > 1)
             {
                 Console.WriteLine($"The most similar commands are");
                 foreach (var commandLine in similarCommands)

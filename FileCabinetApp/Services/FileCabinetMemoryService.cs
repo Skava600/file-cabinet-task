@@ -7,6 +7,7 @@ using System.Reflection;
 using FileCabinetApp.Entities;
 using FileCabinetApp.Models;
 using FileCabinetApp.Utils.Iterators;
+using FileCabinetApp.Utils.Memoization;
 using FileCabinetApp.Validation;
 
 namespace FileCabinetApp.Services
@@ -37,6 +38,8 @@ namespace FileCabinetApp.Services
             new Dictionary<decimal, List<FileCabinetRecord>>();
 
         private readonly IRecordValidator validator;
+
+        private Func<PropertyInfo, string, IEnumerable<FileCabinetRecord>>? functionMemo;
 
         private int lastId;
 
@@ -84,6 +87,8 @@ namespace FileCabinetApp.Services
             this.records.Add(record);
 
             this.AddRecordToDictionaries(record);
+
+            this.functionMemo = null;
         }
 
         /// <inheritdoc/>
@@ -105,6 +110,7 @@ namespace FileCabinetApp.Services
 
             this.AddRecordToDictionaries(record);
 
+            this.functionMemo = null;
             return record.Id;
         }
 
@@ -131,6 +137,8 @@ namespace FileCabinetApp.Services
             record.Salary = recordData.Salary;
 
             this.AddRecordToDictionaries(record);
+
+            this.functionMemo = null;
         }
 
         /// <inheritdoc/>
@@ -148,6 +156,8 @@ namespace FileCabinetApp.Services
                 this.records.Remove(record);
                 this.RemoveRecordFromDictionaries(record);
             }
+
+            this.functionMemo = null;
         }
 
         /// <inheritdoc/>
@@ -202,51 +212,59 @@ namespace FileCabinetApp.Services
         /// <inheritdoc/>
         public IEnumerable<FileCabinetRecord> FindByProperty(PropertyInfo propertyInfo, string propertyValue)
         {
-            IEnumerable<FileCabinetRecord> records;
-            try
+            if (this.functionMemo == null)
             {
-                switch (propertyInfo.Name)
+                this.functionMemo = Memoizer.Memoize<PropertyInfo, string, IEnumerable<FileCabinetRecord>>((info, value) =>
                 {
-                    case nameof(FileCabinetRecord.Id):
-                        int id = int.Parse(propertyValue);
-                        records = this.records.Where(rec => rec.Id == id);
-                        break;
-                    case nameof(FileCabinetRecord.FirstName):
-                        records = this.firstNameDictionary[propertyValue];
-                        break;
-                    case nameof(FileCabinetRecord.LastName):
-                        records = this.lastNameDictionary[propertyValue];
-                        break;
-                    case nameof(FileCabinetRecord.DateOfBirth):
-                        var dob = DateTime.Parse(propertyValue, CultureInfo.InvariantCulture);
-                        records = this.dateOfBirthDictionary[dob];
-                        break;
-                    case nameof(FileCabinetRecord.Sex):
-                        var sex = char.ToUpper(char.Parse(propertyValue));
-                        records = this.sexDictionary[sex];
-                        break;
-                    case nameof(FileCabinetRecord.Height):
-                        var height = short.Parse(propertyValue);
-                        records = this.heightDictionary[height];
-                        break;
-                    case nameof(FileCabinetRecord.Salary):
-                        var salary = decimal.Parse(propertyValue);
-                        records = this.salaryDictionary[salary];
-                        break;
-                    default:
-                        throw new ArgumentException($"There is no such property as : {propertyInfo.Name} or it is not supported");
-                }
-            }
-            catch (KeyNotFoundException)
-            {
-                throw new ArgumentException($"Records with {propertyValue} {propertyInfo.Name} not exist");
-            }
-            catch (FormatException)
-            {
-                throw new ArgumentException($"{propertyValue} is invalid {propertyInfo.PropertyType} format");
+                    IEnumerable<FileCabinetRecord> records;
+                    try
+                    {
+                        switch (info.Name)
+                        {
+                            case nameof(FileCabinetRecord.Id):
+                                int id = int.Parse(value);
+                                records = this.records.Where(rec => rec.Id == id);
+                                break;
+                            case nameof(FileCabinetRecord.FirstName):
+                                records = this.firstNameDictionary[value];
+                                break;
+                            case nameof(FileCabinetRecord.LastName):
+                                records = this.lastNameDictionary[value];
+                                break;
+                            case nameof(FileCabinetRecord.DateOfBirth):
+                                var dob = DateTime.Parse(value, CultureInfo.InvariantCulture);
+                                records = this.dateOfBirthDictionary[dob];
+                                break;
+                            case nameof(FileCabinetRecord.Sex):
+                                var sex = char.ToUpper(char.Parse(value));
+                                records = this.sexDictionary[sex];
+                                break;
+                            case nameof(FileCabinetRecord.Height):
+                                var height = short.Parse(value);
+                                records = this.heightDictionary[height];
+                                break;
+                            case nameof(FileCabinetRecord.Salary):
+                                var salary = decimal.Parse(value);
+                                records = this.salaryDictionary[salary];
+                                break;
+                            default:
+                                throw new ArgumentException($"There is no such property as : {info.Name} or it is not supported");
+                        }
+                    }
+                    catch (KeyNotFoundException)
+                    {
+                        throw new ArgumentException($"Records with {value} {info.Name} not exist");
+                    }
+                    catch (FormatException)
+                    {
+                        throw new ArgumentException($"{value} is invalid {info.PropertyType} format");
+                    }
+
+                    return records;
+                });
             }
 
-            return records;
+            return this.functionMemo(propertyInfo, propertyValue);
         }
 
         /// <inheritdoc/>
