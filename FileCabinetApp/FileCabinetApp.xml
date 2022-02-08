@@ -58,21 +58,6 @@
         <member name="M:FileCabinetApp.CommandHandlers.ConcreteHandlers.CreateCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
             <inheritdoc/>
         </member>
-        <member name="T:FileCabinetApp.CommandHandlers.ConcreteHandlers.EditCommandHandler">
-            <summary>
-            Edit command handler.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.CommandHandlers.ConcreteHandlers.EditCommandHandler.#ctor(FileCabinetApp.IFileCabinetService,System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.ConcreteHandlers.EditCommandHandler"/> class.
-            </summary>
-            <param name="service"> File cabinet service. </param>
-            <param name="validationRule"> Validation rule. </param>
-        </member>
-        <member name="M:FileCabinetApp.CommandHandlers.ConcreteHandlers.EditCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
-            <inheritdoc/>
-        </member>
         <member name="T:FileCabinetApp.CommandHandlers.ConcreteHandlers.ExitCommandHandler">
             <summary>
             Exit command handler.
@@ -101,21 +86,6 @@
         <member name="M:FileCabinetApp.CommandHandlers.ConcreteHandlers.ExportCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
             <inheritdoc/>
         </member>
-        <member name="T:FileCabinetApp.CommandHandlers.ConcreteHandlers.FindCommandHandler">
-            <summary>
-            Find command handler.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.CommandHandlers.ConcreteHandlers.FindCommandHandler.#ctor(FileCabinetApp.IFileCabinetService,System.Action{System.Collections.Generic.IEnumerable{FileCabinetApp.Entities.FileCabinetRecord}})">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.ConcreteHandlers.FindCommandHandler"/> class.
-            </summary>
-            <param name="service"> File cabinet service. </param>
-            <param name="printer"> Record printer. </param>
-        </member>
-        <member name="M:FileCabinetApp.CommandHandlers.ConcreteHandlers.FindCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
-            <inheritdoc/>
-        </member>
         <member name="T:FileCabinetApp.CommandHandlers.ConcreteHandlers.HelpCommandHandler">
             <summary>
             Help command handler.
@@ -138,21 +108,6 @@
         <member name="M:FileCabinetApp.CommandHandlers.ConcreteHandlers.ImportCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
             <inheritdoc/>
         </member>
-        <member name="T:FileCabinetApp.CommandHandlers.ConcreteHandlers.ListCommandHandler">
-            <summary>
-            List command handler.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.CommandHandlers.ConcreteHandlers.ListCommandHandler.#ctor(FileCabinetApp.IFileCabinetService,System.Action{System.Collections.Generic.IEnumerable{FileCabinetApp.Entities.FileCabinetRecord}})">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.ConcreteHandlers.ListCommandHandler"/> class.
-            </summary>
-            <param name="service"> File cabinet service. </param>
-            <param name="printer"> Record printer. </param>
-        </member>
-        <member name="M:FileCabinetApp.CommandHandlers.ConcreteHandlers.ListCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
-            <inheritdoc/>
-        </member>
         <member name="T:FileCabinetApp.CommandHandlers.ConcreteHandlers.PurgeCommandHandler">
             <summary>
             Purge command handler.
@@ -165,20 +120,6 @@
             <param name="service"> File cabinet service. </param>
         </member>
         <member name="M:FileCabinetApp.CommandHandlers.ConcreteHandlers.PurgeCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
-            <inheritdoc/>
-        </member>
-        <member name="T:FileCabinetApp.CommandHandlers.ConcreteHandlers.RemoveCommandHandler">
-            <summary>
-            Remove  command handler.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.CommandHandlers.ConcreteHandlers.RemoveCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.ConcreteHandlers.RemoveCommandHandler"/> class.
-            </summary>
-            <param name="service"> File cabinet service. </param>
-        </member>
-        <member name="M:FileCabinetApp.CommandHandlers.ConcreteHandlers.RemoveCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
             <inheritdoc/>
         </member>
         <member name="T:FileCabinetApp.CommandHandlers.ConcreteHandlers.StatCommandHandler">
@@ -350,6 +291,12 @@
             <value>
             The salary in dollars.
             </value>
+        </member>
+        <member name="M:FileCabinetApp.Entities.FileCabinetRecord.Equals(FileCabinetApp.Entities.FileCabinetRecord)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Entities.FileCabinetRecord.Equals(System.Object)">
+            <inheritdoc/>
         </member>
         <member name="T:FileCabinetApp.Models.Name">
             <summary>

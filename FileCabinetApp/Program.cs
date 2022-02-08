@@ -1,4 +1,9 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Reflection;
+using System.Text;
 using FileCabinetApp.CommandHandlers;
 using FileCabinetApp.CommandHandlers.ConcreteHandlers;
 using FileCabinetApp.Entities;
@@ -21,10 +26,10 @@ namespace FileCabinetApp
 
         private static readonly Dictionary<string, Action<string>> CommandParameters = new Dictionary<string, Action<string>>
         {
-            ["--validation-rules"] = (string validationRules) => Program.validationRules = validationRules.ToLower(),
-            ["-v"] = (string validationRules) => Program.validationRules = validationRules.ToLower(),
-            ["--storage"] = (string storage) => Program.storage = storage.ToLower(),
-            ["-s"] = (string storage) => Program.storage = storage.ToLower(),
+            ["--validation-rules"] = (string validationRules) => Program.validationRules = validationRules.ToLowerInvariant(),
+            ["-v"] = (string validationRules) => Program.validationRules = validationRules.ToLowerInvariant(),
+            ["--storage"] = (string storage) => Program.storage = storage.ToLowerInvariant(),
+            ["-s"] = (string storage) => Program.storage = storage.ToLowerInvariant(),
             ["--use-stopwatch"] = (string str) => Program.isUsingTimewatch = true,
             ["--use-logger"] = (string str) => Program.isUsingLogger = true,
         };
@@ -76,29 +81,27 @@ namespace FileCabinetApp
             var helpCommandHandler = new HelpCommandHandler();
             var createCommandHandler = new CreateCommandHandler(fileCabinetService, Program.validationRules);
             var statCommandHandler = new StatCommandHandler(fileCabinetService);
-            var listCommandHandler = new ListCommandHandler(fileCabinetService, DefaultRecordPrint);
-            var findCommandHandler = new FindCommandHandler(fileCabinetService, DefaultRecordPrint);
             var purgeCommandHandler = new PurgeCommandHandler(fileCabinetService);
             var importCommandHandler = new ImportCommandHandler(fileCabinetService);
             var exportCommandHandler = new ExportCommandHandler(fileCabinetService);
             var insertCommandHandler = new InsertCommandHandler(fileCabinetService);
             var deleteCommandHandler = new DeleteCommandHandler(fileCabinetService);
             var updateCommandHandler = new UpdateCommandHandler(fileCabinetService);
+            var selectCommandHandler = new SelectCommandHandler(fileCabinetService, DefaultRecordPrint);
 
             Action<bool> exitApp = x => isRunning = x;
             var exitCommandHandler = new ExitCommandHandler(exitApp);
 
             helpCommandHandler.SetNext(createCommandHandler);
             createCommandHandler.SetNext(statCommandHandler);
-            statCommandHandler.SetNext(listCommandHandler);
-            listCommandHandler.SetNext(findCommandHandler);
-            findCommandHandler.SetNext(purgeCommandHandler);
+            statCommandHandler.SetNext(purgeCommandHandler);
             purgeCommandHandler.SetNext(importCommandHandler);
             importCommandHandler.SetNext(exportCommandHandler);
             exportCommandHandler.SetNext(exitCommandHandler);
             exitCommandHandler.SetNext(insertCommandHandler);
             insertCommandHandler.SetNext(deleteCommandHandler);
             deleteCommandHandler.SetNext(updateCommandHandler);
+            updateCommandHandler.SetNext(selectCommandHandler);
 
             return helpCommandHandler;
         }
@@ -189,18 +192,79 @@ namespace FileCabinetApp
             Console.WriteLine($"Using {Program.storage.ToLower()} storage.");
         }
 
-        private static void DefaultRecordPrint(IEnumerable<FileCabinetRecord> records)
+        private static void DefaultRecordPrint(IEnumerable<FileCabinetRecord> records, IEnumerable<PropertyInfo> propertyInfos)
         {
+            List<int> columnLengths = new List<int>();
+            StringBuilder rowSeparator = new StringBuilder();
+            foreach (var propertyInfo in propertyInfos)
+            {
+                int maxLengthValue = records.Max(record =>
+                {
+                    var value = propertyInfo.GetValue(record);
+                    if (value == null)
+                    {
+                        return 0;
+                    }
+
+                    string? stringValue;
+                    if (propertyInfo.PropertyType.Equals(typeof(DateTime)))
+                    {
+                        stringValue = string.Format(CultureInfo.InvariantCulture, "{0:yyyy-MMM-dd}", value);
+                    }
+                    else
+                    {
+                        stringValue = value.ToString();
+                    }
+
+                    return stringValue == null ? 0 : stringValue.Length;
+                });
+
+                maxLengthValue = maxLengthValue < propertyInfo.Name.Length ? propertyInfo.Name.Length : maxLengthValue;
+                columnLengths.Add(maxLengthValue);
+                rowSeparator.Append("+" + new string('-', maxLengthValue + 2));
+            }
+
+            rowSeparator.Append('+');
+            Console.WriteLine(rowSeparator.ToString());
+
+            int index = 0;
+            foreach (var propertyInfo in propertyInfos)
+            {
+                var column = "| " + propertyInfo.Name + new string(' ', columnLengths[index] - propertyInfo.Name.Length + 1);
+                Console.Write(column);
+                index++;
+            }
+
+            Console.WriteLine('|');
+
             foreach (var record in records)
             {
-                string date = record.DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture);
-                Console.WriteLine($"#{record.Id}, " +
-                    $"{record.FirstName}, " +
-                    $"{record.LastName}, " +
-                    $"{date}, {record.Sex}, " +
-                    $"{record.Height}, " +
-                    $"{record.Salary}");
+                Console.WriteLine(rowSeparator.ToString());
+                index = 0;
+                foreach (var propertyInfo in propertyInfos)
+                {
+                    var value = propertyInfo.GetValue(record);
+
+                    string? stringValue;
+                    if (propertyInfo.PropertyType.Equals(typeof(DateTime)))
+                    {
+                        stringValue = string.Format(CultureInfo.InvariantCulture, "{0:yyyy-MMM-dd}", value);
+                    }
+                    else
+                    {
+                        stringValue = value == null ? string.Empty : value.ToString();
+                    }
+
+                    stringValue = stringValue ?? string.Empty;
+                    var column = "| " + stringValue + new string(' ', columnLengths[index] - stringValue.Length + 1);
+                    Console.Write(column);
+                    index++;
+                }
+
+                Console.WriteLine('|');
             }
+
+            Console.WriteLine(rowSeparator.ToString());
         }
     }
 }

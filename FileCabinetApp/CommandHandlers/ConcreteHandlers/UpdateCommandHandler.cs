@@ -40,7 +40,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
 
         private void Update(string parameters)
         {
-            Regex parametersRegex = new Regex(@"\s*set\s+(?<updatingProperties>.+)\s+where\s+(?<searchingProperties>.+)$", RegexOptions.IgnoreCase);
+            Regex parametersRegex = new Regex(@"\s*set\s+(?<updatingProperties>.+)(?:\s+where\s+(?<searchingProperties>.+))", RegexOptions.IgnoreCase);
 
             var match = parametersRegex.Match(parameters);
 
@@ -54,8 +54,8 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
                     throw new ArgumentException("Wrong update parameters syntax");
                 }
 
-                var updatingPropertiesTuple = this.ParseProperties(updatingProperties, ",");
-                var searchingPropertiesTuple = this.ParseProperties(searchingProperties, "and");
+                var updatingPropertiesTuple = ParseProperties(updatingProperties, ",");
+                var searchingPropertiesTuple = ParseProperties(searchingProperties, " and ");
 
                 var allRecords = this.FileCabinetService.GetRecords().ToList();
                 foreach (var searchingProperty in searchingPropertiesTuple)
@@ -120,14 +120,14 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
             }
         }
 
-        private IEnumerable<Tuple<PropertyInfo, string>> ParseProperties(string properties, string propertySeparator)
+        private static IEnumerable<Tuple<PropertyInfo, string>> ParseProperties(string properties, string propertySeparator)
         {
             var splitedProperties = properties.Split(propertySeparator, StringSplitOptions.RemoveEmptyEntries);
             List<Tuple<PropertyInfo, string>> propertiesTuple = new List<Tuple<PropertyInfo, string>>();
             PropertyInfo[] fileCabinetRecordProperties = typeof(FileCabinetRecord).GetProperties();
             foreach (var property in splitedProperties)
             {
-                var propertySplited = property.Split('=', 2, StringSplitOptions.RemoveEmptyEntries);
+                var propertySplited = property.Split('=', 2, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
                 if (propertySplited.Length != 2)
                 {
                     throw new ArgumentException($"Wrong updating property syntax : {property}");
@@ -135,8 +135,6 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
 
                 const int propertyNameIndex = 0;
                 const int propertyValueIndex = 1;
-                propertySplited[propertyNameIndex] = propertySplited[propertyNameIndex].Trim();
-                propertySplited[propertyValueIndex] = propertySplited[propertyValueIndex].Trim();
 
                 if (!propertySplited[propertyValueIndex].StartsWith('\'') ||
                     !propertySplited[propertyValueIndex].EndsWith('\''))
@@ -146,7 +144,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
 
                 propertySplited[propertyValueIndex] = propertySplited[propertyValueIndex][1..^1];
 
-                var propertyInfo = fileCabinetRecordProperties.FirstOrDefault(prop => prop.Name.Equals(propertySplited[propertyNameIndex].Trim(), StringComparison.InvariantCultureIgnoreCase));
+                var propertyInfo = fileCabinetRecordProperties.FirstOrDefault(prop => prop.Name.Equals(propertySplited[propertyNameIndex], StringComparison.InvariantCultureIgnoreCase));
 
                 if (propertyInfo == null)
                 {

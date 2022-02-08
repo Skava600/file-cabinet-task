@@ -5,7 +5,7 @@ namespace FileCabinetApp.Entities
     /// <summary>
     /// The class to subscribe file cabinet record.
     /// </summary>
-    public class FileCabinetRecord
+    public class FileCabinetRecord : IEquatable<FileCabinetRecord>
     {
         /// <summary>
         /// Gets or sets the ID.
@@ -62,5 +62,52 @@ namespace FileCabinetApp.Entities
         /// The salary in dollars.
         /// </value>
         public decimal Salary { get; set; }
+
+        /// <inheritdoc/>
+        public bool Equals(FileCabinetRecord? other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+
+            return this.Id.Equals(other.Id) &&
+                this.FirstName.Equals(other.FirstName, StringComparison.OrdinalIgnoreCase) &&
+                this.LastName.Equals(other.LastName, StringComparison.OrdinalIgnoreCase) &&
+                this.DateOfBirth.Equals(other.DateOfBirth) &&
+                char.ToUpperInvariant(this.Sex).Equals(char.ToUpperInvariant(other.Sex)) &&
+                this.Height.Equals(other.Height) &&
+                this.Salary.Equals(other.Salary);
+        }
+
+        /// <inheritdoc/>
+        public override bool Equals(object? obj)
+        {
+            if (obj == null)
+            {
+                return false;
+            }
+
+            FileCabinetRecord? record = obj as FileCabinetRecord;
+            if (record == null)
+            {
+                return false;
+            }
+            else
+            {
+                return this.Equals(record);
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            return this.Id.GetHashCode() ^
+                (this.FirstName == null ? 0 : this.FirstName.GetHashCode(StringComparison.OrdinalIgnoreCase)) ^
+                (this.LastName == null ? 0 : this.LastName.GetHashCode(StringComparison.OrdinalIgnoreCase)) ^
+                this.Sex.GetHashCode() ^
+                this.DateOfBirth.GetHashCode() ^
+                this.Height.GetHashCode() ^
+                this.Salary.GetHashCode();
+        }
     }
 }
