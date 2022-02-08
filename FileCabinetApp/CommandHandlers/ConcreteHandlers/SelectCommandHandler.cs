@@ -46,7 +46,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
             {
                 if (!match.Success)
                 {
-                    throw new ArgumentException("Wrong update parameters syntax");
+                    selectingProperties = parameters;
                 }
 
                 var splitedSelectingProperties = selectingProperties.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
@@ -151,39 +151,10 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
 
         private IEnumerable<FileCabinetRecord> SearchRecordsByOrPropertiesCondition(IEnumerable<Tuple<PropertyInfo, string>> properties)
         {
-            IEnumerable<FileCabinetRecord> allRecords = this.FileCabinetService.GetRecords();
-            List<FileCabinetRecord> foundRecords = new List<FileCabinetRecord>();
+            IEnumerable<FileCabinetRecord> foundRecords = new List<FileCabinetRecord>();
             foreach (var property in properties)
             {
-                var converter = TypeDescriptor.GetConverter(property.Item1.PropertyType);
-                var searchingValue = converter.ConvertFromInvariantString(property.Item2);
-                if (searchingValue == null)
-                {
-                    throw new ArgumentException($"Invaild searching property value : {property.Item2}");
-                }
-
-                switch (property.Item1.PropertyType.Name)
-                {
-                    case nameof(Int32):
-                        foundRecords.AddRange(allRecords.Where(record => Convert.ToInt32(property.Item1.GetValue(record)).Equals(Convert.ToInt32(searchingValue))));
-                        break;
-                    case nameof(String):
-                        foundRecords.AddRange(allRecords.Where(record => Convert.ToString(property.Item1.GetValue(record))!.Equals(Convert.ToString(searchingValue), StringComparison.InvariantCultureIgnoreCase)));
-                        break;
-                    case nameof(DateTime):
-                        foundRecords.AddRange(allRecords.Where(record => Convert.ToDateTime(property.Item1.GetValue(record)).Equals(Convert.ToDateTime(searchingValue))));
-                        break;
-                    case nameof(Char):
-                        foundRecords.AddRange(allRecords.Where(record => Convert.ToChar(property.Item1.GetValue(record)).Equals(char.ToUpper(Convert.ToChar(searchingValue)))));
-                        break;
-                    case nameof(Int16):
-                        foundRecords.AddRange(allRecords.Where(record => Convert.ToInt16(property.Item1.GetValue(record)).Equals(Convert.ToInt16(searchingValue))));
-                        break;
-                    case nameof(Decimal):
-                        foundRecords.AddRange(allRecords.Where(record => Convert.ToDecimal(property.Item1.GetValue(record)).Equals(Convert.ToDecimal(searchingValue))));
-                        break;
-                    default: throw new ArgumentException("Something is went wrong");
-                }
+                foundRecords = foundRecords.Union(this.FileCabinetService.FindByProperty(property.Item1, property.Item2));
             }
 
             return foundRecords;
@@ -191,46 +162,13 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
 
         private IEnumerable<FileCabinetRecord> SearchRecordsByAndPropertiesCondition(IEnumerable<Tuple<PropertyInfo, string>> properties)
         {
-            var allRecords = this.FileCabinetService.GetRecords().ToList();
+            IEnumerable<FileCabinetRecord> foundRecords = this.FileCabinetService.GetRecords();
             foreach (var property in properties)
             {
-                var converter = TypeDescriptor.GetConverter(property.Item1.PropertyType);
-                var searchingValue = converter.ConvertFromInvariantString(property.Item2);
-                if (searchingValue == null)
-                {
-                    throw new ArgumentException($"Invaild searching property value : {property.Item2}");
-                }
-
-                switch (property.Item1.PropertyType.Name)
-                {
-                    case nameof(Int32):
-                        allRecords.RemoveAll(record => !Convert.ToInt32(property.Item1.GetValue(record)).Equals(Convert.ToInt32(searchingValue)));
-                        break;
-                    case nameof(String):
-                        allRecords.RemoveAll(record => !Convert.ToString(property.Item1.GetValue(record))!.Equals(Convert.ToString(searchingValue), StringComparison.InvariantCultureIgnoreCase));
-                        break;
-                    case nameof(DateTime):
-                        allRecords.RemoveAll(record => !Convert.ToDateTime(property.Item1.GetValue(record)).Equals(Convert.ToDateTime(searchingValue)));
-                        break;
-                    case nameof(Char):
-                        allRecords.RemoveAll(record => !Convert.ToChar(property.Item1.GetValue(record)).Equals(char.ToUpper(Convert.ToChar(searchingValue))));
-                        break;
-                    case nameof(Int16):
-                        allRecords.RemoveAll(record => !Convert.ToInt16(property.Item1.GetValue(record)).Equals(Convert.ToInt16(searchingValue)));
-                        break;
-                    case nameof(Decimal):
-                        allRecords.RemoveAll(record => !Convert.ToDecimal(property.Item1.GetValue(record)).Equals(Convert.ToDecimal(searchingValue)));
-                        break;
-                    default: throw new ArgumentException("Something is went wrong");
-                }
-
-                if (allRecords.Count == 0)
-                {
-                    break;
-                }
+                foundRecords = foundRecords.Intersect(this.FileCabinetService.FindByProperty(property.Item1, property.Item2));
             }
 
-            return allRecords;
+            return foundRecords;
         }
     }
 }

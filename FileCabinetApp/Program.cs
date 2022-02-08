@@ -81,24 +81,20 @@ namespace FileCabinetApp
             var helpCommandHandler = new HelpCommandHandler();
             var createCommandHandler = new CreateCommandHandler(fileCabinetService, Program.validationRules);
             var statCommandHandler = new StatCommandHandler(fileCabinetService);
-            var listCommandHandler = new ListCommandHandler(fileCabinetService, DefaultRecordPrint);
-            var findCommandHandler = new FindCommandHandler(fileCabinetService, DefaultRecordPrint);
             var purgeCommandHandler = new PurgeCommandHandler(fileCabinetService);
             var importCommandHandler = new ImportCommandHandler(fileCabinetService);
             var exportCommandHandler = new ExportCommandHandler(fileCabinetService);
             var insertCommandHandler = new InsertCommandHandler(fileCabinetService);
             var deleteCommandHandler = new DeleteCommandHandler(fileCabinetService);
             var updateCommandHandler = new UpdateCommandHandler(fileCabinetService);
-            var selectCommandHandler = new SelectCommandHandler(fileCabinetService, TableRecordPrint);
+            var selectCommandHandler = new SelectCommandHandler(fileCabinetService, DefaultRecordPrint);
 
             Action<bool> exitApp = x => isRunning = x;
             var exitCommandHandler = new ExitCommandHandler(exitApp);
 
             helpCommandHandler.SetNext(createCommandHandler);
             createCommandHandler.SetNext(statCommandHandler);
-            statCommandHandler.SetNext(listCommandHandler);
-            listCommandHandler.SetNext(findCommandHandler);
-            findCommandHandler.SetNext(purgeCommandHandler);
+            statCommandHandler.SetNext(purgeCommandHandler);
             purgeCommandHandler.SetNext(importCommandHandler);
             importCommandHandler.SetNext(exportCommandHandler);
             exportCommandHandler.SetNext(exitCommandHandler);
@@ -196,21 +192,7 @@ namespace FileCabinetApp
             Console.WriteLine($"Using {Program.storage.ToLower()} storage.");
         }
 
-        private static void DefaultRecordPrint(IEnumerable<FileCabinetRecord> records)
-        {
-            foreach (var record in records)
-            {
-                string date = record.DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture);
-                Console.WriteLine($"#{record.Id}, " +
-                    $"{record.FirstName}, " +
-                    $"{record.LastName}, " +
-                    $"{date}, {record.Sex}, " +
-                    $"{record.Height}, " +
-                    $"{record.Salary}");
-            }
-        }
-
-        private static void TableRecordPrint(IEnumerable<FileCabinetRecord> records, IEnumerable<PropertyInfo> propertyInfos)
+        private static void DefaultRecordPrint(IEnumerable<FileCabinetRecord> records, IEnumerable<PropertyInfo> propertyInfos)
         {
             List<int> columnLengths = new List<int>();
             StringBuilder rowSeparator = new StringBuilder();

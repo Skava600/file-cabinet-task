@@ -123,21 +123,6 @@
         <member name="M:FileCabinetApp.CommandHandlers.ConcreteHandlers.ImportCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
             <inheritdoc/>
         </member>
-        <member name="T:FileCabinetApp.CommandHandlers.ConcreteHandlers.ListCommandHandler">
-            <summary>
-            List command handler.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.CommandHandlers.ConcreteHandlers.ListCommandHandler.#ctor(FileCabinetApp.IFileCabinetService,System.Action{System.Collections.Generic.IEnumerable{FileCabinetApp.Entities.FileCabinetRecord}})">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.ConcreteHandlers.ListCommandHandler"/> class.
-            </summary>
-            <param name="service"> File cabinet service. </param>
-            <param name="printer"> Record printer. </param>
-        </member>
-        <member name="M:FileCabinetApp.CommandHandlers.ConcreteHandlers.ListCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
-            <inheritdoc/>
-        </member>
         <member name="T:FileCabinetApp.CommandHandlers.ConcreteHandlers.PurgeCommandHandler">
             <summary>
             Purge command handler.
@@ -321,6 +306,12 @@
             <value>
             The salary in dollars.
             </value>
+        </member>
+        <member name="M:FileCabinetApp.Entities.FileCabinetRecord.Equals(FileCabinetApp.Entities.FileCabinetRecord)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Entities.FileCabinetRecord.Equals(System.Object)">
+            <inheritdoc/>
         </member>
         <member name="T:FileCabinetApp.Models.Name">
             <summary>
