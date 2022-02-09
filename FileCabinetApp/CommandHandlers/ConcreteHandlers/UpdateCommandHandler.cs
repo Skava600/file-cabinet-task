@@ -13,6 +13,9 @@ using FileCabinetApp.Utils.CommandHelper;
 
 namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
 {
+    /// <summary>
+    /// Update command handler.
+    /// </summary>
     internal class UpdateCommandHandler : ServiceCommandHandlerBase
     {
         private static readonly string Command = "update";

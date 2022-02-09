@@ -12,15 +12,23 @@ using FileCabinetApp.Models;
 
 namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
 {
+    /// <summary>
+    /// Insert command handler.
+    /// </summary>
     internal class InsertCommandHandler : ServiceCommandHandlerBase
     {
         private static readonly string Command = "insert";
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InsertCommandHandler"/> class.
+        /// </summary>
+        /// <param name="fileCabinetService"> File cabinet service. </param>
         public InsertCommandHandler(IFileCabinetService fileCabinetService)
             : base(fileCabinetService)
         {
         }
 
+        /// <inheritdoc/>
         public override void Handle(AppCommandRequest request)
         {
             if (request.Command.Equals(Command, StringComparison.OrdinalIgnoreCase))

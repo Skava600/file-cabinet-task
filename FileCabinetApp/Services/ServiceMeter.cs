@@ -12,10 +12,17 @@ using FileCabinetApp.Utils.Iterators;
 
 namespace FileCabinetApp.Services
 {
+    /// <summary>
+    /// Service meter.
+    /// </summary>
     internal class ServiceMeter : IFileCabinetService
     {
         private IFileCabinetService fileCabinetService;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ServiceMeter"/> class.
+        /// </summary>
+        /// <param name="fileCabinetService"> File cabinet service. </param>
         public ServiceMeter(IFileCabinetService fileCabinetService)
         {
             this.fileCabinetService = fileCabinetService;

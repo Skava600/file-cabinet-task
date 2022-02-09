@@ -6,8 +6,17 @@ using System.Threading.Tasks;
 
 namespace FileCabinetApp.Utils.CommandHelper
 {
+    /// <summary>
+    /// Levenshtein distance calculator.
+    /// </summary>
     public static class LevenshteinDistance
     {
+        /// <summary>
+        /// Calculates levenshtein distance between two strings.
+        /// </summary>
+        /// <param name="source1"> First string. </param>
+        /// <param name="source2"> Second string. </param>
+        /// <returns> Distance. </returns>
         public static int Calculate(string source1, string source2)
         {
             if (string.IsNullOrEmpty(source1) && string.IsNullOrEmpty(source2))

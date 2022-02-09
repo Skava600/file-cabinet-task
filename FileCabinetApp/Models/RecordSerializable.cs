@@ -75,14 +75,13 @@ namespace FileCabinetApp.Models
         public override string ToString()
         {
             var builder = new StringBuilder();
-            builder.Append($"{this.Id}, ");
-            builder.Append($"{this.Name?.FirstName}, ");
-            builder.Append($"{this.Name?.LastName}, ");
-            builder.Append($"{this.DateOfBirth.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)}, ");
-            builder.Append($"{this.Sex}, ");
-            builder.Append($"{this.Height}, ");
-            builder.Append($"{this.Salary}");
-            return builder.ToString();
+            return $"{this.Id}, " +
+                $"{this.Name?.FirstName}, " +
+                $"{this.Name?.LastName}, " +
+                $"{this.DateOfBirth.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)}, " +
+                $"{this.Sex}, " +
+                $"{this.Height}, " +
+                $"{this.Salary}";
         }
     }
 }

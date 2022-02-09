@@ -11,17 +11,26 @@ using FileCabinetApp.Utils.CommandHelper;
 
 namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
 {
+    /// <summary>
+    /// Select command handler.
+    /// </summary>
     internal class SelectCommandHandler : ServiceCommandHandlerBase
     {
         private const string Command = "select";
         private Action<IEnumerable<FileCabinetRecord>, IEnumerable<PropertyInfo>> printer;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SelectCommandHandler"/> class.
+        /// </summary>
+        /// <param name="fileCabinetService"> File cabinet service. </param>
+        /// <param name="printer"> Record printer.</param>
         public SelectCommandHandler(IFileCabinetService fileCabinetService, Action<IEnumerable<FileCabinetRecord>, IEnumerable<PropertyInfo>> printer)
             : base(fileCabinetService)
         {
             this.printer = printer;
         }
 
+        /// <inheritdoc/>
         public override void Handle(AppCommandRequest request)
         {
             if (Command.Equals(request.Command, StringComparison.OrdinalIgnoreCase))

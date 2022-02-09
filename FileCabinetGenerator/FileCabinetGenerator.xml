@@ -4,12 +4,12 @@
         <name>FileCabinetGenerator</name>
     </assembly>
     <members>
-        <member name="T:Program">
+        <member name="T:FileCabinetGenerator.Program">
             <summary>
             The program class.
             </summary>
         </member>
-        <member name="M:Program.Main(System.String[])">
+        <member name="M:FileCabinetGenerator.Program.Main(System.String[])">
             <summary>
             Entry point of the application.
             </summary>

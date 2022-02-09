@@ -11,6 +11,9 @@ using FileCabinetApp.Utils.Iterators;
 
 namespace FileCabinetApp.Services
 {
+    /// <summary>
+    /// Service logger.
+    /// </summary>
     internal class ServiceLogger : IFileCabinetService, IDisposable
     {
         private const string LoggerFile = "logs.txt";
@@ -20,6 +23,10 @@ namespace FileCabinetApp.Services
         private IFileCabinetService fileCabinetService;
         private bool disposedValue;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ServiceLogger"/> class.
+        /// </summary>
+        /// <param name="fileCabinetService"> File cabinet service. </param>
         public ServiceLogger(IFileCabinetService fileCabinetService)
         {
             this.fileCabinetService = fileCabinetService;
@@ -226,6 +233,10 @@ namespace FileCabinetApp.Services
             GC.SuppressFinalize(this);
         }
 
+        /// <summary>
+        /// Releases sevice logger's unmanaged resourses.
+        /// </summary>
+        /// <param name="disposing"> Dispose or not. </param>
         protected virtual void Dispose(bool disposing)
         {
             if (!this.disposedValue)

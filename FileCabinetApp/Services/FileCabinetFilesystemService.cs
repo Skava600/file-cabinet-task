@@ -69,6 +69,12 @@ namespace FileCabinetApp.Services
             this.lastId = maxId;
         }
 
+        /// <summary>
+        /// Reads record from binary reader.
+        /// </summary>
+        /// <param name="binaryReader"> Binary reader. </param>
+        /// <returns> Instance of FileCabinetRecord. </returns>
+        /// <exception cref="ArgumentException"> When record in current position is deleted. </exception>
         public static FileCabinetRecord ReadRecordFromStream(BinaryReader binaryReader)
         {
             binaryReader.ReadByte();

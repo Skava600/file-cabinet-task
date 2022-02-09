@@ -7,11 +7,19 @@ using FileCabinetApp.Models;
 
 namespace FileCabinetApp.Validation
 {
+    /// <summary>
+    /// Height validator.
+    /// </summary>
     internal class HeightValidator : IRecordValidator
     {
         private readonly short minHeight;
         private readonly short maxHeight;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HeightValidator"/> class.
+        /// </summary>
+        /// <param name="minHeight"> Min height. </param>
+        /// <param name="maxHeight">Max height. </param>
         public HeightValidator(short minHeight, short maxHeight)
         {
             this.minHeight = minHeight;

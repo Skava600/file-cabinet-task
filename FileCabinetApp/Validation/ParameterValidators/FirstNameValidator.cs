@@ -7,11 +7,19 @@ using FileCabinetApp.Models;
 
 namespace FileCabinetApp.Validation
 {
+    /// <summary>
+    /// First name validator.
+    /// </summary>
     internal class FirstNameValidator : IRecordValidator
     {
         private readonly int minNameLength;
         private readonly int maxNameLength;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FirstNameValidator"/> class.
+        /// </summary>
+        /// <param name="minLength"> Min length of first name. </param>
+        /// <param name="maxLength"> Max length of first name. </param>
         public FirstNameValidator(int minLength, int maxLength)
         {
             this.minNameLength = minLength;

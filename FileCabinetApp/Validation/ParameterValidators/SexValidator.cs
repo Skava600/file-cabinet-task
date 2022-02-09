@@ -7,10 +7,17 @@ using FileCabinetApp.Models;
 
 namespace FileCabinetApp.Validation
 {
+    /// <summary>
+    /// Sex validator.
+    /// </summary>
     internal class SexValidator : IRecordValidator
     {
         private readonly char[] availableSex;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SexValidator"/> class.
+        /// </summary>
+        /// <param name="availableSex"> array of available sexs. </param>
         public SexValidator(char[] availableSex)
         {
             this.availableSex = availableSex;

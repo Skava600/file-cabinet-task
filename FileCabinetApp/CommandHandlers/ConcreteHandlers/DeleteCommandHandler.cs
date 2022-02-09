@@ -9,15 +9,23 @@ using FileCabinetApp.Entities;
 
 namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
 {
+    /// <summary>
+    /// Delete command handler.
+    /// </summary>
     internal class DeleteCommandHandler : ServiceCommandHandlerBase
     {
         private static readonly string Command = "delete";
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DeleteCommandHandler"/> class.
+        /// </summary>
+        /// <param name="fileCabinetService"> File cabinet service. </param>
         public DeleteCommandHandler(IFileCabinetService fileCabinetService)
             : base(fileCabinetService)
         {
         }
 
+        /// <inheritdoc/>
         public override void Handle(AppCommandRequest request)
         {
             if (request.Command.Equals(Command, StringComparison.OrdinalIgnoreCase))

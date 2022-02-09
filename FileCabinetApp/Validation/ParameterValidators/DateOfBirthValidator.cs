@@ -8,11 +8,19 @@ using FileCabinetApp.Models;
 
 namespace FileCabinetApp.Validation
 {
+    /// <summary>
+    /// Date of birth validator.
+    /// </summary>
     internal class DateOfBirthValidator : IRecordValidator
     {
         private readonly DateTime minDate;
         private readonly DateTime maxDate;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DateOfBirthValidator"/> class.
+        /// </summary>
+        /// <param name="from"> Min date of birth. </param>
+        /// <param name="to"> Max date of birth. </param>
         public DateOfBirthValidator(DateTime from, DateTime to)
         {
             this.minDate = from;

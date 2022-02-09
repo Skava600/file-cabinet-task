@@ -8,8 +8,18 @@ using FileCabinetApp.Entities;
 
 namespace FileCabinetApp.Utils.CommandHelper
 {
+    /// <summary>
+    /// Parameters parser.
+    /// </summary>
     public static class CommandParser
     {
+        /// <summary>
+        /// Parse parameters from select command.
+        /// </summary>
+        /// <param name="parameters"> Parameters. </param>
+        /// <param name="actualSeparator"> Separator between properties.</param>
+        /// <returns> IEnumerable of pairs property info and string representation of value . </returns>
+        /// <exception cref="ArgumentException"> When using more than one operator type. </exception>
         public static IEnumerable<Tuple<PropertyInfo, string>> ParseSelectParameters(string parameters, out string actualSeparator)
         {
             const string andSeparator = " and ";
@@ -40,6 +50,12 @@ namespace FileCabinetApp.Utils.CommandHelper
             return ParseProperty(splitedProperties);
         }
 
+        /// <summary>
+        /// Parse parameters from update command.
+        /// </summary>
+        /// <param name="parameters"> Parameters. </param>
+        /// <param name="separator"> Separator  between properties. </param>
+        /// <returns> IEnumerable of pairs property info and string representation of value . </returns>
         public static IEnumerable<Tuple<PropertyInfo, string>> ParseUpdateParameters(string parameters, string separator)
         {
             var splitedProperties = parameters.Split(separator, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);

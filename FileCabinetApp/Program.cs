@@ -35,7 +35,7 @@ namespace FileCabinetApp
         };
 
         private static bool isRunning = true;
-        private static IRecordValidator recordValidator = new ValidatorBuilder().CreateDefault();
+        private static IRecordValidator recordValidator = ValidatorBuilder.CreateDefault();
         private static IFileCabinetService fileCabinetService = new FileCabinetMemoryService(recordValidator);
         private static string validationRules = "default";
         private static string storage = "memory";
@@ -153,11 +153,11 @@ namespace FileCabinetApp
 
             switch (Program.validationRules)
             {
-                case "custom": recordValidator = new ValidatorBuilder().CreateCustom();
+                case "custom": recordValidator = ValidatorBuilder.CreateCustom();
                     break;
-                case "default": recordValidator = new ValidatorBuilder().CreateDefault();
+                case "default": recordValidator = ValidatorBuilder.CreateDefault();
                     break;
-                default: recordValidator = new ValidatorBuilder().CreateDefault();
+                default: recordValidator = ValidatorBuilder.CreateDefault();
                     Program.validationRules = "default";
                     break;
             }
