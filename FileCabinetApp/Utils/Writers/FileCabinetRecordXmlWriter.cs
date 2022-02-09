@@ -37,9 +37,9 @@ namespace FileCabinetApp.Utils.Writers
 
             this.writer.WriteElementString("dateOfBirth", record.DateOfBirth.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture));
 
-            this.writer.WriteElementString("sex", record.Sex.ToString());
-            this.writer.WriteElementString("height", record.Height.ToString());
-            this.writer.WriteElementString("salary", record.Salary.ToString());
+            this.writer.WriteElementString("sex", record.Sex.ToString(CultureInfo.InvariantCulture));
+            this.writer.WriteElementString("height", record.Height.ToString(CultureInfo.InvariantCulture));
+            this.writer.WriteElementString("salary", record.Salary.ToString(CultureInfo.InvariantCulture));
 
             this.writer.WriteEndElement();
         }

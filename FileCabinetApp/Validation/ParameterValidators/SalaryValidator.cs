@@ -6,6 +6,9 @@ using FileCabinetApp.Models;
 
 namespace FileCabinetApp.Validation
 {
+    /// <summary>
+    /// Salary validator.
+    /// </summary>
     internal class SalaryValidator : IRecordValidator
     {
         private readonly decimal minSalary;

@@ -35,12 +35,12 @@ namespace FileCabinetApp
         };
 
         private static bool isRunning = true;
-        private static IRecordValidator recordValidator = new ValidatorBuilder().CreateDefault();
+        private static IRecordValidator recordValidator = ValidatorBuilder.CreateDefault();
         private static IFileCabinetService fileCabinetService = new FileCabinetMemoryService(recordValidator);
         private static string validationRules = "default";
         private static string storage = "memory";
-        private static bool isUsingTimewatch = false;
-        private static bool isUsingLogger = false;
+        private static bool isUsingTimewatch;
+        private static bool isUsingLogger;
 
         /// <summary>
         /// Defines the entry point of the application.
@@ -112,7 +112,7 @@ namespace FileCabinetApp
             string paramValue;
             for (int i = 0; i < args.Length; i++)
             {
-                if (args[i].StartsWith("--"))
+                if (args[i].StartsWith("--", StringComparison.Ordinal))
                 {
                     string[] param = args[i].Split('=', 2);
                     const int paramIndex = 0;
@@ -153,11 +153,11 @@ namespace FileCabinetApp
 
             switch (Program.validationRules)
             {
-                case "custom": recordValidator = new ValidatorBuilder().CreateCustom();
+                case "custom": recordValidator = ValidatorBuilder.CreateCustom();
                     break;
-                case "default": recordValidator = new ValidatorBuilder().CreateDefault();
+                case "default": recordValidator = ValidatorBuilder.CreateDefault();
                     break;
-                default: recordValidator = new ValidatorBuilder().CreateDefault();
+                default: recordValidator = ValidatorBuilder.CreateDefault();
                     Program.validationRules = "default";
                     break;
             }
@@ -188,8 +188,8 @@ namespace FileCabinetApp
                 Console.WriteLine("Using service logger.");
             }
 
-            Console.WriteLine($"Using {Program.validationRules.ToLower()} validation rules.");
-            Console.WriteLine($"Using {Program.storage.ToLower()} storage.");
+            Console.WriteLine($"Using {Program.validationRules.ToLowerInvariant()} validation rules.");
+            Console.WriteLine($"Using {Program.storage.ToLowerInvariant()} storage.");
         }
 
         private static void DefaultRecordPrint(IEnumerable<FileCabinetRecord> records, IEnumerable<PropertyInfo> propertyInfos)

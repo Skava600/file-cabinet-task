@@ -9,6 +9,9 @@ using FileCabinetApp.Services;
 
 namespace FileCabinetApp.Utils.Iterators
 {
+    /// <summary>
+    /// Record iterator.
+    /// </summary>
     internal class RecordCollection : IEnumerable<FileCabinetRecord>, IDisposable
     {
         private readonly List<long> offsets;
@@ -42,12 +45,17 @@ namespace FileCabinetApp.Utils.Iterators
             return this.GetEnumerator();
         }
 
+        /// <inheritdoc/>
         public void Dispose()
         {
             this.Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
 
+        /// <summary>
+        /// Releases unmanaged resources of RecordCollection.
+        /// </summary>
+        /// <param name="disposing"> disposing or not. </param>
         protected virtual void Dispose(bool disposing)
         {
             if (!this.disposedValue)

@@ -7,23 +7,33 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using FileCabinetApp.Entities;
+using FileCabinetApp.Utils.CommandHelper;
 
 namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
 {
+    /// <summary>
+    /// Select command handler.
+    /// </summary>
     internal class SelectCommandHandler : ServiceCommandHandlerBase
     {
         private const string Command = "select";
         private Action<IEnumerable<FileCabinetRecord>, IEnumerable<PropertyInfo>> printer;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SelectCommandHandler"/> class.
+        /// </summary>
+        /// <param name="fileCabinetService"> File cabinet service. </param>
+        /// <param name="printer"> Record printer.</param>
         public SelectCommandHandler(IFileCabinetService fileCabinetService, Action<IEnumerable<FileCabinetRecord>, IEnumerable<PropertyInfo>> printer)
             : base(fileCabinetService)
         {
             this.printer = printer;
         }
 
+        /// <inheritdoc/>
         public override void Handle(AppCommandRequest request)
         {
-            if (Command.Equals(request.Command, StringComparison.InvariantCultureIgnoreCase))
+            if (Command.Equals(request.Command, StringComparison.OrdinalIgnoreCase))
             {
                 this.Select(request.Parameters);
             }
@@ -41,7 +51,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
 
             var selectingProperties = match.Groups["selectingProperties"].Value;
             var searchingProperties = match.Groups["searchingProperties"].Value;
-            IEnumerable<FileCabinetRecord> foundRecords;
+            IEnumerable<FileCabinetRecord> foundRecords = new List<FileCabinetRecord>();
             try
             {
                 if (!match.Success)
@@ -63,16 +73,31 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
                     selectingPropertiesInfo.Add(propertyInfo);
                 }
 
-                string separator;
                 if (!string.IsNullOrWhiteSpace(searchingProperties))
                 {
-                    var searchingPropertiesTuple = ParseProperties(searchingProperties, out separator);
-                    foundRecords = separator switch
+                    var searchingPropertiesTuple = CommandParser.ParseSelectParameters(searchingProperties, out string separator);
+                    Func<IEnumerable<FileCabinetRecord>, IEnumerable<FileCabinetRecord>> combineFoundRecords;
+                    const string andSeparator = "and";
+                    const string orSeparator = "or";
+
+                    switch (separator)
                     {
-                        "and" => this.SearchRecordsByAndPropertiesCondition(searchingPropertiesTuple),
-                        "or" => this.SearchRecordsByOrPropertiesCondition(searchingPropertiesTuple),
-                        _ => throw new ArgumentException($"Wrong separator : '{separator}'")
-                    };
+                        case andSeparator:
+                            combineFoundRecords = foundRecords.Intersect;
+                            foundRecords = this.FileCabinetService.GetRecords();
+                            break;
+                        case orSeparator:
+                            combineFoundRecords = foundRecords.Union;
+                            foundRecords = new List<FileCabinetRecord>();
+                            break;
+                        default:
+                            throw new ArgumentException($"Wrong separator : '{separator}'");
+                    }
+
+                    foreach (var property in searchingPropertiesTuple)
+                    {
+                        foundRecords = combineFoundRecords(this.FileCabinetService.FindByProperty(property.Item1, property.Item2));
+                    }
                 }
                 else
                 {
@@ -85,90 +110,6 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
             {
                 Console.WriteLine($"Selecting failed : {ex.Message}.");
             }
-        }
-
-        private static IEnumerable<Tuple<PropertyInfo, string>> ParseProperties(string properties, out string separator)
-        {
-            const string andSeparator = " and ";
-            const string orSeparator = " or ";
-
-            separator = andSeparator;
-            var splitedProperties = properties.Split(andSeparator, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-
-            if (splitedProperties.Length == 1)
-            {
-                splitedProperties = properties.Split(orSeparator, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-                separator = orSeparator;
-            }
-            else
-            {
-                var splitedProperitesByOr = properties.Split(orSeparator, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-                if (splitedProperitesByOr.Length != 1)
-                {
-                    throw new ArgumentException("You should use only one operator type: 'and' or 'or'");
-                }
-            }
-
-            if (splitedProperties.Length == 1)
-            {
-                separator = andSeparator;
-            }
-
-            List<Tuple<PropertyInfo, string>> propertiesTuple = new List<Tuple<PropertyInfo, string>>();
-            PropertyInfo[] fileCabinetRecordProperties = typeof(FileCabinetRecord).GetProperties();
-            foreach (var property in splitedProperties)
-            {
-                var propertySplited = property.Split('=', 2, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-                if (propertySplited.Length != 2)
-                {
-                    throw new ArgumentException($"Wrong updating property syntax : {property}");
-                }
-
-                const int propertyNameIndex = 0;
-                const int propertyValueIndex = 1;
-
-                if (!propertySplited[propertyValueIndex].StartsWith('\'') ||
-                    !propertySplited[propertyValueIndex].EndsWith('\''))
-                {
-                    throw new ArgumentException("Property vaue should be in single quotes.");
-                }
-
-                propertySplited[propertyValueIndex] = propertySplited[propertyValueIndex][1..^1];
-
-                var propertyInfo = fileCabinetRecordProperties.FirstOrDefault(prop => prop.Name.Equals(propertySplited[propertyNameIndex], StringComparison.InvariantCultureIgnoreCase));
-
-                if (propertyInfo == null)
-                {
-                    throw new ArgumentException($"There is no such property as {propertySplited[propertyNameIndex]}");
-                }
-
-                propertiesTuple.Add(new Tuple<PropertyInfo, string>(propertyInfo, propertySplited[propertyValueIndex]));
-            }
-
-            separator = separator.Trim();
-            return propertiesTuple;
-        }
-
-        private IEnumerable<FileCabinetRecord> SearchRecordsByOrPropertiesCondition(IEnumerable<Tuple<PropertyInfo, string>> properties)
-        {
-            IEnumerable<FileCabinetRecord> foundRecords = new List<FileCabinetRecord>();
-            foreach (var property in properties)
-            {
-                foundRecords = foundRecords.Union(this.FileCabinetService.FindByProperty(property.Item1, property.Item2));
-            }
-
-            return foundRecords;
-        }
-
-        private IEnumerable<FileCabinetRecord> SearchRecordsByAndPropertiesCondition(IEnumerable<Tuple<PropertyInfo, string>> properties)
-        {
-            IEnumerable<FileCabinetRecord> foundRecords = this.FileCabinetService.GetRecords();
-            foreach (var property in properties)
-            {
-                foundRecords = foundRecords.Intersect(this.FileCabinetService.FindByProperty(property.Item1, property.Item2));
-            }
-
-            return foundRecords;
         }
     }
 }

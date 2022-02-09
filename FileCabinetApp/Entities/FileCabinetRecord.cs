@@ -99,6 +99,7 @@ namespace FileCabinetApp.Entities
             }
         }
 
+        /// <inheritdoc/>
         public override int GetHashCode()
         {
             return this.Id.GetHashCode() ^

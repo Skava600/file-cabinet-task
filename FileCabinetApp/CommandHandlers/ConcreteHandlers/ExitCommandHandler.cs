@@ -26,7 +26,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
         /// <inheritdoc/>
         public override void Handle(AppCommandRequest request)
         {
-            if (request.Command.Equals(Command, StringComparison.InvariantCultureIgnoreCase))
+            if (request.Command.Equals(Command, StringComparison.OrdinalIgnoreCase))
             {
                 this.Exit(request.Parameters);
             }

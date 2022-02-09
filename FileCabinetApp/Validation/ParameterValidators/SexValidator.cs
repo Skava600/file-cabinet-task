@@ -7,10 +7,17 @@ using FileCabinetApp.Models;
 
 namespace FileCabinetApp.Validation
 {
+    /// <summary>
+    /// Sex validator.
+    /// </summary>
     internal class SexValidator : IRecordValidator
     {
         private readonly char[] availableSex;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SexValidator"/> class.
+        /// </summary>
+        /// <param name="availableSex"> array of available sexs. </param>
         public SexValidator(char[] availableSex)
         {
             this.availableSex = availableSex;
@@ -27,7 +34,7 @@ namespace FileCabinetApp.Validation
                 throw new ArgumentNullException(nameof(record));
             }
 
-            if (!Array.Exists(this.availableSex, sex => sex.Equals(char.ToUpperInvariant(record.Sex))))
+            if (!Array.Exists(this.availableSex, sex => char.ToUpperInvariant(sex).Equals(char.ToUpperInvariant(record.Sex))))
             {
                 throw new ArgumentException("Wrong sex");
             }

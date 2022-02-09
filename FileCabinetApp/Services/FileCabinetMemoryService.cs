@@ -58,12 +58,12 @@ namespace FileCabinetApp.Services
         {
             if (id < 1)
             {
-                throw new ArgumentException($"Id can't be less than one.");
+                throw new ArgumentException($"Id can't be less than one");
             }
 
             if (this.IsRecordExists(id))
             {
-                throw new ArgumentException($"Record with id {id} is already existing.");
+                throw new ArgumentException($"Record with id {id} is already existing");
             }
 
             this.validator.ValidateParameters(recordData);
@@ -79,7 +79,7 @@ namespace FileCabinetApp.Services
                 FirstName = recordData.FirstName,
                 LastName = recordData.LastName,
                 DateOfBirth = recordData.DateOfBirth,
-                Sex = char.ToUpper(recordData.Sex),
+                Sex = char.ToUpperInvariant(recordData.Sex),
                 Height = recordData.Height,
                 Salary = recordData.Salary,
             };
@@ -101,7 +101,7 @@ namespace FileCabinetApp.Services
                 FirstName = recordData.FirstName,
                 LastName = recordData.LastName,
                 DateOfBirth = recordData.DateOfBirth,
-                Sex = char.ToUpper(recordData.Sex),
+                Sex = char.ToUpper(recordData.Sex, CultureInfo.InvariantCulture),
                 Height = recordData.Height,
                 Salary = recordData.Salary,
             };
@@ -146,7 +146,7 @@ namespace FileCabinetApp.Services
         {
             if (!this.IsRecordExists(id))
             {
-                Console.WriteLine($"#{id} record is not found.");
+                Console.WriteLine($"#{id} record is not found");
             }
 
             var record = this.records.Find(rec => rec.Id == id);
@@ -222,7 +222,7 @@ namespace FileCabinetApp.Services
                         switch (info.Name)
                         {
                             case nameof(FileCabinetRecord.Id):
-                                int id = int.Parse(value);
+                                int id = int.Parse(value, CultureInfo.InvariantCulture);
                                 records = this.records.Where(rec => rec.Id == id);
                                 break;
                             case nameof(FileCabinetRecord.FirstName):
@@ -236,15 +236,15 @@ namespace FileCabinetApp.Services
                                 records = this.dateOfBirthDictionary[dob];
                                 break;
                             case nameof(FileCabinetRecord.Sex):
-                                var sex = char.ToUpper(char.Parse(value));
+                                var sex = char.ToUpper(char.Parse(value), CultureInfo.InvariantCulture);
                                 records = this.sexDictionary[sex];
                                 break;
                             case nameof(FileCabinetRecord.Height):
-                                var height = short.Parse(value);
+                                var height = short.Parse(value, CultureInfo.InvariantCulture);
                                 records = this.heightDictionary[height];
                                 break;
                             case nameof(FileCabinetRecord.Salary):
-                                var salary = decimal.Parse(value);
+                                var salary = decimal.Parse(value, CultureInfo.InvariantCulture);
                                 records = this.salaryDictionary[salary];
                                 break;
                             default:
@@ -390,7 +390,7 @@ namespace FileCabinetApp.Services
                 }
             }
 
-            throw new ArgumentException("All ids are occupied.");
+            throw new ArgumentException("All ids are occupied");
         }
     }
 }
