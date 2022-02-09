@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,7 +32,7 @@ namespace FileCabinetApp.Validation
 
             if (record.DateOfBirth < this.minDate || record.DateOfBirth > this.maxDate)
             {
-                throw new ArgumentException($"Date of birth must be between {this.minDate.ToString("d")} and {this.maxDate.ToString("d")}");
+                throw new ArgumentException($"Date of birth must be between {this.minDate.ToString("d", CultureInfo.InvariantCulture)} and {this.maxDate.ToString("d", CultureInfo.InvariantCulture)}");
             }
         }
     }

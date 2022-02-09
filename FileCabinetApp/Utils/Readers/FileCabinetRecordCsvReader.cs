@@ -31,19 +31,20 @@ namespace FileCabinetApp.Utils.Readers
         public IList<FileCabinetRecord> ReadAll()
         {
             IList<FileCabinetRecord> records = new List<FileCabinetRecord>();
+            this.reader.ReadLine();
             string? line;
             while ((line = this.reader.ReadLine()) != null)
             {
-                string[] fields = line.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                string[] fields = line.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
                 FileCabinetRecord record = new FileCabinetRecord
                 {
-                    Id = int.Parse(fields[0]),
+                    Id = int.Parse(fields[0], CultureInfo.InvariantCulture),
                     FirstName = fields[1],
                     LastName = fields[2],
                     DateOfBirth = DateTime.Parse(fields[3], CultureInfo.InvariantCulture),
-                    Sex = char.Parse(fields[4].Trim()),
-                    Height = short.Parse(fields[5]),
-                    Salary = decimal.Parse(fields[6]),
+                    Sex = char.Parse(fields[4]),
+                    Height = short.Parse(fields[5], CultureInfo.InvariantCulture),
+                    Salary = decimal.Parse(fields[6], CultureInfo.InvariantCulture),
                 };
                 records.Add(record);
             }

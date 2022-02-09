@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using FileCabinetApp.Entities;
 using FileCabinetApp.Models;
+using FileCabinetApp.Utils.CommandHelper;
 
 namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
 {
@@ -28,7 +29,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
         /// <inheritdoc/>
         public override void Handle(AppCommandRequest request)
         {
-            if (request.Command.Equals(Command, StringComparison.InvariantCultureIgnoreCase))
+            if (request.Command.Equals(Command, StringComparison.OrdinalIgnoreCase))
             {
                 this.Update(request.Parameters);
             }
@@ -54,53 +55,22 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
                     throw new ArgumentException("Wrong update parameters syntax");
                 }
 
-                var updatingPropertiesTuple = ParseProperties(updatingProperties, ",");
-                var searchingPropertiesTuple = ParseProperties(searchingProperties, " and ");
+                const string commaSeparatpr = ",";
+                const string andSeparator = " and ";
+                var updatingPropertiesTuple = CommandParser.ParseUpdateParameters(updatingProperties, commaSeparatpr);
+                var searchingPropertiesTuple = CommandParser.ParseUpdateParameters(searchingProperties, andSeparator);
 
-                var allRecords = this.FileCabinetService.GetRecords().ToList();
-                foreach (var searchingProperty in searchingPropertiesTuple)
+                IEnumerable<FileCabinetRecord> foundRecords = this.FileCabinetService.GetRecords();
+                foreach (var property in searchingPropertiesTuple)
                 {
-                    var converter = TypeDescriptor.GetConverter(searchingProperty.Item1.PropertyType);
-                    var searchingValue = converter.ConvertFromInvariantString(searchingProperty.Item2);
-                    if (searchingValue == null)
-                    {
-                        throw new ArgumentException($"Invaild searching property value : {searchingProperty.Item2}");
-                    }
-
-                    switch (searchingProperty.Item1.PropertyType.Name)
-                    {
-                        case nameof(Int32):
-                            allRecords.RemoveAll(record => !Convert.ToInt32(searchingProperty.Item1.GetValue(record)).Equals(Convert.ToInt32(searchingValue)));
-                            break;
-                        case nameof(String):
-                            allRecords.RemoveAll(record => !Convert.ToString(searchingProperty.Item1.GetValue(record)) !.Equals(Convert.ToString(searchingValue), StringComparison.InvariantCultureIgnoreCase));
-                            break;
-                        case nameof(DateTime):
-                            allRecords.RemoveAll(record => !Convert.ToDateTime(searchingProperty.Item1.GetValue(record)).Equals(Convert.ToDateTime(searchingValue)));
-                            break;
-                        case nameof(Char):
-                            allRecords.RemoveAll(record => !Convert.ToChar(searchingProperty.Item1.GetValue(record)).Equals(char.ToUpper(Convert.ToChar(searchingValue))));
-                            break;
-                        case nameof(Int16):
-                            allRecords.RemoveAll(record => !Convert.ToInt16(searchingProperty.Item1.GetValue(record)).Equals(Convert.ToInt16(searchingValue)));
-                            break;
-                        case nameof(Decimal):
-                            allRecords.RemoveAll(record => !Convert.ToDecimal(searchingProperty.Item1.GetValue(record)).Equals(Convert.ToDecimal(searchingValue)));
-                            break;
-                        default: throw new ArgumentException("Something is went wrong");
-                    }
-
-                    if (allRecords.Count == 0)
-                    {
-                        break;
-                    }
+                    foundRecords = foundRecords.Intersect(this.FileCabinetService.FindByProperty(property.Item1, property.Item2));
                 }
 
-                foreach (var record in allRecords)
+                foreach (var record in foundRecords)
                 {
                     foreach (var updatingProperty in updatingPropertiesTuple)
                     {
-                        if (updatingProperty.Item1.Name.Equals(nameof(record.Id), StringComparison.InvariantCultureIgnoreCase))
+                        if (updatingProperty.Item1.Name.Equals(nameof(record.Id), StringComparison.OrdinalIgnoreCase))
                         {
                             throw new ArgumentException("You can't change id of a record");
                         }
@@ -118,43 +88,6 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
             {
                 Console.WriteLine($"Updating failed : {ex.Message}.");
             }
-        }
-
-        private static IEnumerable<Tuple<PropertyInfo, string>> ParseProperties(string properties, string propertySeparator)
-        {
-            var splitedProperties = properties.Split(propertySeparator, StringSplitOptions.RemoveEmptyEntries);
-            List<Tuple<PropertyInfo, string>> propertiesTuple = new List<Tuple<PropertyInfo, string>>();
-            PropertyInfo[] fileCabinetRecordProperties = typeof(FileCabinetRecord).GetProperties();
-            foreach (var property in splitedProperties)
-            {
-                var propertySplited = property.Split('=', 2, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-                if (propertySplited.Length != 2)
-                {
-                    throw new ArgumentException($"Wrong updating property syntax : {property}");
-                }
-
-                const int propertyNameIndex = 0;
-                const int propertyValueIndex = 1;
-
-                if (!propertySplited[propertyValueIndex].StartsWith('\'') ||
-                    !propertySplited[propertyValueIndex].EndsWith('\''))
-                {
-                    throw new ArgumentException("Property vaue should be in single quotes.");
-                }
-
-                propertySplited[propertyValueIndex] = propertySplited[propertyValueIndex][1..^1];
-
-                var propertyInfo = fileCabinetRecordProperties.FirstOrDefault(prop => prop.Name.Equals(propertySplited[propertyNameIndex], StringComparison.InvariantCultureIgnoreCase));
-
-                if (propertyInfo == null)
-                {
-                    throw new ArgumentException($"There is no such property as {propertySplited[propertyNameIndex]}");
-                }
-
-                propertiesTuple.Add(new Tuple<PropertyInfo, string>(propertyInfo, propertySplited[propertyValueIndex]));
-            }
-
-            return propertiesTuple;
         }
     }
 }

@@ -29,7 +29,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
         /// <inheritdoc/>
         public override void Handle(AppCommandRequest request)
         {
-            if (request.Command.Equals(Command, StringComparison.InvariantCultureIgnoreCase))
+            if (request.Command.Equals(Command, StringComparison.OrdinalIgnoreCase))
             {
                 this.Import(request.Parameters);
             }
@@ -41,7 +41,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
 
         private void Import(string parameters)
         {
-            string[] inputs = parameters.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
+            string[] inputs = parameters.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 
             if (inputs.Length < 2)
             {
@@ -65,11 +65,11 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
             using (StreamReader reader = new StreamReader(filePath))
             {
                 var snapshot = new FileCabinetServiceSnapshot(Array.Empty<FileCabinetRecord>());
-                if (format.Equals(CsvString, StringComparison.InvariantCultureIgnoreCase))
+                if (format.Equals(CsvString, StringComparison.OrdinalIgnoreCase))
                 {
                     snapshot.LoadFromCsv(reader);
                 }
-                else if (format.Equals(XmlString, StringComparison.InvariantCultureIgnoreCase))
+                else if (format.Equals(XmlString, StringComparison.OrdinalIgnoreCase))
                 {
                     snapshot.LoadFromXml(reader);
                 }

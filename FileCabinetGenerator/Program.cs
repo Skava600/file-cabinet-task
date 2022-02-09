@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
 using FileCabinetApp.Models;
@@ -39,7 +42,7 @@ public static class Program
         string paramValue;
         for (int i = 0; i < args.Length; i++)
         {
-            if (args[i].StartsWith("--"))
+            if (args[i].StartsWith("--", StringComparison.Ordinal))
             {
                 string[] param = args[i].Split('=', 2);
                 const int paramIndex = 0;
@@ -85,7 +88,7 @@ public static class Program
             return;
         }
 
-        List<RecordSerializable> generatedRecords = GenerateRecords(int.Parse(startId!), int.Parse(recordsAmount!));
+        List<RecordSerializable> generatedRecords = GenerateRecords(int.Parse(startId !, CultureInfo.InvariantCulture), int.Parse(recordsAmount!, CultureInfo.InvariantCulture));
         Export(generatedRecords);
     }
 
@@ -189,16 +192,16 @@ public static class Program
             throw new ArgumentException("error: start id not set.");
         }
 
-        if (!outputType.Equals(CsvString, StringComparison.InvariantCultureIgnoreCase) &&
-            !outputType.Equals(XmlString, StringComparison.InvariantCultureIgnoreCase))
+        if (!outputType.Equals(CsvString, StringComparison.OrdinalIgnoreCase) &&
+            !outputType.Equals(XmlString, StringComparison.OrdinalIgnoreCase))
         {
             throw new ArgumentException($"error: Invalid format type mode '{outputType}'.");
         }
 
-        if (!outputFileName.EndsWith('.' + outputType.ToLower()))
+        if (!outputFileName.EndsWith('.' + outputType.ToLowerInvariant(), StringComparison.Ordinal))
         {
             throw new ArgumentException(
-                $"error: Invalid format of output file '{outputFileName}. Should be '.{outputType.ToLower()}.");
+                $"error: Invalid format of output file '{outputFileName}. Should be '.{outputType.ToLowerInvariant()}.");
         }
 
         const int minAmount = 1;

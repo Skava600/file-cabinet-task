@@ -116,7 +116,7 @@ namespace FileCabinetApp.Services
                 FirstName = recordData.FirstName,
                 LastName = recordData.LastName,
                 DateOfBirth = recordData.DateOfBirth,
-                Sex = char.ToUpper(recordData.Sex),
+                Sex = char.ToUpperInvariant(recordData.Sex),
                 Height = recordData.Height,
                 Salary = recordData.Salary,
             };
@@ -137,7 +137,7 @@ namespace FileCabinetApp.Services
                 FirstName = recordData.FirstName,
                 LastName = recordData.LastName,
                 DateOfBirth = recordData.DateOfBirth,
-                Sex = char.ToUpper(recordData.Sex),
+                Sex = char.ToUpperInvariant(recordData.Sex),
                 Height = recordData.Height,
                 Salary = recordData.Salary,
             };
@@ -170,7 +170,7 @@ namespace FileCabinetApp.Services
                 FirstName = recordData.FirstName,
                 LastName = recordData.LastName,
                 DateOfBirth = recordData.DateOfBirth,
-                Sex = recordData.Sex,
+                Sex = char.ToUpperInvariant(recordData.Sex),
                 Height = recordData.Height,
                 Salary = recordData.Salary,
             };
@@ -220,8 +220,6 @@ namespace FileCabinetApp.Services
 
             this.fileStream.Seek(isDeletedBytePosition, SeekOrigin.Begin);
             this.fileStream.WriteByte(1);
-
-            this.fileStream.Seek(0, SeekOrigin.End);
         }
 
         /// <inheritdoc/>
@@ -288,7 +286,7 @@ namespace FileCabinetApp.Services
                 switch (propertyInfo.Name)
                 {
                     case nameof(FileCabinetRecord.Id):
-                        var id = int.Parse(propertyValue);
+                        var id = int.Parse(propertyValue, CultureInfo.InvariantCulture);
                         int index = this.GetIndexOf(id);
                         if (index == -1)
                         {
@@ -309,15 +307,15 @@ namespace FileCabinetApp.Services
                         recordsOffsets = this.dateOfBirthDictionary[dob];
                         break;
                     case nameof(FileCabinetRecord.Sex):
-                        var sex = char.ToUpper(char.Parse(propertyValue));
+                        var sex = char.ToUpperInvariant(char.Parse(propertyValue));
                         recordsOffsets = this.sexDictionary[sex];
                         break;
                     case nameof(FileCabinetRecord.Height):
-                        var height = short.Parse(propertyValue);
+                        var height = short.Parse(propertyValue, CultureInfo.InvariantCulture);
                         recordsOffsets = this.heightDictionary[height];
                         break;
                     case nameof(FileCabinetRecord.Salary):
-                        var salary = decimal.Parse(propertyValue);
+                        var salary = decimal.Parse(propertyValue, CultureInfo.InvariantCulture);
                         recordsOffsets = this.salaryDictionary[salary];
                         break;
                     default:

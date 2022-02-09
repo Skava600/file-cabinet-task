@@ -8,12 +8,12 @@ namespace FileCabinetApp.Utils.Memoization
 {
     public static class Memoizer
     {
-        public static Func<A, B, R> Memoize<A, B, R>(Func<A, B, R> func)
+        public static Func<TA, TB, TR> Memoize<TA, TB, TR>(Func<TA, TB, TR> func)
         {
-            var cache = new Dictionary<(A, B), R>();
+            var cache = new Dictionary<(TA, TB), TR>();
             return (a, b) =>
             {
-                R value;
+                TR? value;
                 if (cache.TryGetValue((a, b), out value))
                 {
                     return value;

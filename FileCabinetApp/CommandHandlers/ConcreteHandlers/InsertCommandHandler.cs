@@ -23,7 +23,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
 
         public override void Handle(AppCommandRequest request)
         {
-            if (request.Command.Equals(Command, StringComparison.InvariantCultureIgnoreCase))
+            if (request.Command.Equals(Command, StringComparison.OrdinalIgnoreCase))
             {
                 this.Insert(request.Parameters);
             }
@@ -35,43 +35,54 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
 
         private void Insert(string parameters)
         {
-            PropertyInfo[] fileCabinetRecordProperties = typeof(FileCabinetRecord).GetProperties();
+            List<PropertyInfo> fileCabinetRecordProperties = typeof(FileCabinetRecord).GetProperties().ToList();
 
-            string[] dividedParams = parameters.Split(") values (");
+            Regex insertParametersRegex = new Regex(@"^\s*\((?<propertyNames>.+)\)\s+values\s+\((?<propertyValues>.+)\)\s*$");
+            Match match = insertParametersRegex.Match(parameters);
+
+            string propertyNames = match.Groups["propertyNames"].Value;
+            string propertyValues = match.Groups["propertyValues"].Value;
 
             try
             {
-                if (dividedParams.Length != 2)
+                if (!match.Success)
                 {
-                    throw new ArgumentException("Invalid insert parameters");
+                    throw new ArgumentException("Insert parameters are wrong");
                 }
 
                 Regex propertyNamesRegex = new Regex(@"(?:\w+)(?=(\s*,\s*)|$)");
-                Regex propertyValuesRegex = new Regex(@"(?<=')(?:[\w\.\/]+)(?=('\s*,\s*)|('\s*\)\s*$))");
+                Regex propertyValuesRegex = new Regex(@"(?<=')(?:[\w\.\/\s]+)(?=('\s*,\s*)|('\s*\s*$))");
 
-                var nameMatches = propertyNamesRegex.Matches(dividedParams[0]);
-                var valuesMatches = propertyValuesRegex.Matches(dividedParams[1]);
-                if (nameMatches.Count != fileCabinetRecordProperties.Length)
+                var nameMatches = propertyNamesRegex.Matches(propertyNames);
+                var valuesMatches = propertyValuesRegex.Matches(propertyValues);
+                if (nameMatches.Count != fileCabinetRecordProperties.Count)
                 {
-                    throw new ArgumentException("Wrong property names parameter");
+                    throw new ArgumentException("Should be all properties presented");
                 }
 
-                if (valuesMatches.Count != fileCabinetRecordProperties.Length)
+                if (valuesMatches.Count != fileCabinetRecordProperties.Count)
                 {
-                    throw new ArgumentException("Wrong property values parameter");
+                    throw new ArgumentException("Should be all property values presented");
                 }
 
                 FileCabinetRecord newRecord = new FileCabinetRecord();
-                for (int i = 0; i < fileCabinetRecordProperties.Length; i++)
+                List<PropertyInfo> usedFileCabinetRecordProperties = new List<PropertyInfo>();
+                for (int i = 0; i < fileCabinetRecordProperties.Count; i++)
                 {
-                    var property = fileCabinetRecordProperties.FirstOrDefault(p => p.Name.Equals(nameMatches[i].Value, StringComparison.InvariantCultureIgnoreCase));
+                    var property = fileCabinetRecordProperties.FirstOrDefault(p => p.Name.Equals(nameMatches[i].Value, StringComparison.OrdinalIgnoreCase));
                     if (property == null)
                     {
                         throw new ArgumentException($"Wrong property name : {nameMatches[i].Value}");
                     }
 
+                    usedFileCabinetRecordProperties.Add(property);
                     var converter = TypeDescriptor.GetConverter(property.PropertyType);
                     property.SetValue(newRecord, converter.ConvertFromInvariantString(valuesMatches[i].Value));
+                }
+
+                if (usedFileCabinetRecordProperties.Intersect(fileCabinetRecordProperties).Count() != fileCabinetRecordProperties.Count)
+                {
+                    throw new ArgumentException($"Some of properties are repeating: {propertyNames}");
                 }
 
                 RecordData recordData = new RecordData(newRecord);

@@ -27,7 +27,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
         /// <inheritdoc/>
         public override void Handle(AppCommandRequest request)
         {
-            if (request.Command.Equals(Command, StringComparison.InvariantCultureIgnoreCase))
+            if (request.Command.Equals(Command, StringComparison.OrdinalIgnoreCase))
             {
                 this.Export(request.Parameters);
             }
@@ -39,7 +39,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
 
         private void Export(string parameters)
         {
-            string[] inputs = parameters.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
+            string[] inputs = parameters.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 
             if (inputs.Length < 2)
             {
@@ -64,9 +64,9 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
                     answer = Console.ReadKey().KeyChar;
                     Console.WriteLine();
                 }
-                while (!char.ToLower(answer).Equals('y') && !char.ToLower(answer).Equals('n'));
+                while (!char.ToLowerInvariant(answer).Equals('y') && !char.ToLowerInvariant(answer).Equals('n'));
 
-                if (char.ToLower(answer).Equals('n'))
+                if (char.ToLowerInvariant(answer).Equals('n'))
                 {
                     return;
                 }
@@ -74,7 +74,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
 
             try
             {
-                if (format.Equals(CsvString, StringComparison.InvariantCultureIgnoreCase))
+                if (format.Equals(CsvString, StringComparison.OrdinalIgnoreCase))
                 {
                     using (StreamWriter sw = new StreamWriter(filePath))
                     {
@@ -82,7 +82,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
                         Console.WriteLine($"All records are exported to file {filePath}.");
                     }
                 }
-                else if (format.Equals(XmlString, StringComparison.InvariantCultureIgnoreCase))
+                else if (format.Equals(XmlString, StringComparison.OrdinalIgnoreCase))
                 {
                     using (StreamWriter sw = new StreamWriter(filePath))
                     {
@@ -92,7 +92,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
                 }
                 else
                 {
-                    Console.WriteLine($"{format} is not correct format, available only {XmlString} and {CsvString}");
+                    Console.WriteLine($"{format} is not correct format, available only {XmlString} and {CsvString}.");
                 }
             }
             catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException)

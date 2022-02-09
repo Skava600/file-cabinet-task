@@ -42,42 +42,42 @@ namespace FileCabinetApp.Utils.Config
                 .Create();
         }
 
-        private Tuple<int, int> ReadFirstNameRules()
+        public Tuple<int, int> ReadFirstNameRules()
         {
             var minSize = this.config.GetSection(this.validationRules).GetSection("firstName:min");
             var maxSize = this.config.GetSection(this.validationRules).GetSection("firstName:max");
             return new Tuple<int, int>(minSize.Get<int>(), maxSize.Get<int>());
         }
 
-        private Tuple<int, int> ReadLastNameRules()
+        public Tuple<int, int> ReadLastNameRules()
         {
             var minSize = this.config.GetSection(this.validationRules).GetSection("lastName:min");
             var maxSize = this.config.GetSection(this.validationRules).GetSection("lastName:max");
             return new Tuple<int, int>(minSize.Get<int>(), maxSize.Get<int>());
         }
 
-        private Tuple<DateTime, DateTime> ReadDateOfBirthRules()
+        public Tuple<DateTime, DateTime> ReadDateOfBirthRules()
         {
             var from = this.config.GetSection(this.validationRules).GetSection("dateOfBirth:from");
             var to = this.config.GetSection(this.validationRules).GetSection("dateOfBirth:to");
             return new Tuple<DateTime, DateTime>(from.Get<DateTime>(), to.Get<DateTime>());
         }
 
-        private Tuple<short, short> ReadHeightRules()
+        public Tuple<short, short> ReadHeightRules()
         {
             var minHeight = this.config.GetSection(this.validationRules).GetSection("height:min");
             var maxHeight = this.config.GetSection(this.validationRules).GetSection("height:max");
             return new Tuple<short, short>(minHeight.Get<short>(), maxHeight.Get<short>());
         }
 
-        private Tuple<decimal, decimal> ReadSalaryRules()
+        public Tuple<decimal, decimal> ReadSalaryRules()
         {
             var minSalary = this.config.GetSection(this.validationRules).GetSection("salary:min");
             var maxSalary = this.config.GetSection(this.validationRules).GetSection("salary:max");
             return new Tuple<decimal, decimal>(minSalary.Get<decimal>(), maxSalary.Get<decimal>());
         }
 
-        private char[] ReadSexRules()
+        public char[] ReadSexRules()
         {
             var sexRules = this.config.GetSection(this.validationRules).GetSection("sex");
             return sexRules.Get<char[]>();

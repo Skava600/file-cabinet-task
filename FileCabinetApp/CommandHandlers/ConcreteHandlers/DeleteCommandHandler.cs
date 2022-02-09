@@ -20,7 +20,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
 
         public override void Handle(AppCommandRequest request)
         {
-            if (request.Command.Equals(Command, StringComparison.InvariantCultureIgnoreCase))
+            if (request.Command.Equals(Command, StringComparison.OrdinalIgnoreCase))
             {
                 this.Delete(request.Parameters);
             }
@@ -42,7 +42,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
 
             PropertyInfo[] fileCabinetRecordProperties = typeof(FileCabinetRecord).GetProperties();
 
-            var propertyInfo = fileCabinetRecordProperties.FirstOrDefault(prop => prop.Name.Equals(propertyName, StringComparison.InvariantCultureIgnoreCase));
+            var propertyInfo = fileCabinetRecordProperties.FirstOrDefault(prop => prop.Name.Equals(propertyName, StringComparison.OrdinalIgnoreCase));
 
             try
             {

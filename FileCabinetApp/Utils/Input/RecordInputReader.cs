@@ -1,6 +1,9 @@
 ﻿using FileCabinetApp.Converters;
 using FileCabinetApp.Models;
+using FileCabinetApp.Utils.Config;
 using FileCabinetApp.Validation;
+using Microsoft.Extensions.Configuration;
+using System.Globalization;
 
 namespace FileCabinetApp.Utils.Input
 {
@@ -9,16 +12,7 @@ namespace FileCabinetApp.Utils.Input
     /// </summary>
     public class RecordInputReader
     {
-        private const int MinNameLength = 2;
-        private const int MaxNameLength = 60;
-
-        private const short MinHeight = 0;
-        private const short MaxHeight = 300;
-
-        private const decimal MinSalary = 0;
-        private const decimal MaxSalary = decimal.MaxValue;
-
-        private string validationRules;
+        private readonly ValidationConfigReader configReader;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RecordInputReader"/> class.
@@ -26,12 +20,8 @@ namespace FileCabinetApp.Utils.Input
         /// <param name="validationRules"> validation rules: default or custom. </param>
         public RecordInputReader(string validationRules)
         {
-            this.validationRules = validationRules;
+            this.configReader = new ValidationConfigReader(validationRules);
         }
-
-        private static DateTime MinDate => new DateTime(1900, 1, 1);
-
-        private static DateTime MaxDate => DateTime.Now;
 
         /// <summary>
         /// Reads users record input.
@@ -47,29 +37,36 @@ namespace FileCabinetApp.Utils.Input
             Func<string, Tuple<bool, string, short>> shortConverter = InputConverter.ShortConverter;
             Func<string, Tuple<bool, string, decimal>> decimalConverter = InputConverter.DecimalConverter;
 
+            Tuple<int, int> firstNameRules = this.configReader.ReadFirstNameRules();
+            Tuple<int, int> lastNameRules = this.configReader.ReadLastNameRules();
+            Tuple<DateTime, DateTime> dateOfBirthRules = this.configReader.ReadDateOfBirthRules();
+            Tuple<short, short> heightRules = this.configReader.ReadHeightRules();
+            char[] sexRules = this.configReader.ReadSexRules();
+            Tuple<decimal, decimal> salaryRules = this.configReader.ReadSalaryRules();
+
             Func<string, Tuple<bool, string>> firstNameValidator =
-                name => name.Length < MinNameLength || name.Length > MaxNameLength ?
-                new Tuple<bool, string>(false, $"Length of first name must be between {MinNameLength} and {MaxNameLength}") :
+                name => name.Length < firstNameRules.Item1 || name.Length > firstNameRules.Item2 ?
+                new Tuple<bool, string>(false, $"Length of first name must be between {firstNameRules.Item1} and {firstNameRules.Item2}") :
                 new Tuple<bool, string>(true, nameof(record.FirstName));
             Func<string, Tuple<bool, string>> lastNameValidator =
-                name => name.Length < MinNameLength || name.Length > MaxNameLength ?
-                new Tuple<bool, string>(false, $"Length of last name must be between {MinNameLength} and {MaxNameLength}") :
+                name => name.Length < lastNameRules.Item1 || name.Length > lastNameRules.Item2 ?
+                new Tuple<bool, string>(false, $"Length of last name must be between {lastNameRules.Item1} and {lastNameRules.Item2}") :
                 new Tuple<bool, string>(true, nameof(record.LastName));
             Func<DateTime, Tuple<bool, string>> dateOfBirthValidator =
-                dateOfBirth => dateOfBirth < MinDate || dateOfBirth > MaxDate ?
-                new Tuple<bool, string>(false, $"Date of birth current must be between {MinDate.ToShortDateString} and {MaxDate.ToShortDateString}") :
+                dateOfBirth => dateOfBirth < dateOfBirthRules.Item1 || dateOfBirth > dateOfBirthRules.Item2 ?
+                new Tuple<bool, string>(false, $"Date of birth current must be between {dateOfBirthRules.Item1.ToString("d", CultureInfo.InvariantCulture)} and {dateOfBirthRules.Item2.ToString("d", CultureInfo.InvariantCulture)}") :
                 new Tuple<bool, string>(true, nameof(record.DateOfBirth));
             Func<char, Tuple<bool, string>> sexValidator =
-                sex => !char.ToUpper(sex).Equals('M') && !char.ToUpper(sex).Equals('F') ?
-                new Tuple<bool, string>(false, "sex is only M(male) and F(female)") :
+                sex => !Array.Exists(sexRules, availableSex => char.ToUpperInvariant(sex).Equals(char.ToUpperInvariant(availableSex))) ?
+                new Tuple<bool, string>(false, "Not valid sex") :
                 new Tuple<bool, string>(true, nameof(record.Sex));
             Func<short, Tuple<bool, string>> heightValidator =
-                height => height < MinHeight || height > MaxHeight ?
-                new Tuple<bool, string>(false, $"height must be a number between {MinHeight}  and {MaxHeight}") :
+                height => height < heightRules.Item1 || height > heightRules.Item2 ?
+                new Tuple<bool, string>(false, $"height must be a number between {heightRules.Item1}  and {heightRules.Item2}") :
                 new Tuple<bool, string>(true, nameof(record.Height));
             Func<decimal, Tuple<bool, string>> salaryValidator =
-                salary => salary < MinSalary || salary > MaxSalary ?
-                new Tuple<bool, string>(false, $"Salary should be between {MinSalary} and {MaxSalary}.") :
+                salary => salary < salaryRules.Item1 || salary > salaryRules.Item2 ?
+                new Tuple<bool, string>(false, $"Salary should be between {salaryRules.Item1} and {salaryRules.Item2}.") :
                 new Tuple<bool, string>(true, nameof(record.Salary));
 
             Console.Write("First name: ");
@@ -81,7 +78,7 @@ namespace FileCabinetApp.Utils.Input
             Console.Write("Date of birth: ");
             var dateOfBirth = ReadInput(dateTimeConverter, dateOfBirthValidator);
 
-            Console.Write("Sex (M or F): ");
+            Console.Write("Sex: ");
             var sex = ReadInput(charConverter, sexValidator);
 
             Console.Write("Height: ");
