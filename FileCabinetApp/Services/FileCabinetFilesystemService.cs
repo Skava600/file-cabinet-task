@@ -116,7 +116,7 @@ namespace FileCabinetApp.Services
                 this.lastId = id;
             }
 
-            var record = new FileCabinetRecord
+            FileCabinetRecord record = new FileCabinetRecord
             {
                 Id = id,
                 FirstName = recordData.FirstName,
@@ -137,7 +137,7 @@ namespace FileCabinetApp.Services
         public int CreateRecord(RecordData recordData)
         {
             this.validator.ValidateParameters(recordData);
-            var record = new FileCabinetRecord
+            FileCabinetRecord record = new FileCabinetRecord
             {
                 Id = this.GenerateId(),
                 FirstName = recordData.FirstName,
@@ -170,7 +170,7 @@ namespace FileCabinetApp.Services
             }
 
             this.validator.ValidateParameters(recordData);
-            var editedRecord = new FileCabinetRecord()
+            FileCabinetRecord editedRecord = new FileCabinetRecord()
             {
                 Id = id,
                 FirstName = recordData.FirstName,
@@ -192,7 +192,7 @@ namespace FileCabinetApp.Services
                     if (currentId == id && isDeleted == 0)
                     {
                         this.fileStream.Seek(-(sizeof(int) + (sizeof(byte) * 2)), SeekOrigin.Current);
-                        var oldRecord = ReadRecordFromStream(binaryReader);
+                        FileCabinetRecord oldRecord = ReadRecordFromStream(binaryReader);
 
                         this.fileStream.Seek(RecordSize * recordIndex, SeekOrigin.Begin);
                         this.RemoveRecordFromDictionaries(oldRecord, this.fileStream.Position);
@@ -219,7 +219,7 @@ namespace FileCabinetApp.Services
 
             long recordOffset = RecordSize * recordIndex;
             this.fileStream.Seek(recordOffset, SeekOrigin.Begin);
-            var record = ReadRecordFromStream(new BinaryReader(this.fileStream, Encoding.Unicode, true));
+            FileCabinetRecord record = ReadRecordFromStream(new BinaryReader(this.fileStream, Encoding.Unicode, true));
             this.RemoveRecordFromDictionaries(record, recordOffset);
 
             long isDeletedBytePosition = recordOffset + sizeof(byte);
@@ -231,13 +231,6 @@ namespace FileCabinetApp.Services
         /// <inheritdoc/>
         public IEnumerable<int> DeleteRecord(PropertyInfo propertyInfo, string propertyValue)
         {
-            var converter = TypeDescriptor.GetConverter(propertyInfo.PropertyType);
-            var value = converter.ConvertFromString(propertyValue);
-            if (value == null)
-            {
-                throw new ArgumentException($"Wrong property value: {propertyValue}");
-            }
-
             IEnumerable<FileCabinetRecord> records;
 
             records = this.FindByProperty(propertyInfo, propertyValue);
@@ -259,7 +252,7 @@ namespace FileCabinetApp.Services
             this.lastNameDictionary.Clear();
             this.dateOfBirthDictionary.Clear();
 
-            var records = this.GetRecords();
+            IEnumerable<FileCabinetRecord> records = this.GetRecords();
 
             this.fileStream.Seek(0, SeekOrigin.Begin);
 
@@ -332,11 +325,11 @@ namespace FileCabinetApp.Services
             }
             catch (KeyNotFoundException)
             {
-                throw new ArgumentException($"Records with {propertyValue} {propertyInfo.Name} not exist");
+                records = new RecordCollection(this.fileStream, Array.Empty<long>());
             }
             catch (FormatException)
             {
-                throw new ArgumentException($"{propertyValue} is invalid {propertyInfo.PropertyType} format");
+                throw new ArgumentException($"'{propertyValue}' is invalid {propertyInfo.PropertyType.Name} format");
             }
 
             return records;
@@ -411,7 +404,7 @@ namespace FileCabinetApp.Services
 
             foreach (var record in snapshot.Records)
             {
-                var recordData = new RecordData(record);
+                RecordData recordData = new RecordData(record);
 
                 try
                 {
@@ -421,7 +414,7 @@ namespace FileCabinetApp.Services
                     }
                     else
                     {
-                        this.CreateRecord(recordData);
+                        this.CreateRecordWithId(record.Id, recordData);
                     }
                 }
                 catch (ArgumentException ex)

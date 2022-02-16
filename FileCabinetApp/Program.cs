@@ -172,7 +172,7 @@ namespace FileCabinetApp
                     break;
                 default:
                     fileCabinetService = new FileCabinetMemoryService(recordValidator);
-                    Program.validationRules = "memory";
+                    Program.storage = "memory";
                     break;
             }
 

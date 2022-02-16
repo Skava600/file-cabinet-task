@@ -62,24 +62,31 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
                 return;
             }
 
-            using (StreamReader reader = new StreamReader(filePath))
+            try
             {
-                var snapshot = new FileCabinetServiceSnapshot(Array.Empty<FileCabinetRecord>());
-                if (format.Equals(CsvString, StringComparison.OrdinalIgnoreCase))
+                using (StreamReader reader = new StreamReader(filePath))
                 {
-                    snapshot.LoadFromCsv(reader);
-                }
-                else if (format.Equals(XmlString, StringComparison.OrdinalIgnoreCase))
-                {
-                    snapshot.LoadFromXml(reader);
-                }
-                else
-                {
-                    Console.WriteLine($"{format} is not correct format, available only {CsvString} and {XmlString}");
-                }
+                    var snapshot = new FileCabinetServiceSnapshot(Array.Empty<FileCabinetRecord>());
+                    if (format.Equals(CsvString, StringComparison.OrdinalIgnoreCase))
+                    {
+                        snapshot.LoadFromCsv(reader);
+                    }
+                    else if (format.Equals(XmlString, StringComparison.OrdinalIgnoreCase))
+                    {
+                        snapshot.LoadFromXml(reader);
+                    }
+                    else
+                    {
+                        Console.WriteLine($"{format} is not correct format, available only {CsvString} and {XmlString}");
+                    }
 
-                this.FileCabinetService.Restore(snapshot);
-                Console.WriteLine($"{snapshot.Records.Count} were imported from {filePath}.");
+                    this.FileCabinetService.Restore(snapshot);
+                    Console.WriteLine($"{snapshot.Records.Count} were imported from {filePath}.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
             }
         }
     }

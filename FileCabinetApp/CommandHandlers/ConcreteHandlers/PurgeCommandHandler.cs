@@ -41,7 +41,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
             {
                 var records = this.FileCabinetService.GetStat();
                 this.FileCabinetService.Purge();
-                Console.WriteLine($"Data file processing is completed: {records.Item2} of {records.Item1} records were purged.");
+                Console.WriteLine($"Data file processing is completed: {records.Item2} of {records.Item1 + records.Item2} records were purged.");
             }
             catch (NotImplementedException)
             {
