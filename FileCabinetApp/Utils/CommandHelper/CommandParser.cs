@@ -25,13 +25,13 @@ namespace FileCabinetApp.Utils.CommandHelper
             const string andSeparator = " and ";
             const string orSeparator = " or ";
 
-            actualSeparator = andSeparator;
+            actualSeparator = andSeparator.Trim();
             var splitedProperties = parameters.Split(andSeparator, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 
             if (splitedProperties.Length == 1)
             {
                 splitedProperties = parameters.Split(orSeparator, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-                actualSeparator = orSeparator;
+                actualSeparator = orSeparator.Trim();
             }
             else
             {
@@ -44,7 +44,7 @@ namespace FileCabinetApp.Utils.CommandHelper
 
             if (splitedProperties.Length == 1)
             {
-                actualSeparator = andSeparator;
+                actualSeparator = andSeparator.Trim();
             }
 
             return ParseProperty(splitedProperties);

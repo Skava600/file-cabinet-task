@@ -47,11 +47,11 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
         {
             Regex parametersRegex = new Regex(@"^\s*(?<selectingProperties>.+)(?:\s+where\s+(?<searchingProperties>.+))", RegexOptions.IgnoreCase);
 
-            var match = parametersRegex.Match(parameters);
+            Match match = parametersRegex.Match(parameters);
 
-            var selectingProperties = match.Groups["selectingProperties"].Value;
-            var searchingProperties = match.Groups["searchingProperties"].Value;
-            IEnumerable<FileCabinetRecord> foundRecords = new List<FileCabinetRecord>();
+            string selectingProperties = match.Groups["selectingProperties"].Value;
+            string searchingProperties = match.Groups["searchingProperties"].Value;
+            IEnumerable<FileCabinetRecord> foundRecords;
             try
             {
                 if (!match.Success)
@@ -59,7 +59,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
                     selectingProperties = parameters;
                 }
 
-                var splitedSelectingProperties = selectingProperties.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+                string[] splitedSelectingProperties = selectingProperties.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
                 List<PropertyInfo> selectingPropertiesInfo = new List<PropertyInfo>();
                 PropertyInfo[] fileCabinetRecordProperties = typeof(FileCabinetRecord).GetProperties();
                 foreach (var splitedSelectingProperty in splitedSelectingProperties)
@@ -75,28 +75,29 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
 
                 if (!string.IsNullOrWhiteSpace(searchingProperties))
                 {
-                    var searchingPropertiesTuple = CommandParser.ParseSelectParameters(searchingProperties, out string separator);
-                    Func<IEnumerable<FileCabinetRecord>, IEnumerable<FileCabinetRecord>> combineFoundRecords;
+                    IEnumerable<Tuple<PropertyInfo, string>> searchingPropertiesTuple = CommandParser.ParseSelectParameters(searchingProperties, out string separator);
                     const string andSeparator = "and";
                     const string orSeparator = "or";
 
-                    switch (separator)
+                    if (separator.Equals(andSeparator, StringComparison.Ordinal))
                     {
-                        case andSeparator:
-                            combineFoundRecords = foundRecords.Intersect;
-                            foundRecords = this.FileCabinetService.GetRecords();
-                            break;
-                        case orSeparator:
-                            combineFoundRecords = foundRecords.Union;
-                            foundRecords = new List<FileCabinetRecord>();
-                            break;
-                        default:
-                            throw new ArgumentException($"Wrong separator : '{separator}'");
+                        foundRecords = this.FileCabinetService.GetRecords();
+                        foreach (var property in searchingPropertiesTuple)
+                        {
+                            foundRecords = foundRecords.Intersect(this.FileCabinetService.FindByProperty(property.Item1, property.Item2));
+                        }
                     }
-
-                    foreach (var property in searchingPropertiesTuple)
+                    else if (separator.Equals(orSeparator, StringComparison.Ordinal))
                     {
-                        foundRecords = combineFoundRecords(this.FileCabinetService.FindByProperty(property.Item1, property.Item2));
+                        foundRecords = new List<FileCabinetRecord>();
+                        foreach (var property in searchingPropertiesTuple)
+                        {
+                            foundRecords = foundRecords.Union(this.FileCabinetService.FindByProperty(property.Item1, property.Item2));
+                        }
+                    }
+                    else
+                    {
+                        throw new ArgumentException($"Wrong separator : '{separator}'");
                     }
                 }
                 else

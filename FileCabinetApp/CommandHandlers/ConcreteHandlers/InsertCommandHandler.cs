@@ -77,14 +77,14 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
                 List<PropertyInfo> usedFileCabinetRecordProperties = new List<PropertyInfo>();
                 for (int i = 0; i < fileCabinetRecordProperties.Count; i++)
                 {
-                    var property = fileCabinetRecordProperties.FirstOrDefault(p => p.Name.Equals(nameMatches[i].Value, StringComparison.OrdinalIgnoreCase));
+                    PropertyInfo? property = fileCabinetRecordProperties.FirstOrDefault(p => p.Name.Equals(nameMatches[i].Value, StringComparison.OrdinalIgnoreCase));
                     if (property == null)
                     {
                         throw new ArgumentException($"Wrong property name : {nameMatches[i].Value}");
                     }
 
                     usedFileCabinetRecordProperties.Add(property);
-                    var converter = TypeDescriptor.GetConverter(property.PropertyType);
+                    TypeConverter converter = TypeDescriptor.GetConverter(property.PropertyType);
                     property.SetValue(newRecord, converter.ConvertFromInvariantString(valuesMatches[i].Value));
                 }
 

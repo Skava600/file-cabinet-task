@@ -33,20 +33,30 @@ namespace FileCabinetApp.Utils.Readers
             IList<FileCabinetRecord> records = new List<FileCabinetRecord>();
             this.reader.ReadLine();
             string? line;
+            int i = 1;
             while ((line = this.reader.ReadLine()) != null)
             {
                 string[] fields = line.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-                FileCabinetRecord record = new FileCabinetRecord
+                try
                 {
-                    Id = int.Parse(fields[0], CultureInfo.InvariantCulture),
-                    FirstName = fields[1],
-                    LastName = fields[2],
-                    DateOfBirth = DateTime.Parse(fields[3], CultureInfo.InvariantCulture),
-                    Sex = char.Parse(fields[4]),
-                    Height = short.Parse(fields[5], CultureInfo.InvariantCulture),
-                    Salary = decimal.Parse(fields[6], CultureInfo.InvariantCulture),
-                };
-                records.Add(record);
+                    FileCabinetRecord record = new FileCabinetRecord
+                    {
+                        Id = int.Parse(fields[0], CultureInfo.InvariantCulture),
+                        FirstName = fields[1],
+                        LastName = fields[2],
+                        DateOfBirth = DateTime.Parse(fields[3], CultureInfo.InvariantCulture),
+                        Sex = char.Parse(fields[4]),
+                        Height = short.Parse(fields[5], CultureInfo.InvariantCulture),
+                        Salary = decimal.Parse(fields[6], CultureInfo.InvariantCulture),
+                    };
+                    records.Add(record);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Corruption of data in line {i}. Error text : {ex.Message}");
+                }
+
+                i++;
             }
 
             return records;

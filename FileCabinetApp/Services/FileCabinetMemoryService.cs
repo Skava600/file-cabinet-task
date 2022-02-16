@@ -253,7 +253,7 @@ namespace FileCabinetApp.Services
                     }
                     catch (KeyNotFoundException)
                     {
-                        throw new ArgumentException($"Records with {value} {info.Name} not exist");
+                        records = Enumerable.Empty<FileCabinetRecord>();
                     }
                     catch (FormatException)
                     {
@@ -293,7 +293,7 @@ namespace FileCabinetApp.Services
                     }
                     else
                     {
-                        this.CreateRecord(recordData);
+                        this.CreateRecordWithId(record.Id, recordData);
                     }
                 }
                 catch (ArgumentException ex)

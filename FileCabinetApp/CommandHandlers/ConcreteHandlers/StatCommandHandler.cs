@@ -37,7 +37,7 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
 
         private void Stat(string parameters)
         {
-            var recordsCount = this.FileCabinetService.GetStat();
+            Tuple<int, int> recordsCount = this.FileCabinetService.GetStat();
             Console.WriteLine($"{recordsCount.Item1} record(s), {recordsCount.Item2} deleted record(s).");
         }
     }

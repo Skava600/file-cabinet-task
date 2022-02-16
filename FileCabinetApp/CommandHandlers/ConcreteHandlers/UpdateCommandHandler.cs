@@ -46,10 +46,10 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
         {
             Regex parametersRegex = new Regex(@"\s*set\s+(?<updatingProperties>.+)(?:\s+where\s+(?<searchingProperties>.+))", RegexOptions.IgnoreCase);
 
-            var match = parametersRegex.Match(parameters);
+            Match match = parametersRegex.Match(parameters);
 
-            var updatingProperties = match.Groups["updatingProperties"].Value;
-            var searchingProperties = match.Groups["searchingProperties"].Value;
+            string updatingProperties = match.Groups["updatingProperties"].Value;
+            string searchingProperties = match.Groups["searchingProperties"].Value;
 
             try
             {
@@ -60,8 +60,8 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
 
                 const string commaSeparatpr = ",";
                 const string andSeparator = " and ";
-                var updatingPropertiesTuple = CommandParser.ParseUpdateParameters(updatingProperties, commaSeparatpr);
-                var searchingPropertiesTuple = CommandParser.ParseUpdateParameters(searchingProperties, andSeparator);
+                IEnumerable<Tuple<PropertyInfo, string>> updatingPropertiesTuple = CommandParser.ParseUpdateParameters(updatingProperties, commaSeparatpr);
+                IEnumerable<Tuple<PropertyInfo, string>> searchingPropertiesTuple = CommandParser.ParseUpdateParameters(searchingProperties, andSeparator);
 
                 IEnumerable<FileCabinetRecord> foundRecords = this.FileCabinetService.GetRecords();
                 foreach (var property in searchingPropertiesTuple)
@@ -78,8 +78,8 @@ namespace FileCabinetApp.CommandHandlers.ConcreteHandlers
                             throw new ArgumentException("You can't change id of a record");
                         }
 
-                        var converter = TypeDescriptor.GetConverter(updatingProperty.Item1.PropertyType);
-                        var newValue = converter.ConvertFromInvariantString(updatingProperty.Item2);
+                        TypeConverter converter = TypeDescriptor.GetConverter(updatingProperty.Item1.PropertyType);
+                        object? newValue = converter.ConvertFromInvariantString(updatingProperty.Item2);
                         updatingProperty.Item1.SetValue(record, newValue);
                     }
 
